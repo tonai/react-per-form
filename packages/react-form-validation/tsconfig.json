@@ -1,0 +1,5 @@
+{
+  "extends": "tsconfig/react-lib.json",
+  "include": ["src", "../../global.d.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
