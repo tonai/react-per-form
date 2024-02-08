@@ -10,7 +10,7 @@ interface IInputProps extends InputProps {
 function Input(props: IInputProps) {
   const { validator, ...inputProps } = props;
   const id = useId();
-  const { error, ref } = useInput(id, validator);
+  const { error, ref } = useInput({ name: id, validator });
 
   return (
     <div>

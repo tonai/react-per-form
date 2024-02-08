@@ -4,7 +4,7 @@ export type IValidate = (
   mode: IFormMode,
   formData: FormData,
   name?: string,
-) => void;
+) => IError;
 
 export type IFormValidate = (
   mode: IFormMode,

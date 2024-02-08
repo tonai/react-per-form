@@ -10,10 +10,10 @@ function Dynamic(props: IDynamicProps) {
   const name = useId();
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
-  const { errors, refs } = useMultipleInput(
-    ids.map((id) => `${name}-${id}`),
+  const { errors, refs } = useMultipleInput({
+    names: ids.map((id) => `${name}-${id}`),
     validator,
-  );
+  });
 
   function handleAdd() {
     setIds(ids.concat(ref.current));

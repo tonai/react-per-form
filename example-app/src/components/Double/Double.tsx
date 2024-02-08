@@ -9,7 +9,7 @@ function Double(props: IDoubleProps) {
   const { validator } = props;
   const id1 = useId();
   const id2 = useId();
-  const { errors, refs } = useMultipleInput([id1, id2], validator);
+  const { errors, refs } = useMultipleInput({ names: [id1, id2], validator });
 
   return (
     <div>

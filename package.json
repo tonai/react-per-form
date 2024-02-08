@@ -17,10 +17,13 @@
     "url": "https://github.com/tonai"
   },
   "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "prelint": "npm run build",
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",
     "format": "prettier --write --ignore-unknown .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.0",

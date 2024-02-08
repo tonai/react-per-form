@@ -144,5 +144,6 @@ export function createValidate(
         ? Object.keys(errors.validator)[0]
         : refName;
     manageErrors(mode, errors, refs[errorName], setErrors, useNativeValidation);
+    return errors;
   };
 }
