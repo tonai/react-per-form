@@ -8,7 +8,7 @@ export type IValidate = (
 
 export type IFormValidate = (
   mode: IFormMode,
-  name?: string | string[],
+  name?: string[] | string,
 ) => boolean;
 
 export type IReset = () => void;
@@ -26,14 +26,14 @@ export type IValidatorMultiple = (
 ) => string;
 
 export interface IFormValidator {
-  validator: IValidatorMultiple;
   names: string[];
+  validator: IValidatorMultiple;
 }
 
 export interface IError {
   all?: Record<string, string>;
-  native?: Record<string, string>;
   main?: string;
+  native?: Record<string, string>;
   validator?: Record<string, string>;
 }
 
@@ -41,6 +41,7 @@ export interface IFormContext {
   checkValidity: (mode: IFormMode) => void;
   errors: IError;
   isValid: boolean;
+  messages?: IValidityMessages;
   mode: IFormMode;
   removeValidator: (name: string) => void;
   resetForm: () => void;
@@ -48,3 +49,5 @@ export interface IFormContext {
   useNativeValidation: boolean;
   validateForm: IFormValidate;
 }
+
+export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;

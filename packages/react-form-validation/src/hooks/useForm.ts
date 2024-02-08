@@ -1,13 +1,4 @@
-import {
-  FormEvent,
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { getFormValidate, insertInMapSet } from '../helpers';
-import {
+import type {
   IError,
   IFormContext,
   IFormMode,
@@ -15,7 +6,13 @@ import {
   IReset,
   IValidate,
   IValidatorMultiple,
+  IValidityMessages,
 } from '../types';
+import type { FormEvent, RefObject } from 'react';
+
+import { useCallback, useMemo, useRef, useState } from 'react';
+
+import { getFormValidate, insertInMapSet } from '../helpers';
 
 export interface IField {
   reset: IReset;
@@ -25,20 +22,21 @@ export interface IField {
 export type IFields = Map<string, IField>;
 
 export interface IUseFormProps {
-  onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
+  messages?: IValidityMessages;
   mode?: IFormMode;
+  onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
   useNativeValidation?: boolean;
   validators?:
-    | Record<string, IValidatorMultiple | IFormValidator>
-    | IFormValidator[];
+    | IFormValidator[]
+    | Record<string, IFormValidator | IValidatorMultiple>;
 }
 
 export interface IUseFormResult extends IFormContext {
   formProps: {
     noValidate: boolean;
     onChange: (event: FormEvent<HTMLFormElement>) => void;
-    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     onReset: () => void;
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     ref: RefObject<HTMLFormElement>;
   };
 }
@@ -46,6 +44,7 @@ export interface IUseFormResult extends IFormContext {
 export function useForm(props: IUseFormProps): IUseFormResult {
   const {
     onSubmit,
+    messages,
     mode = 'none',
     useNativeValidation = true,
     validators,
@@ -57,7 +56,7 @@ export function useForm(props: IUseFormProps): IUseFormResult {
   const [errors, setErrors] = useState<IError>({});
 
   const validateForm = useCallback(
-    (mode: IFormMode, names?: string | string[]) => {
+    (mode: IFormMode, names?: string[] | string) => {
       if (!ref.current) {
         return false;
       }
@@ -88,6 +87,7 @@ export function useForm(props: IUseFormProps): IUseFormResult {
                 useNativeValidation,
                 setErrors,
                 value,
+                messages,
               );
               insertInMapSet(validatorMap, name, validate);
             }
@@ -100,6 +100,7 @@ export function useForm(props: IUseFormProps): IUseFormResult {
                 useNativeValidation,
                 setErrors,
                 validator,
+                messages,
               );
               insertInMapSet(validatorMap, name, validate);
             } else {
@@ -113,6 +114,7 @@ export function useForm(props: IUseFormProps): IUseFormResult {
                     useNativeValidation,
                     setErrors,
                     validator,
+                    messages,
                   );
                   insertInMapSet(validatorMap, name, validate);
                 }
@@ -133,11 +135,11 @@ export function useForm(props: IUseFormProps): IUseFormResult {
         }
       }
 
-      const isValid = Boolean(ref.current?.checkValidity());
+      const isValid = Boolean(ref.current.checkValidity());
       setIsValid(isValid);
       return isValid;
     },
-    [useNativeValidation, validators],
+    [messages, useNativeValidation, validators],
   );
 
   const resetForm = useCallback(() => {
@@ -158,15 +160,18 @@ export function useForm(props: IUseFormProps): IUseFormResult {
     [],
   );
 
-  const checkValidity = useCallback((mode: IFormMode) => {
-    if (!checkValidityPromise.current) {
-      checkValidityPromise.current = new Promise((resolve) =>
-        setTimeout(resolve, 0),
-      )
-        .then(() => validateForm(mode))
-        .then(() => (checkValidityPromise.current = null));
-    }
-  }, []);
+  const checkValidity = useCallback(
+    (mode: IFormMode) => {
+      if (!checkValidityPromise.current) {
+        checkValidityPromise.current = new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        })
+          .then(() => validateForm(mode))
+          .then(() => (checkValidityPromise.current = null));
+      }
+    },
+    [validateForm],
+  );
 
   if (!ref.current) {
     checkValidity('none');
@@ -177,19 +182,20 @@ export function useForm(props: IUseFormProps): IUseFormResult {
       checkValidity,
       errors,
       formProps: {
-        noValidate: useNativeValidation,
+        noValidate: !useNativeValidation,
         onChange: (event: FormEvent<HTMLFormElement>) =>
           validateForm(mode, (event.target as HTMLInputElement).name),
+        onReset: resetForm,
         onSubmit: (event: FormEvent<HTMLFormElement>) => {
           event.preventDefault();
           if (validateForm('check')) {
             onSubmit?.(event);
           }
         },
-        onReset: resetForm,
         ref,
       },
       isValid,
+      messages,
       mode,
       removeValidator,
       resetForm,
@@ -201,9 +207,11 @@ export function useForm(props: IUseFormProps): IUseFormResult {
       checkValidity,
       errors,
       isValid,
+      messages,
       mode,
       onSubmit,
       removeValidator,
+      resetForm,
       setValidator,
       useNativeValidation,
       validateForm,

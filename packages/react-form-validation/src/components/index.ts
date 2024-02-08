@@ -1,3 +1,3 @@
-export * from './Form';
-export * from './Reset';
-export * from './Submit';
+export * from './Form/Form';
+export * from './Reset/Reset';
+export * from './Submit/Submit';

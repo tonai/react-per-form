@@ -1,14 +1,28 @@
-import { Dispatch, RefObject, SetStateAction } from 'react';
-import { IError, IFormMode, IValidatorMultiple } from '../types';
+import type {
+  IError,
+  IFormMode,
+  IValidate,
+  IValidatorMultiple,
+  IValidityMessages,
+} from '../types';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
 
-export function validityHasNativeError(validity?: ValidityState): boolean {
+export function getNativeError(
+  validity?: ValidityState,
+): keyof ValidityState | null {
   if (!validity) {
-    return false;
+    return null;
   }
   for (const key in validity) {
-    return key !== 'customError' && validity[key as keyof typeof validity];
+    if (
+      key !== 'customError' &&
+      key !== 'valid' &&
+      validity[key as keyof typeof validity]
+    ) {
+      return key as keyof ValidityState;
+    }
   }
-  return false;
+  return null;
 }
 
 export function getData(
@@ -24,7 +38,7 @@ export function manageErrors(
   ref: RefObject<HTMLInputElement>,
   setErrors: Dispatch<SetStateAction<IError>>,
   useNativeValidation: boolean,
-) {
+): void {
   if (!useNativeValidation) {
     setErrors((errors) => {
       if (
@@ -47,15 +61,28 @@ export function createValidate(
   useNativeValidation: boolean,
   setErrors: Dispatch<SetStateAction<IError>>,
   validator?: IValidatorMultiple,
-) {
+  messages?: IValidityMessages,
+): IValidate {
   return (mode: IFormMode, formData: FormData, name?: string) => {
     // Native errors
     const refArray = Object.entries(refs);
     const nativeErrors = refArray.reduce<Record<string, string>>(
       (acc, [name, ref]) => {
-        if (validityHasNativeError(ref.current?.validity)) {
-          ref.current?.setCustomValidity('');
-          const message = ref.current?.validationMessage;
+        if (!ref.current) {
+          return acc;
+        }
+        ref.current.setCustomValidity('');
+        const { validity } = ref.current;
+        if (validity.valid) {
+          return acc;
+        }
+        const validityKey = getNativeError(validity);
+        if (validityKey) {
+          const customMessage = messages?.[validityKey];
+          if (customMessage) {
+            ref.current.setCustomValidity(customMessage);
+          }
+          const message = customMessage ?? ref.current.validationMessage;
           if (message) {
             acc[name] = message;
           }
@@ -67,7 +94,7 @@ export function createValidate(
 
     // Custom validator errors
     const hasNativeError = Object.keys(nativeErrors).length > 0;
-    const refName = name || names[0];
+    const refName = name ?? names[0];
     const validatorErrors: Record<string, string> = {};
     if (validator) {
       const error = validator(getData(formData, names), names);
@@ -92,15 +119,15 @@ export function createValidate(
     if (hasValidatorError) {
       errors.validator = validatorErrors;
     }
-    if (errors.native || errors.validator) {
+    if (errors.native ?? errors.validator) {
       errors.all = Object.fromEntries(
         names
           .map((name) => [
             name,
-            errors.native?.[name] || errors.validator?.[name],
+            errors.native?.[name] ?? errors.validator?.[name],
           ])
           .filter(([_, error]) => error),
-      );
+      ) as Record<string, string>;
     }
     if (errors.all) {
       const errorArray = Object.values(errors.all);
@@ -111,6 +138,11 @@ export function createValidate(
       }
     }
 
-    manageErrors(mode, errors, refs[refName], setErrors, useNativeValidation);
+    const errorName = errors.native
+      ? Object.keys(errors.native)[0]
+      : errors.validator
+        ? Object.keys(errors.validator)[0]
+        : refName;
+    manageErrors(mode, errors, refs[errorName], setErrors, useNativeValidation);
   };
 }

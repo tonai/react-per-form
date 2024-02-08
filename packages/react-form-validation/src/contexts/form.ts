@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+import type { IFormContext } from '../types';
+
 import { createContext } from 'react';
-import { IFormContext } from '../types';
 
 export const formContext = createContext<IFormContext>({
   checkValidity() {},

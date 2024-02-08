@@ -1,5 +1,7 @@
+import type { IError, IValidatorMultiple, IValidityMessages } from '../types';
+import type { RefObject } from 'react';
+
 import {
-  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -7,23 +9,31 @@ import {
   useRef,
   useState,
 } from 'react';
+
 import { formContext } from '../contexts';
 import { createValidate } from '../helpers';
-import { IError, IValidatorMultiple } from '../types';
 
-export interface IUseMultipleInput {
+export interface IUseMultipleInputProps {
+  messages?: IValidityMessages;
+  names: string[];
+  validator?: IValidatorMultiple;
+}
+
+export interface IUseMultipleInputResult {
   error?: string;
   errors: IError;
+  messages?: IValidityMessages;
   refs: RefObject<Record<string, RefObject<HTMLInputElement>>>;
 }
 
 export function useMultipleInput(
-  names: string[],
-  validator?: IValidatorMultiple,
-): IUseMultipleInput {
+  props: IUseMultipleInputProps,
+): IUseMultipleInputResult {
+  const { names, messages, validator } = props;
   const refs = useRef<Record<string, RefObject<HTMLInputElement>>>({}); // Object.fromEntries(names.map((name) => [name, { current: null }]))
   const {
     checkValidity,
+    messages: formMessages,
     mode,
     removeValidator,
     setValidator,
@@ -31,26 +41,10 @@ export function useMultipleInput(
     validateForm,
   } = useContext(formContext);
   const [errors, setErrors] = useState<IError>({});
-
-  // const manageErrors = useCallback(
-  //   (mode: IFormMode, newErrors: Record<string, string>, name: string) => {
-  //     if (!showError) {
-  //       setErrors((errors) => {
-  //         if (
-  //           mode === "check" ||
-  //           mode === "change" ||
-  //           (mode === "fix" && Object.keys(errors).length > 0)
-  //         ) {
-  //           return newErrors;
-  //         }
-  //         return errors;
-  //       });
-  //     } else if (mode === "check" || mode === "change") {
-  //       refs.current[name].current?.reportValidity();
-  //     }
-  //   },
-  //   [showError]
-  // );
+  const customMessages = useMemo(
+    () => ({ ...formMessages, ...messages }),
+    [formMessages, messages],
+  );
 
   const validate = useMemo(
     () =>
@@ -60,40 +54,38 @@ export function useMultipleInput(
         useNativeValidation,
         setErrors,
         validator,
+        customMessages,
       ),
-    [names, useNativeValidation, validator],
+    [customMessages, names, useNativeValidation, validator],
   );
 
   const reset = useCallback(() => {
-    if (refs.current) {
-      Object.values(refs.current).forEach((ref) => {
-        if (ref.current) {
-          ref.current.value = '';
-        }
-      });
-    }
+    Object.values(refs.current).forEach((ref) => {
+      if (ref.current) {
+        ref.current.value = '';
+      }
+    });
     setErrors({});
   }, []);
 
   // Synchronize refs and validator functions
-  let mustValidate = false;
   const keys = Object.keys(refs.current);
   const allNames = useMemo(
-    () => new Set(Object.keys(refs.current).concat(names)),
+    () => [...new Set(Object.keys(refs.current).concat(names))],
     [names],
   );
-  allNames.forEach((name) => {
+  const mustValidate = allNames.some((name) => {
     if (!keys.includes(name)) {
       refs.current[name] = { current: null };
       setValidator(name, validate, reset);
-      mustValidate = true;
+      return true;
     } else if (!names.includes(name)) {
       delete refs.current[name];
       removeValidator(name);
-      mustValidate = true;
-    } else {
-      setValidator(name, validate, reset);
+      return true;
     }
+    setValidator(name, validate, reset);
+    return false;
   });
 
   // useEffect(() => {
@@ -106,11 +98,11 @@ export function useMultipleInput(
   }
 
   useEffect(() => {
-    if ((mode === 'check' || mode === 'blur') && refs.current) {
+    if (mode === 'check' || mode === 'blur') {
       const listeners = Object.entries(refs.current).map<
         [HTMLInputElement | null, () => void]
       >(([name, ref]) => {
-        const eventHandler = () => validateForm('check', name);
+        const eventHandler = (): boolean => validateForm('check', name);
         ref.current?.addEventListener('blur', eventHandler);
         return [ref.current, eventHandler];
       });
@@ -119,6 +111,7 @@ export function useMultipleInput(
           ref?.removeEventListener('blur', eventHandler),
         );
     }
+    return undefined;
   }, [mode, names, validateForm]);
 
   return { error: errors.main, errors, refs };

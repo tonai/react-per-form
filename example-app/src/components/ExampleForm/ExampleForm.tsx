@@ -40,12 +40,17 @@ function globalValidatorMultiple(values: IFormValues, names: string[]) {
     : 'The sum must be equal to 12';
 }
 
+const messages = {
+  valueMissing: "T'as pas oublié qqch ?",
+};
+
 export default function ExampleForm(props: Omit<IFormProps, 'children'>) {
   return (
     <Form
       {...props}
+      messages={messages}
       validators={{
-        foo: { validator: globalValidatorMultiple, names: ['foo', 'bar'] },
+        sum12: { validator: globalValidatorMultiple, names: ['foo', 'bar'] },
       }}
     >
       <div>
