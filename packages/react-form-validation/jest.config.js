@@ -19,7 +19,6 @@ const config = {
   roots: ['src'],
   setupFilesAfterEnv: ['./setupTests.ts'],
   testEnvironment: 'jsdom',
-  // testPathIgnorePatterns: ['/node_modules/', '/src/contexts/'],
 };
 
 export default config;

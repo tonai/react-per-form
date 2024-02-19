@@ -52,6 +52,7 @@ tsconfig.tsbuildinfo
 coverage
 cypress/videos/
 cypress/screenshots/
+junit.xml
 
 # System files
 .DS_Store

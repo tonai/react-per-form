@@ -23,7 +23,7 @@
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",
     "format": "prettier --write --ignore-unknown .",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
