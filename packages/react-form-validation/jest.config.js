@@ -10,6 +10,7 @@ const config = {
       statements: 80,
     },
   },
+  reporters: ['default'],
   roots: ['src'],
   // setupFilesAfterEnv: ['./setupTests.ts'],
   testEnvironment: 'jsdom',
