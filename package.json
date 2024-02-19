@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "dev": "npm run dev --workspaces --if-present",
+    "dev": "npm run dev -w packages/react-form-validation & npm run dev -w example-app",
     "prelint": "npm run build",
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",
