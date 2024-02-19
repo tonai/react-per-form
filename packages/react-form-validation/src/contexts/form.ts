@@ -5,7 +5,7 @@ import { createContext } from 'react';
 
 export const formContext = createContext<IFormContext>({
   // checkValidity() {},
-  errors: {},
+  errors: { all: {}, native: {}, validator: {} },
   // isValid: true,
   mode: 'none',
   ref: { current: null },
