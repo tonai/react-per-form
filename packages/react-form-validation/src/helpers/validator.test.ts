@@ -45,11 +45,33 @@ describe('validator helper', () => {
         native: {},
         validator: {},
       });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'change', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'fix', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'none', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
     });
 
-    it('should display the native errors (non native form validation)', () => {
+    it('should display the form errors (non native form validation)', () => {
       const errors = {
-        all: {},
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       };
@@ -58,16 +80,39 @@ describe('validator helper', () => {
       );
       displayErrors(errors, form, [], formErrors, 'check', false);
       expect(formErrors.mock.results[0].value).toEqual({
-        all: {},
+        all: { foo: 'error' },
         main: { error: 'error', id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'change', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'fix', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      formErrors.mockClear();
+      displayErrors(errors, form, [], formErrors, 'none', false);
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
     });
 
-    it('should display the native errors (non native input validation)', () => {
+    it('should display the input errors (non native input validation)', () => {
       const errors = {
-        all: {},
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       };
@@ -90,7 +135,9 @@ describe('validator helper', () => {
           ]),
         ],
       ];
-      displayErrors(errors, form, validators, formErrors, 'check', false);
+      displayErrors(errors, form, validators, formErrors, 'check', false, [
+        'foo',
+      ]);
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         main: { error: 'error', id: 'foo', names: ['foo'] },
@@ -98,11 +145,98 @@ describe('validator helper', () => {
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
-        all: {},
+        all: { foo: 'error' },
         main: { error: 'error', id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
+      formErrors.mockClear();
+      inputErrors.mockClear();
+      displayErrors(errors, form, validators, formErrors, 'change', false, [
+        'foo',
+      ]);
+      expect(inputErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      });
+      formErrors.mockClear();
+      inputErrors.mockClear();
+      displayErrors(errors, form, validators, formErrors, 'fix', false, [
+        'foo',
+      ]);
+      expect(inputErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      formErrors.mockClear();
+      inputErrors.mockClear();
+      displayErrors(errors, form, validators, formErrors, 'none', false, [
+        'foo',
+      ]);
+      expect(inputErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        native: {},
+        validator: {},
+      });
+    });
+
+    it('should trigger form reportValidity function (native form validation)', () => {
+      const errors = { all: {}, native: {}, validator: {} };
+      const spy = jest.spyOn(form, 'reportValidity');
+      displayErrors(errors, form, [], () => '', 'check', true);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'change', true);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'fix', true);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'none', true);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('should trigger input reportValidity function (native input validation)', () => {
+      input1.setAttribute('required', '');
+      const errors = {
+        all: { foo: 'error' },
+        main: { error: 'error', id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      };
+      const spy = jest.spyOn(input1, 'reportValidity');
+      displayErrors(errors, form, [], () => '', 'check', true, ['foo']);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'change', true, ['foo']);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'fix', true, ['foo']);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], () => '', 'none', true, ['foo']);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
     });
   });
 
