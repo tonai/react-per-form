@@ -1,13 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
   IFormMode,
-  IValidate,
-  IValidatorMultiple,
+  IMainError,
+  ISetValidatorParams,
+  IValidatorError,
   IValidityMessages,
 } from '../types';
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 
-export function getNativeError(
+import { intersection } from './array';
+import { getFormInputs } from './form';
+
+export function getNativeErrorKey(
   validity?: ValidityState,
 ): keyof ValidityState | null {
   if (!validity) {
@@ -32,118 +37,269 @@ export function getData(
   return Object.fromEntries(names.map((name) => [name, formData.get(name)]));
 }
 
-export function manageErrors(
-  mode: IFormMode,
-  newErrors: IError,
-  ref: RefObject<HTMLInputElement>,
+export function getFieldMessages(
+  set: Set<ISetValidatorParams>,
+  messages: IValidityMessages = {},
+): IValidityMessages {
+  return Array.from(set).reduce<IValidityMessages>(
+    (acc, params) => ({ ...acc, ...params.messages }),
+    messages,
+  );
+}
+
+export function getFilteredErrors<T>(
+  errors: Record<string, T>,
+  names?: string[],
+): Record<string, T> {
+  if (!names) {
+    return errors;
+  }
+  return Object.fromEntries(
+    Object.entries(errors).filter(([name]) => names.includes(name)),
+  );
+}
+
+export function setMainError(
+  errors: Omit<IError, 'all'>,
+): IMainError | undefined {
+  const native = Object.entries(errors.native).find(
+    ([, error]) => error !== '',
+  );
+  if (native) {
+    errors.main = { error: native[1], id: native[0], names: [native[0]] };
+  } else {
+    const validator = Object.entries(errors.validator).find(
+      ([, { error }]) => error !== '',
+    );
+    if (validator) {
+      errors.main = {
+        error: validator[1].error,
+        id: validator[0],
+        names: validator[1].names,
+      };
+    }
+  }
+  return errors.main;
+}
+
+export function getValidatorIds(
+  validatorEntries: [string, Set<ISetValidatorParams>][],
+  names?: string[],
+): string[] {
+  const ids = new Set<string>();
+  for (const [, set] of validatorEntries) {
+    for (const params of set.values()) {
+      const { id, names: fieldNames } = params;
+      if (!names || intersection(names, fieldNames).length > 0) {
+        ids.add(id);
+      }
+    }
+  }
+  return [...ids];
+}
+
+export function getErrorObject(
+  nativeErrors: Record<string, string>,
+  validatorErrors: Record<string, IValidatorError>,
+  names?: string[],
+  ids?: string[],
+): IError {
+  const native = getFilteredErrors(nativeErrors, names);
+  const validator = getFilteredErrors(validatorErrors, ids);
+  const all = Object.values(validator).reduce<Record<string, string>>(
+    (acc, { error, names }) => {
+      for (const name of names) {
+        acc[name] ||= error;
+      }
+      return acc;
+    },
+    {},
+  );
+  for (const [name, value] of Object.entries(native)) {
+    if (value || !all[name]) {
+      all[name] = value;
+    }
+  }
+  const errors: IError = {
+    all,
+    native,
+    validator,
+  };
+  setMainError(errors);
+  return errors;
+}
+
+export function mergeErrors(prevErrors: IError, errors: IError): IError {
+  const newErrors = {
+    all: {
+      ...prevErrors.all,
+      ...errors.all,
+    },
+    native: {
+      ...prevErrors.native,
+      ...errors.native,
+    },
+    validator: {
+      ...prevErrors.validator,
+      ...errors.validator,
+    },
+  };
+  setMainError(newErrors);
+  return newErrors;
+}
+
+export function hasError(errors: IError): boolean {
+  return Boolean(errors.main);
+}
+
+export function getNativeError(
+  input: HTMLInputElement,
+  fieldMessages: IValidityMessages = {},
+): string {
+  input.setCustomValidity('');
+  const { validity } = input;
+  if (validity.valid) {
+    return '';
+  }
+  const validityKey = getNativeErrorKey(validity);
+  if (validityKey) {
+    const customMessage = fieldMessages[validityKey];
+    if (customMessage) {
+      input.setCustomValidity(customMessage);
+    }
+    const message = customMessage ?? input.validationMessage;
+    if (message) {
+      return message;
+    }
+  }
+  return '';
+}
+
+export function getValidatorError(
+  form: HTMLFormElement,
+  validatorEntries: [string, Set<ISetValidatorParams>][],
+): Record<string, IValidatorError> {
+  const validatorErrors: Record<string, IValidatorError> = {};
+  const formData: FormData = new FormData(form);
+
+  for (const [name, set] of validatorEntries) {
+    for (const params of set.values()) {
+      const { id, names: fieldNames, validator } = params;
+      if (id in validatorErrors) {
+        continue;
+      }
+      const error = validator(getData(formData, fieldNames), fieldNames);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      const input = form.elements[name] as HTMLInputElement;
+      if (!input.validationMessage && error) {
+        input.setCustomValidity(error);
+      }
+      validatorErrors[id] = { error, names: fieldNames };
+    }
+  }
+
+  return validatorErrors;
+}
+
+export function displayErrors(
+  errors: IError,
+  form: HTMLFormElement,
+  validatorEntries: [string, Set<ISetValidatorParams>][],
   setErrors: Dispatch<SetStateAction<IError>>,
+  mode: IFormMode,
   useNativeValidation: boolean,
+  names?: string[],
 ): void {
+  const { native, validator } = errors;
+
+  // Field errors
+  for (const [name, set] of validatorEntries) {
+    for (const params of set.values()) {
+      if (names && !names.includes(name)) {
+        continue;
+      }
+      const { id, names: fieldNames, setErrors } = params;
+      if (!useNativeValidation && setErrors) {
+        setErrors((prevErrors) => {
+          if (
+            mode === 'check' ||
+            mode === 'change' ||
+            (mode === 'fix' && hasError(prevErrors))
+          ) {
+            return mergeErrors(
+              prevErrors,
+              getErrorObject(native, validator, fieldNames, [id]),
+            );
+          }
+          return prevErrors;
+        });
+      }
+    }
+  }
+
+  // Global form errors
   if (!useNativeValidation) {
-    setErrors((errors) => {
+    setErrors((prevErrors) => {
       if (
         mode === 'check' ||
         mode === 'change' ||
-        (mode === 'fix' && Object.keys(errors).length > 0)
+        (mode === 'fix' && hasError(prevErrors))
       ) {
-        return newErrors;
+        return mergeErrors(prevErrors, errors);
       }
-      return errors;
+      return prevErrors;
     });
   } else if (mode === 'check' || mode === 'change') {
-    ref.current?.reportValidity();
+    if (!names) {
+      form.reportValidity();
+    } else if (errors.main) {
+      const name = errors.main.names[0];
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      const input = form.elements[name] as HTMLInputElement;
+      input.reportValidity();
+    }
   }
 }
 
-export function createValidate(
-  refs: Record<string, RefObject<HTMLInputElement>>,
-  names: string[],
-  useNativeValidation: boolean,
+export function validateForm(
+  form: HTMLFormElement,
+  validatorMap: Map<string, Set<ISetValidatorParams>>,
   setErrors: Dispatch<SetStateAction<IError>>,
-  validator?: IValidatorMultiple,
+  mode: IFormMode,
+  useNativeValidation: boolean,
   messages?: IValidityMessages,
-): IValidate {
-  return (mode: IFormMode, formData: FormData, name?: string) => {
-    // Native errors
-    const refArray = Object.entries(refs);
-    const nativeErrors = refArray.reduce<Record<string, string>>(
-      (acc, [name, ref]) => {
-        if (!ref.current) {
-          return acc;
-        }
-        ref.current.setCustomValidity('');
-        const { validity } = ref.current;
-        if (validity.valid) {
-          return acc;
-        }
-        const validityKey = getNativeError(validity);
-        if (validityKey) {
-          const customMessage = messages?.[validityKey];
-          if (customMessage) {
-            ref.current.setCustomValidity(customMessage);
-          }
-          const message = customMessage ?? ref.current.validationMessage;
-          if (message) {
-            acc[name] = message;
-          }
-        }
-        return acc;
-      },
-      {},
-    );
+  names?: string[],
+): IError {
+  const inputs = getFormInputs(form);
+  const validatorEntries = Array.from(validatorMap.entries());
+  const fieldMessages = Object.fromEntries(
+    validatorEntries.map(([name, set]) => [
+      name,
+      getFieldMessages(set, messages),
+    ]),
+  );
 
-    // Custom validator errors
-    const hasNativeError = Object.keys(nativeErrors).length > 0;
-    const refName = name ?? names[0];
-    const validatorErrors: Record<string, string> = {};
-    if (validator) {
-      const error = validator(getData(formData, names), names);
-      if (error) {
-        if (!hasNativeError) {
-          refs[refName].current?.setCustomValidity(error);
-        }
-        for (const name of names) {
-          validatorErrors[name] = error;
-        }
-      } else {
-        refs[refName].current?.setCustomValidity('');
-      }
-    }
-    const hasValidatorError = Object.keys(validatorErrors).length > 0;
+  // Native errors
+  const nativeErrors = inputs.reduce<Record<string, string>>((acc, input) => {
+    const inputName = input.getAttribute('name') ?? '';
+    acc[inputName] = getNativeError(input, fieldMessages[inputName]);
+    return acc;
+  }, {});
 
-    // IError object
-    const errors: IError = {};
-    if (hasNativeError) {
-      errors.native = nativeErrors;
-    }
-    if (hasValidatorError) {
-      errors.validator = validatorErrors;
-    }
-    if (errors.native ?? errors.validator) {
-      errors.all = Object.fromEntries(
-        names
-          .map((name) => [
-            name,
-            errors.native?.[name] ?? errors.validator?.[name],
-          ])
-          .filter(([_, error]) => error),
-      ) as Record<string, string>;
-    }
-    if (errors.all) {
-      const errorArray = Object.values(errors.all);
-      if (name && errors.all[name]) {
-        errors.main = errors.all[name];
-      } else if (!name && errorArray.length > 0) {
-        errors.main = errorArray[0];
-      }
-    }
+  // Custom validator errors
+  const validatorErrors = getValidatorError(form, validatorEntries);
 
-    const errorName = errors.native
-      ? Object.keys(errors.native)[0]
-      : errors.validator
-        ? Object.keys(errors.validator)[0]
-        : refName;
-    manageErrors(mode, errors, refs[errorName], setErrors, useNativeValidation);
-    return errors;
-  };
+  // IError object
+  const ids = getValidatorIds(validatorEntries, names);
+  const errors = getErrorObject(nativeErrors, validatorErrors, names, ids);
+  displayErrors(
+    errors,
+    form,
+    validatorEntries,
+    setErrors,
+    mode,
+    useNativeValidation,
+    names,
+  );
+  return errors;
 }

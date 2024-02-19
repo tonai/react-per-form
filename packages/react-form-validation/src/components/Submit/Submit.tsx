@@ -1,8 +1,6 @@
 import type { ReactElement } from 'react';
 
-import { useContext } from 'react';
-
-import { formContext } from '../../contexts';
+import { useFormValid } from '../../hooks/useFormValid';
 
 type IElementProps = JSX.IntrinsicElements['input'];
 
@@ -12,7 +10,7 @@ export interface ISubmitProps extends IElementProps {
 
 export function Submit(props: ISubmitProps): ReactElement {
   const { disableOnError, ...inputProps } = props;
-  const { isValid } = useContext(formContext);
+  const isValid = useFormValid();
 
   return (
     <input

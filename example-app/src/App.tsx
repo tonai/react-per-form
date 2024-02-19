@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { IFormMode } from 'react-form-validation';
-import ExampleForm from './components/ExampleForm/ExampleForm';
+// import HookForm from './components/HookForm/HookForm';
+import NativeForm from './components/NativeForm/NativeForm';
 import './App.css';
 
 function App() {
@@ -38,7 +39,12 @@ function App() {
           />
         </label>
       </div>
-      <ExampleForm
+      {/* <HookForm
+        mode={mode}
+        onSubmit={() => console.log('Submit!')}
+        useNativeValidation={useNativeValidation}
+      /> */}
+      <NativeForm
         mode={mode}
         onSubmit={() => console.log('Submit!')}
         useNativeValidation={useNativeValidation}

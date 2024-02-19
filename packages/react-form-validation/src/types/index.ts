@@ -1,3 +1,5 @@
+import type { Dispatch, RefObject, SetStateAction } from 'react';
+
 export type IFormMode = 'blur' | 'change' | 'check' | 'fix' | 'none';
 
 export type IValidate = (
@@ -10,8 +12,6 @@ export type IFormValidate = (
   mode: IFormMode,
   name?: string[] | string,
 ) => boolean;
-
-export type IReset = () => void;
 
 export type IFormValues = Record<string, FormDataEntryValue | null>;
 
@@ -30,24 +30,50 @@ export interface IFormValidator {
   validator: IValidatorMultiple;
 }
 
-export interface IError {
-  all?: Record<string, string>;
-  main?: string;
-  native?: Record<string, string>;
-  validator?: Record<string, string>;
+export interface ISetValidatorParams {
+  id: string;
+  messages?: IValidityMessages;
+  names: string[];
+  setErrors?: Dispatch<SetStateAction<IError>>;
+  validator: IValidatorMultiple;
 }
 
+export type ISetValidator = (params: ISetValidatorParams) => void;
+
+export type IRemoveValidator = (params: ISetValidatorParams) => void;
+
+export interface IMainError {
+  error: string;
+  id: string;
+  names: string[];
+}
+
+export interface IValidatorError {
+  error: string;
+  names: string[];
+}
+
+export interface IError {
+  all: Record<string, string>;
+  main?: IMainError;
+  native: Record<string, string>;
+  validator: Record<string, IValidatorError>;
+}
+
+export type ISubscriber = (form: HTMLFormElement | null) => void;
+
+export type IUnSubscribe = () => void;
+
 export interface IFormContext {
-  checkValidity: (mode: IFormMode) => void;
   errors: IError;
-  isValid: boolean;
   messages?: IValidityMessages;
   mode: IFormMode;
-  removeValidator: (name: string) => void;
-  resetForm: () => void;
-  setValidator: (name: string, validate: IValidate, reset: IReset) => void;
+  ref: RefObject<HTMLFormElement>;
+  removeValidator: IRemoveValidator;
+  setValidator: ISetValidator;
+  subscribe: (subscriber: ISubscriber) => IUnSubscribe;
   useNativeValidation: boolean;
-  validateForm: IFormValidate;
+  validate: IFormValidate;
 }
 
 export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;

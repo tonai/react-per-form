@@ -1,18 +1,21 @@
-import { useId, useRef, useState } from 'react';
-import { IValidatorMultiple, useMultipleInput } from 'react-form-validation';
+import { useId, useMemo, useRef, useState } from 'react';
+import { IFormValues, useMultipleInput } from 'react-form-validation';
 
-interface IDynamicProps {
-  validator?: IValidatorMultiple;
+function dynamicValidator(values: IFormValues) {
+  return Object.values(values).reduce((a, b) => Number(a) + Number(b), 0) === 12
+    ? ''
+    : 'The sum must be equal to 12';
 }
 
-function Dynamic(props: IDynamicProps) {
-  const { validator } = props;
+function Dynamic() {
   const name = useId();
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
-  const { errors, refs } = useMultipleInput({
-    names: ids.map((id) => `${name}-${id}`),
-    validator,
+  const names = useMemo(() => ids.map((id) => `${name}-${id}`), [ids, name]);
+  const { errors } = useMultipleInput({
+    id: 'dynamic',
+    names,
+    validator: dynamicValidator,
   });
 
   function handleAdd() {
@@ -32,8 +35,8 @@ function Dynamic(props: IDynamicProps) {
       {ids.map((id) => (
         <div key={id}>
           <input
+            autoComplete="off"
             name={`${name}-${id}`}
-            ref={refs.current?.[`${name}-${id}`]}
             required
             type="number"
           />
@@ -45,10 +48,15 @@ function Dynamic(props: IDynamicProps) {
             Remove
           </button>
           {errors.all?.[`${name}-${id}`] && (
-            <div style={{ color: 'red' }}>{errors.all?.[`${name}-${id}`]}</div>
+            <div style={{ color: 'red' }}>
+              {errors.native?.[`${name}-${id}`]}
+            </div>
           )}
         </div>
       ))}
+      {errors.validator?.dynamic && (
+        <div style={{ color: 'red' }}>{errors.validator.dynamic.error}</div>
+      )}
     </div>
   );
 }

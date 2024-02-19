@@ -1,28 +1,21 @@
-import { getFormValidate, insertInMapSet } from './form';
-import { createValidate } from './validator';
-
-jest.mock('./validator', () => ({
-  createValidate: jest.fn(),
-}));
+import { getFormInputs, insertInMapSet } from './form';
 
 describe('form helper', () => {
-  describe('getFormValidate', () => {
-    it('should return the validate function', () => {
+  describe('getFormInputs', () => {
+    it('should get the form inputs', () => {
       const form = document.createElement('form');
-      const input = document.createElement('input');
-      input.setAttribute('name', 'foo');
-      form.appendChild(input);
-      const setErrors = (): null => null;
-      const validator = (): string => '';
-      getFormValidate(form, ['foo'], true, setErrors, validator, {});
-      expect(createValidate).toHaveBeenCalledWith(
-        { foo: { current: input } },
-        ['foo'],
-        true,
-        setErrors,
-        validator,
-        {},
-      );
+      const input1 = document.createElement('input');
+      input1.setAttribute('name', 'foo');
+      input1.setAttribute('value', '');
+      form.appendChild(input1);
+      const input2 = document.createElement('input');
+      input2.setAttribute('value', '');
+      form.appendChild(input2);
+      const input3 = document.createElement('input');
+      input3.setAttribute('name', 'foo');
+      input3.setAttribute('type', 'submit');
+      form.appendChild(input2);
+      expect(getFormInputs(form)).toEqual([input1]);
     });
   });
 

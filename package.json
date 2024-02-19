@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev --workspaces --if-present",
     "prelint": "npm run build",
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",
