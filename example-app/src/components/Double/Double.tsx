@@ -1,5 +1,5 @@
 import { useId, useMemo } from 'react';
-import { IFormValues, useMultipleInput } from 'react-form-validation';
+import { IFormValues, useInputs } from 'react-form-validation';
 
 function doubleValidator(values: IFormValues, names: string[]) {
   if (values[names[0]] === '' || values[names[1]] === '') {
@@ -14,7 +14,7 @@ function Double() {
   const id1 = useId();
   const id2 = useId();
   const names = useMemo(() => [id1, id2], [id1, id2]);
-  const { errors } = useMultipleInput({ names, validator: doubleValidator });
+  const { errors } = useInputs({ names, validator: doubleValidator });
 
   return (
     <div>

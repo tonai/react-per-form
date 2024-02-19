@@ -35,7 +35,7 @@ export interface ISetValidatorParams {
   messages?: IValidityMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
-  validator: IValidatorMultiple;
+  validator?: IValidatorMultiple;
 }
 
 export type ISetValidator = (params: ISetValidatorParams) => void;
