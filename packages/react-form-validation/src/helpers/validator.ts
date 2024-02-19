@@ -185,7 +185,7 @@ export function getValidatorError(
   for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {
       const { id, names: fieldNames, validator } = params;
-      if (id in validatorErrors) {
+      if (id in validatorErrors || !validator) {
         continue;
       }
       const error = validator(getData(formData, fieldNames), fieldNames);

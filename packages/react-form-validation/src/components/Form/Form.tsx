@@ -30,7 +30,7 @@ export function Form(props: IFormProps): ReactElement {
 
   return (
     <formContext.Provider value={context}>
-      <form {...restProps} {...formProps}>
+      <form data-testid="rfv-form" {...restProps} {...formProps}>
         {children}
       </form>
     </formContext.Provider>

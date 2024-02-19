@@ -1,5 +1,5 @@
 import { useId, useMemo, useRef, useState } from 'react';
-import { IFormValues, useMultipleInput } from 'react-form-validation';
+import { IFormValues, useInputs } from 'react-form-validation';
 
 function dynamicValidator(values: IFormValues) {
   return Object.values(values).reduce((a, b) => Number(a) + Number(b), 0) === 12
@@ -12,7 +12,7 @@ function Dynamic() {
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
   const names = useMemo(() => ids.map((id) => `${name}-${id}`), [ids, name]);
-  const { errors } = useMultipleInput({
+  const { errors } = useInputs({
     id: 'dynamic',
     names,
     validator: dynamicValidator,

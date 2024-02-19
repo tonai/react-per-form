@@ -3,10 +3,10 @@ import type { IFormContext } from '../types';
 
 import { createContext } from 'react';
 
+import { initialError } from '../constants';
+
 export const formContext = createContext<IFormContext>({
-  // checkValidity() {},
-  errors: { all: {}, native: {}, validator: {} },
-  // isValid: true,
+  errors: initialError,
   mode: 'none',
   ref: { current: null },
   removeValidator() {},

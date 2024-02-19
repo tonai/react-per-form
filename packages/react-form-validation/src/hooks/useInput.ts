@@ -9,7 +9,7 @@ import type {
 
 import { useMemo } from 'react';
 
-import { useMultipleInput } from './useMultipleInput';
+import { useInputs } from './useInputs';
 
 export interface IUseInputProps {
   id?: string;
@@ -33,7 +33,7 @@ export function useInput(props: IUseInputProps): IUseInputResult {
     return undefined;
   }, [name, validator]);
   const names = useMemo(() => [name], [name]);
-  const { errors } = useMultipleInput({
+  const { errors } = useInputs({
     id: id ?? name,
     messages,
     names,

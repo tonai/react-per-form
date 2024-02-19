@@ -2,6 +2,11 @@
 const config = {
   clearMocks: true,
   collectCoverage: true,
+  collectCoverageFrom: [
+    '**/*.{ts,tsx}',
+    '!**/node_modules/**',
+    '!**/contexts/**',
+  ],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -12,8 +17,9 @@ const config = {
   },
   reporters: ['default'],
   roots: ['src'],
-  // setupFilesAfterEnv: ['./setupTests.ts'],
+  setupFilesAfterEnv: ['./setupTests.ts'],
   testEnvironment: 'jsdom',
+  // testPathIgnorePatterns: ['/node_modules/', '/src/contexts/'],
 };
 
 export default config;

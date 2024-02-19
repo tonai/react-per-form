@@ -12,7 +12,8 @@ import type { FormEvent, RefObject } from 'react';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { getFormInputs, insertInMapSet, validateForm } from '../helpers';
+import { initialError } from '../constants';
+import { getFormInputs, getValidatorMap, validateForm } from '../helpers';
 
 export interface IUseFormProps {
   messages?: IValidityMessages;
@@ -34,7 +35,7 @@ export interface IUseFormResult extends IFormContext {
   };
 }
 
-export function useForm(props: IUseFormProps): IUseFormResult {
+export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     onSubmit,
     messages,
@@ -44,11 +45,7 @@ export function useForm(props: IUseFormProps): IUseFormResult {
   } = props;
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorParams>>(new Set());
-  const [errors, setErrors] = useState<IError>({
-    all: {},
-    native: {},
-    validator: {},
-  });
+  const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
   const subscribers = useRef<ISubscriber[]>([]);
@@ -70,37 +67,11 @@ export function useForm(props: IUseFormProps): IUseFormResult {
       }
 
       // field validation
-      const validatorMap = new Map<string, Set<ISetValidatorParams>>();
-      for (const params of fields.current.values()) {
-        for (const name of params.names) {
-          insertInMapSet(validatorMap, name, params);
-        }
-      }
-
-      // Form validation
-      if (validators) {
-        for (const [id, value] of Object.entries(validators)) {
-          if (typeof value === 'function') {
-            // Array.from(fields.current).find(params => params.names.includes(name));
-            insertInMapSet(validatorMap, id, {
-              id,
-              messages,
-              names: [id],
-              validator: value,
-            });
-          } else {
-            const { names: validatorNames, validator } = value;
-            for (const name of validatorNames) {
-              insertInMapSet(validatorMap, name, {
-                id,
-                messages,
-                names: validatorNames,
-                validator,
-              });
-            }
-          }
-        }
-      }
+      const validatorMap = getValidatorMap(
+        fields.current,
+        validators,
+        messages,
+      );
 
       // Validate
       validateForm(
@@ -155,8 +126,15 @@ export function useForm(props: IUseFormProps): IUseFormResult {
     if (ref.current) {
       getFormInputs(ref.current).forEach((input) => (input.value = ''));
     }
+    setErrors(initialError);
+    const validatorMap = getValidatorMap(fields.current, validators, messages);
+    for (const [, set] of validatorMap.entries()) {
+      for (const params of set.values()) {
+        params.setErrors?.(initialError);
+      }
+    }
     debouncedValidate('none');
-  }, [debouncedValidate]);
+  }, [debouncedValidate, messages, validators]);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -169,8 +147,8 @@ export function useForm(props: IUseFormProps): IUseFormResult {
   );
 
   useEffect(() => {
-    debouncedValidate('none');
-  }, [debouncedValidate]);
+    validate('none');
+  }, [validate]);
 
   // Manage blur event listeners
   useEffect(() => {

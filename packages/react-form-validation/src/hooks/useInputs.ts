@@ -7,45 +7,37 @@ import type {
 
 import { useContext, useEffect, useState } from 'react';
 
+import { initialError } from '../constants';
 import { formContext } from '../contexts';
 
-export interface IUseMultipleInputProps {
+export interface IUseInputsProps {
   id?: string;
   messages?: IValidityMessages;
   names: string[];
   validator?: IValidatorMultiple;
 }
 
-export interface IUseMultipleInputResult {
+export interface IUseInputsResult {
   error?: IMainError;
   errors: IError;
 }
 
-export function useMultipleInput(
-  props: IUseMultipleInputProps,
-): IUseMultipleInputResult {
+export function useInputs(props: IUseInputsProps): IUseInputsResult {
   const { id, names, messages, validator } = props;
 
   const { removeValidator, setValidator } = useContext(formContext);
-  const [errors, setErrors] = useState<IError>({
-    all: {},
-    native: {},
-    validator: {},
-  });
+  const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {
-    if (validator) {
-      const params = {
-        id: id ?? String(names),
-        messages,
-        names,
-        setErrors,
-        validator,
-      };
-      setValidator(params);
-      return () => removeValidator(params);
-    }
-    return undefined;
+    const params = {
+      id: id ?? String(names),
+      messages,
+      names,
+      setErrors,
+      validator,
+    };
+    setValidator(params);
+    return () => removeValidator(params);
   }, [id, messages, names, removeValidator, setValidator, validator]);
 
   return { error: errors.main, errors };
