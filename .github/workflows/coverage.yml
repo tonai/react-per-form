@@ -1,8 +1,11 @@
 name: 'coverage'
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
+permissions:
+  checks: write
+  pull-requests: write
 jobs:
   coverage:
     runs-on: ubuntu-latest
