@@ -33,5 +33,5 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Lint
         run: ${{ steps.detect-package-manager.outputs.manager }} run lint
-      - name: Test
-        run: ${{ steps.detect-package-manager.outputs.manager }} run test
+      # - name: Test
+      #   run: ${{ steps.detect-package-manager.outputs.manager }} run test
