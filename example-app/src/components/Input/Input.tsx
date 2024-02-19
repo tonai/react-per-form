@@ -1,21 +1,23 @@
 import { useId } from 'react';
-import { IValidator, useInput } from 'react-form-validation';
+import { useInput } from 'react-form-validation';
 
 type InputProps = JSX.IntrinsicElements['input'];
 
-interface IInputProps extends InputProps {
-  validator?: IValidator;
+function fooValidator(value: FormDataEntryValue | null) {
+  return String(value).includes('foo') ? '' : 'Value does not include "foo"';
 }
 
-function Input(props: IInputProps) {
-  const { validator, ...inputProps } = props;
+function Input(props: InputProps) {
   const id = useId();
-  const { error, ref } = useInput({ name: id, validator });
+  const { error } = useInput({
+    name: props.name ?? id,
+    validator: fooValidator,
+  });
 
   return (
     <div>
-      <input name={id} {...inputProps} ref={ref} />
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+      <input autoComplete="off" name={id} {...props} />
+      {error && <div style={{ color: 'red' }}>{error.error}</div>}
     </div>
   );
 }

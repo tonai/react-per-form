@@ -4,15 +4,18 @@ import type { IFormContext } from '../types';
 import { createContext } from 'react';
 
 export const formContext = createContext<IFormContext>({
-  checkValidity() {},
+  // checkValidity() {},
   errors: {},
-  isValid: true,
+  // isValid: true,
   mode: 'none',
+  ref: { current: null },
   removeValidator() {},
-  resetForm() {},
   setValidator() {},
+  subscribe() {
+    return () => {};
+  },
   useNativeValidation: true,
-  validateForm() {
+  validate() {
     return true;
   },
 });
