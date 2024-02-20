@@ -14,10 +14,10 @@ export function Submit(props: ISubmitProps): ReactElement {
 
   return (
     <input
-      {...inputProps}
       data-testid="rfv-submit"
       disabled={disableOnError ? !isValid : false}
       type="submit"
+      {...inputProps}
     />
   );
 }

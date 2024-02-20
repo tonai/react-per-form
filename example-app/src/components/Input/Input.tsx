@@ -1,23 +1,22 @@
 import { useId } from 'react';
 import { useInput } from 'react-form-validation';
+import { hookFooValidator } from '../../helpers/validators';
 
-type InputProps = JSX.IntrinsicElements['input'];
-
-function fooValidator(value: FormDataEntryValue | null) {
-  return String(value).includes('foo') ? '' : 'Value does not include "foo"';
-}
-
-function Input(props: InputProps) {
+function Input(props: JSX.IntrinsicElements['input']) {
   const id = useId();
   const { error } = useInput({
     name: props.name ?? id,
-    validator: fooValidator,
+    validator: hookFooValidator,
   });
 
   return (
     <div>
-      <input autoComplete="off" name={id} {...props} />
-      {error && <div style={{ color: 'red' }}>{error.error}</div>}
+      <input autoComplete="off" data-testid="simple" name={id} {...props} />
+      {error && (
+        <div className="error" data-testid="simple-error">
+          {error.error}
+        </div>
+      )}
     </div>
   );
 }
