@@ -1,11 +1,6 @@
 import { useId, useMemo, useRef, useState } from 'react';
-import { IFormValues, useInputs } from 'react-form-validation';
-
-function dynamicValidator(values: IFormValues) {
-  return Object.values(values).reduce((a, b) => Number(a) + Number(b), 0) === 12
-    ? ''
-    : 'The sum must be equal to 12';
-}
+import { useInputs } from 'react-form-validation';
+import { dynamicValidator } from '../../helpers/validators';
 
 function Dynamic() {
   const name = useId();
@@ -29,18 +24,20 @@ function Dynamic() {
 
   return (
     <div>
-      <button onClick={handleAdd} type="button">
+      <button data-testid="dynamic-add" onClick={handleAdd} type="button">
         Add
       </button>
       {ids.map((id) => (
         <div key={id}>
           <input
             autoComplete="off"
+            data-testid={`dynamic-${id}`}
             name={`${name}-${id}`}
             required
             type="number"
           />
           <button
+            data-testid={`dynamic-${id}-remove`}
             className="inline"
             onClick={() => handleRemove(id)}
             type="button"
@@ -48,14 +45,16 @@ function Dynamic() {
             Remove
           </button>
           {errors.all?.[`${name}-${id}`] && (
-            <div style={{ color: 'red' }}>
+            <div className="error" data-testid={`dynamic-${id}-error`}>
               {errors.native?.[`${name}-${id}`]}
             </div>
           )}
         </div>
       ))}
       {errors.validator?.dynamic && (
-        <div style={{ color: 'red' }}>{errors.validator.dynamic.error}</div>
+        <div className="error" data-testid="dynamic-validator-error">
+          {errors.validator.dynamic.error}
+        </div>
       )}
     </div>
   );

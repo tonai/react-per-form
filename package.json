@@ -24,7 +24,8 @@
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",
     "format": "prettier --write --ignore-unknown .",
     "prepare": "husky || true",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "e2e": "npm run e2e --workspaces --if-present"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.0",

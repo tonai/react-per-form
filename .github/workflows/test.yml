@@ -1,4 +1,4 @@
-name: 'Tests'
+name: Tests
 on: push
 jobs:
   test:
@@ -35,3 +35,14 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} run lint
       - name: Test
         run: ${{ steps.detect-package-manager.outputs.manager }} run test
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npm run e2e
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: example-app/playwright-report/
+          retention-days: 7

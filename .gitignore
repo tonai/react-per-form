@@ -53,6 +53,11 @@ coverage
 cypress/videos/
 cypress/screenshots/
 junit.xml
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
 
 # System files
 .DS_Store

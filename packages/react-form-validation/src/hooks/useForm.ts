@@ -138,9 +138,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
       if (validate('check')) {
         onSubmit?.(event);
+      } else {
+        event.preventDefault();
       }
     },
     [onSubmit, validate],

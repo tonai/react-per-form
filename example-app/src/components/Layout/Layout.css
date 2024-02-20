@@ -1,0 +1,19 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  gap: 20px;
+  margin-inline: auto;
+  margin-top: 100px;
+}
+
+.layout__list {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+}
+
+.layout__link {
+  display: inline-block;
+  padding: 10px;
+}
