@@ -26,7 +26,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return native errors on submit', () => {
+  it('should return native errors (mode=submit)', () => {
     const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
       wrapper: ({ children }) => (
         <Form useNativeValidation={false}>
@@ -62,7 +62,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return validator errors on submit', () => {
+  it('should return validator errors (mode=submit)', () => {
     const { result } = renderHook(
       () =>
         useInputs({
@@ -110,7 +110,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return custom errors on submit', () => {
+  it('should return custom errors (mode=submit)', () => {
     const { result } = renderHook(
       () =>
         useInputs({
@@ -153,7 +153,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should validate the form on blur', () => {
+  it('should validate the form (mode=blur)', () => {
     const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
       wrapper: ({ children }) => (
         <Form mode="blur" useNativeValidation={false}>
@@ -187,7 +187,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should validate the form on change', () => {
+  it('should validate the form (mode=change)', () => {
     const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
       wrapper: ({ children }) => (
         <Form mode="change" useNativeValidation={false}>
@@ -235,10 +235,55 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should validate the form on fix', () => {
+  it('should validate the form (mode=all)', () => {
     const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
       wrapper: ({ children }) => (
-        <Form mode="change" useNativeValidation={false}>
+        <Form mode="all" useNativeValidation={false}>
+          <input name="foo" />
+          <input data-testid="rfv-input" name="bar" required />
+          {children}
+        </Form>
+      ),
+    });
+    act(() => jest.runAllTimers());
+    // Blur
+    fireEvent.blur(screen.getByTestId('rfv-input'));
+    expect(result.current.error).toEqual({
+      error: 'Constraints not satisfied',
+      id: 'bar',
+      names: ['bar'],
+    });
+    expect(result.current.errors).toEqual({
+      all: {
+        bar: 'Constraints not satisfied',
+      },
+      main: {
+        error: 'Constraints not satisfied',
+        id: 'bar',
+        names: ['bar'],
+      },
+      native: {
+        bar: 'Constraints not satisfied',
+      },
+      validator: {},
+    });
+    // Change
+    fireEvent.change(screen.getByTestId('rfv-input'), {
+      target: { value: 'foo' },
+    });
+    act(() => jest.runAllTimers());
+    expect(result.current.error).toEqual(undefined);
+    expect(result.current.errors).toEqual({
+      all: { bar: '' },
+      native: { bar: '' },
+      validator: {},
+    });
+  });
+
+  it('should revalidate the form (revalidateMode=change)', () => {
+    const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
+      wrapper: ({ children }) => (
+        <Form revalidateMode="change" useNativeValidation={false}>
           <input name="foo" />
           <input data-testid="rfv-input" name="bar" required />
           {children}
@@ -282,10 +327,10 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should validate the form on check', () => {
+  it('should revalidate the form (revalidateMode=blur)', () => {
     const { result } = renderHook(() => useInputs({ names: ['foo', 'bar'] }), {
       wrapper: ({ children }) => (
-        <Form mode="check" useNativeValidation={false}>
+        <Form revalidateMode="blur" useNativeValidation={false}>
           <input name="foo" />
           <input data-testid="rfv-input" name="bar" required />
           {children}
@@ -293,8 +338,8 @@ describe('useInputs hook', () => {
       ),
     });
     act(() => jest.runAllTimers());
-    // Blur
-    fireEvent.blur(screen.getByTestId('rfv-input'));
+    // Submit
+    fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       id: 'bar',
@@ -303,6 +348,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {
         bar: 'Constraints not satisfied',
+        foo: '',
       },
       main: {
         error: 'Constraints not satisfied',
@@ -311,6 +357,7 @@ describe('useInputs hook', () => {
       },
       native: {
         bar: 'Constraints not satisfied',
+        foo: '',
       },
       validator: {},
     });
@@ -319,10 +366,34 @@ describe('useInputs hook', () => {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());
+    expect(result.current.error).toEqual({
+      error: 'Constraints not satisfied',
+      id: 'bar',
+      names: ['bar'],
+    });
+    expect(result.current.errors).toEqual({
+      all: {
+        bar: 'Constraints not satisfied',
+        foo: '',
+      },
+      main: {
+        error: 'Constraints not satisfied',
+        id: 'bar',
+        names: ['bar'],
+      },
+      native: {
+        bar: 'Constraints not satisfied',
+        foo: '',
+      },
+      validator: {},
+    });
+    // Blur
+    fireEvent.blur(screen.getByTestId('rfv-input'));
+    act(() => jest.runAllTimers());
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
-      all: { bar: '' },
-      native: { bar: '' },
+      all: { bar: '', foo: '' },
+      native: { bar: '', foo: '' },
       validator: {},
     });
   });

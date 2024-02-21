@@ -40,6 +40,7 @@ describe('useInputs hook', () => {
       native: {},
       validator: {},
     });
+    // Submit
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
@@ -85,6 +86,7 @@ describe('useInputs hook', () => {
       native: {},
       validator: {},
     });
+    // Submit
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Validator error',
@@ -135,6 +137,7 @@ describe('useInputs hook', () => {
       native: {},
       validator: {},
     });
+    // Submit
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Custom error',
