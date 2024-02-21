@@ -6,7 +6,7 @@ export function useFormValid(): boolean {
   const { ref, subscribe } = useContext(formContext);
   const [isValid, setIsValid] = useState(Boolean(ref.current?.checkValidity()));
   useEffect(() => {
-    subscribe((form: HTMLFormElement | null) => {
+    return subscribe((form: HTMLFormElement | null) => {
       setIsValid(Boolean(form?.checkValidity()));
     });
   }, [subscribe]);

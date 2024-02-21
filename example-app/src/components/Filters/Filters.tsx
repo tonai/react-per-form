@@ -1,19 +1,32 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { IFormMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
 import './Filters.css';
 
 interface IFiltersProps {
   mode: IFormMode;
+  revalidateMode: IFormRevalidateMode;
   setMode: Dispatch<SetStateAction<IFormMode>>;
+  setRevalidateMode: Dispatch<SetStateAction<IFormRevalidateMode>>;
   setUseNativeValidation: Dispatch<SetStateAction<boolean>>;
   useNativeValidation: boolean;
 }
 
 export default function Filters(props: IFiltersProps) {
-  const { mode, setMode, setUseNativeValidation, useNativeValidation } = props;
+  const {
+    mode,
+    revalidateMode,
+    setMode,
+    setRevalidateMode,
+    setUseNativeValidation,
+    useNativeValidation,
+  } = props;
 
   function handleMode(event: ChangeEvent<HTMLSelectElement>) {
     setMode(event.target.value as IFormMode);
+  }
+
+  function handleRevalidateMode(event: ChangeEvent<HTMLSelectElement>) {
+    setRevalidateMode(event.target.value as IFormRevalidateMode);
   }
 
   function handleUseNativeValidation(event: ChangeEvent<HTMLInputElement>) {
@@ -25,12 +38,22 @@ export default function Filters(props: IFiltersProps) {
       <label>
         Mode:&nbsp;
         <select data-testid="mode" onChange={handleMode} value={mode}>
-          <option value="none">none</option>
-          <option value="fix">fix</option>
+          <option value="submit">submit</option>
           <option value="blur">blur</option>
           <option value="change">change</option>
-          <option value="check">check</option>
-          {/* <option value="force">force</option> */}
+          <option value="all">all</option>
+        </select>
+      </label>
+      <label>
+        Revalidate Mode:&nbsp;
+        <select
+          data-testid="revalidate-mode"
+          onChange={handleRevalidateMode}
+          value={revalidateMode}
+        >
+          <option value="submit">submit</option>
+          <option value="blur">blur</option>
+          <option value="change">change</option>
         </select>
       </label>
       <label>

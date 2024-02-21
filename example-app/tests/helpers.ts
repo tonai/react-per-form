@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { IFormMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
 
 export async function goto(page: Page, url: string) {
   await page.goto(url);
@@ -20,6 +20,15 @@ export async function disableNativeValidation(page: Page) {
 
 export async function selectMode(page: Page, mode: IFormMode) {
   const select = page.getByTestId('mode');
+  await select.selectOption(mode);
+  await expect(select).toHaveValue(mode);
+}
+
+export async function selectRevalidateMode(
+  page: Page,
+  mode: IFormRevalidateMode,
+) {
+  const select = page.getByTestId('revalidate-mode');
   await select.selectOption(mode);
   await expect(select).toHaveValue(mode);
 }

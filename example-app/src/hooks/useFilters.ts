@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react';
-import { IFormMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
 
 export function useFilters() {
-  const [mode, setMode] = useState<IFormMode>('none');
+  const [mode, setMode] = useState<IFormMode>('submit');
+  const [revalidateMode, setRevalidateMode] =
+    useState<IFormRevalidateMode>('submit');
   const [useNativeValidation, setUseNativeValidation] = useState(true);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -13,10 +15,12 @@ export function useFilters() {
   return {
     filtersProps: {
       mode,
+      revalidateMode,
       setMode,
+      setRevalidateMode,
       setUseNativeValidation,
       useNativeValidation,
     },
-    hookProps: { mode, onSubmit, useNativeValidation },
+    hookProps: { mode, onSubmit, revalidateMode, useNativeValidation },
   };
 }

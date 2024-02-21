@@ -39,28 +39,28 @@ describe('validator helper', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
       );
-      displayErrors(errors, form, [], formErrors, 'check', false);
+      displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'change', false);
+      displayErrors(errors, form, [], formErrors, true, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'fix', false);
+      displayErrors(errors, form, [], formErrors, false, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'none', false);
+      displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
@@ -78,7 +78,7 @@ describe('validator helper', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
       );
-      displayErrors(errors, form, [], formErrors, 'check', false);
+      displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         main: { error: 'error', id: 'foo', names: ['foo'] },
@@ -86,7 +86,7 @@ describe('validator helper', () => {
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'change', false);
+      displayErrors(errors, form, [], formErrors, true, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         main: { error: 'error', id: 'foo', names: ['foo'] },
@@ -94,14 +94,14 @@ describe('validator helper', () => {
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'fix', false);
+      displayErrors(errors, form, [], formErrors, false, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
         validator: {},
       });
       formErrors.mockClear();
-      displayErrors(errors, form, [], formErrors, 'none', false);
+      displayErrors(errors, form, [], formErrors, false, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
         native: {},
@@ -135,7 +135,7 @@ describe('validator helper', () => {
           ]),
         ],
       ];
-      displayErrors(errors, form, validators, formErrors, 'check', false, [
+      displayErrors(errors, form, validators, formErrors, true, true, false, [
         'foo',
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
@@ -152,7 +152,7 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, 'change', false, [
+      displayErrors(errors, form, validators, formErrors, true, false, false, [
         'foo',
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
@@ -169,7 +169,7 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, 'fix', false, [
+      displayErrors(errors, form, validators, formErrors, false, true, false, [
         'foo',
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
@@ -184,7 +184,7 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, 'none', false, [
+      displayErrors(errors, form, validators, formErrors, false, false, false, [
         'foo',
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
@@ -202,16 +202,16 @@ describe('validator helper', () => {
     it('should trigger form reportValidity function (native form validation)', () => {
       const errors = { all: {}, native: {}, validator: {} };
       const spy = jest.spyOn(form, 'reportValidity');
-      displayErrors(errors, form, [], () => '', 'check', true);
+      displayErrors(errors, form, [], () => '', true, true, true);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'change', true);
+      displayErrors(errors, form, [], () => '', true, false, true);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'fix', true);
+      displayErrors(errors, form, [], () => '', false, true, true);
       expect(spy).not.toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'none', true);
+      displayErrors(errors, form, [], () => '', false, false, true);
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });
@@ -225,16 +225,16 @@ describe('validator helper', () => {
         validator: {},
       };
       const spy = jest.spyOn(input1, 'reportValidity');
-      displayErrors(errors, form, [], () => '', 'check', true, ['foo']);
+      displayErrors(errors, form, [], () => '', true, true, true, ['foo']);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'change', true, ['foo']);
+      displayErrors(errors, form, [], () => '', true, false, true, ['foo']);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'fix', true, ['foo']);
-      expect(spy).not.toHaveBeenCalled();
+      displayErrors(errors, form, [], () => '', false, true, true, ['foo']);
+      expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', 'none', true, ['foo']);
+      displayErrors(errors, form, [], () => '', false, false, true, ['foo']);
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });
@@ -343,6 +343,7 @@ describe('validator helper', () => {
 
   describe('getNativeErrorKey', () => {
     it('should not return any error key', () => {
+      expect(getNativeErrorKey()).toEqual(null);
       expect(getNativeErrorKey(input1.validity)).toEqual(null);
     });
 
@@ -548,13 +549,13 @@ describe('validator helper', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
       );
-      expect(validateForm(form, new Map(), formErrors, 'check', false)).toEqual(
-        {
-          all: { bar: '', foo: '' },
-          native: { bar: '', foo: '' },
-          validator: {},
-        },
-      );
+      expect(
+        validateForm(form, new Map(), formErrors, true, true, false),
+      ).toEqual({
+        all: { bar: '', foo: '' },
+        native: { bar: '', foo: '' },
+        validator: {},
+      });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { bar: '', foo: '' },
         native: { bar: '', foo: '' },
@@ -567,18 +568,18 @@ describe('validator helper', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
       );
-      expect(validateForm(form, new Map(), formErrors, 'check', false)).toEqual(
-        {
-          all: { bar: '', foo: 'Constraints not satisfied' },
-          main: {
-            error: 'Constraints not satisfied',
-            id: 'foo',
-            names: ['foo'],
-          },
-          native: { bar: '', foo: 'Constraints not satisfied' },
-          validator: {},
+      expect(
+        validateForm(form, new Map(), formErrors, true, true, false),
+      ).toEqual({
+        all: { bar: '', foo: 'Constraints not satisfied' },
+        main: {
+          error: 'Constraints not satisfied',
+          id: 'foo',
+          names: ['foo'],
         },
-      );
+        native: { bar: '', foo: 'Constraints not satisfied' },
+        validator: {},
+      });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { bar: '', foo: 'Constraints not satisfied' },
         main: {
@@ -608,7 +609,7 @@ describe('validator helper', () => {
         ],
       ]);
       expect(
-        validateForm(form, validators, formErrors, 'check', false),
+        validateForm(form, validators, formErrors, true, true, false),
       ).toEqual({
         all: { bar: 'Custom error', foo: 'Custom error' },
         main: {

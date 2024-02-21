@@ -1,6 +1,8 @@
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 
-export type IFormMode = 'blur' | 'change' | 'check' | 'fix' | 'none';
+export type IFormMode = 'all' | 'blur' | 'change' | 'submit';
+
+export type IFormRevalidateMode = 'blur' | 'change' | 'submit';
 
 export type IValidate = (
   mode: IFormMode,
@@ -9,7 +11,8 @@ export type IValidate = (
 ) => IError;
 
 export type IFormValidate = (
-  mode: IFormMode,
+  display?: boolean,
+  revalidate?: boolean,
   name?: string[] | string,
 ) => boolean;
 
@@ -70,6 +73,7 @@ export interface IFormContext {
   mode: IFormMode;
   ref: RefObject<HTMLFormElement>;
   removeValidator: IRemoveValidator;
+  revalidateMode: IFormRevalidateMode;
   setValidator: ISetValidator;
   subscribe: (subscriber: ISubscriber) => IUnSubscribe;
   useNativeValidation: boolean;

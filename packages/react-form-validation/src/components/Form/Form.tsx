@@ -14,8 +14,9 @@ export function Form(props: IFormProps): ReactElement {
   const {
     children,
     messages,
-    mode = 'none',
+    mode,
     onSubmit,
+    revalidateMode,
     useNativeValidation = true,
     validators,
     ...restProps
@@ -24,6 +25,7 @@ export function Form(props: IFormProps): ReactElement {
     messages,
     mode,
     onSubmit,
+    revalidateMode,
     useNativeValidation,
     validators,
   });

@@ -2,6 +2,7 @@ import type {
   IError,
   IFormContext,
   IFormMode,
+  IFormRevalidateMode,
   IFormValidator,
   ISetValidatorParams,
   ISubscriber,
@@ -19,6 +20,7 @@ export interface IUseFormProps {
   messages?: IValidityMessages;
   mode?: IFormMode;
   onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
+  revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
   validators?:
     | IFormValidator[]
@@ -39,7 +41,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     onSubmit,
     messages,
-    mode = 'none',
+    mode = 'submit',
+    revalidateMode = 'submit',
     useNativeValidation = true,
     validators,
   } = props;
@@ -61,7 +64,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   }, []);
 
   const validate = useCallback(
-    (mode: IFormMode, names?: string[] | string | null) => {
+    (display = false, revalidate = false, names?: string[] | string | null) => {
       if (!ref.current) {
         return false;
       }
@@ -78,7 +81,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         ref.current,
         validatorMap,
         setErrors,
-        mode,
+        display,
+        revalidate,
         useNativeValidation,
         messages,
         names instanceof Array ? names : names ? [names] : undefined,
@@ -92,9 +96,13 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const timer = useRef<NodeJS.Timeout>();
   const debouncedValidate = useCallback(
-    (mode: IFormMode, names?: string[] | string | null) => {
+    (
+      display?: boolean,
+      revalidate?: boolean,
+      names?: string[] | string | null,
+    ) => {
       clearTimeout(timer.current);
-      timer.current = setTimeout(() => validate(mode, names), 0);
+      timer.current = setTimeout(() => validate(display, revalidate, names), 0);
     },
     [validate],
   );
@@ -102,7 +110,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const removeValidator = useCallback(
     (params: ISetValidatorParams) => {
       fields.current.delete(params);
-      debouncedValidate('none');
+      debouncedValidate();
     },
     [debouncedValidate],
   );
@@ -110,16 +118,20 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const setValidator = useCallback(
     (params: ISetValidatorParams) => {
       fields.current.add(params);
-      debouncedValidate('none');
+      debouncedValidate();
     },
     [debouncedValidate],
   );
 
   const handleChange = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      debouncedValidate(mode, (event.target as HTMLInputElement).name);
+      debouncedValidate(
+        mode === 'all' || mode === 'change',
+        revalidateMode === 'change',
+        (event.target as HTMLInputElement).name,
+      );
     },
-    [mode, debouncedValidate],
+    [mode, debouncedValidate, revalidateMode],
   );
 
   const handleReset = useCallback(() => {
@@ -133,12 +145,12 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         params.setErrors?.(initialError);
       }
     }
-    debouncedValidate('none');
+    debouncedValidate();
   }, [debouncedValidate, messages, validators]);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      if (validate('check')) {
+      if (validate(true)) {
         onSubmit?.(event);
       } else {
         event.preventDefault();
@@ -148,16 +160,23 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
 
   useEffect(() => {
-    validate('none');
+    validate();
   }, [validate]);
 
   // Manage blur event listeners
   useEffect(() => {
-    if (ref.current && (mode === 'check' || mode === 'blur')) {
+    if (
+      ref.current &&
+      (mode === 'all' || mode === 'blur' || revalidateMode === 'blur')
+    ) {
       const inputs = getFormInputs(ref.current);
       const listeners = inputs.map<[HTMLInputElement, () => void]>((input) => {
         const eventHandler = (): boolean =>
-          validate('check', input.getAttribute('name'));
+          validate(
+            mode === 'all' || mode === 'blur',
+            revalidateMode === 'blur',
+            input.getAttribute('name'),
+          );
         input.addEventListener('blur', eventHandler);
         return [input, eventHandler];
       });
@@ -167,7 +186,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         );
     }
     return undefined;
-  }, [mode, validate]);
+  }, [mode, revalidateMode, validate]);
 
   const formProps = useMemo(
     () => ({
@@ -188,6 +207,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       mode,
       ref,
       removeValidator,
+      revalidateMode,
       setValidator,
       subscribe,
       useNativeValidation,
@@ -199,6 +219,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       messages,
       mode,
       removeValidator,
+      revalidateMode,
       setValidator,
       subscribe,
       useNativeValidation,

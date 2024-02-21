@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
-  IFormMode,
   IMainError,
   ISetValidatorParams,
   IValidatorError,
@@ -158,19 +157,13 @@ export function getNativeError(
 ): string {
   input.setCustomValidity('');
   const { validity } = input;
-  if (validity.valid) {
-    return '';
-  }
   const validityKey = getNativeErrorKey(validity);
   if (validityKey) {
     const customMessage = fieldMessages[validityKey];
     if (customMessage) {
       input.setCustomValidity(customMessage);
     }
-    const message = customMessage ?? input.validationMessage;
-    if (message) {
-      return message;
-    }
+    return customMessage ?? input.validationMessage;
   }
   return '';
 }
@@ -206,11 +199,27 @@ export function displayErrors(
   form: HTMLFormElement,
   validatorEntries: [string, Set<ISetValidatorParams>][],
   setErrors: Dispatch<SetStateAction<IError>>,
-  mode: IFormMode,
+  display: boolean,
+  revalidate: boolean,
   useNativeValidation: boolean,
   names?: string[],
 ): void {
   const { native, validator } = errors;
+
+  // Native validation
+  if (useNativeValidation) {
+    if (!names) {
+      if (display) {
+        form.reportValidity();
+      }
+    } else if (errors.main && (display || revalidate)) {
+      const name = errors.main.names[0];
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      const input = form.elements[name] as HTMLInputElement;
+      input.reportValidity();
+    }
+    return;
+  }
 
   // Field errors
   for (const [name, set] of validatorEntries) {
@@ -219,13 +228,9 @@ export function displayErrors(
         continue;
       }
       const { id, names: fieldNames, setErrors } = params;
-      if (!useNativeValidation && setErrors) {
+      if (setErrors) {
         setErrors((prevErrors) => {
-          if (
-            mode === 'check' ||
-            mode === 'change' ||
-            (mode === 'fix' && hasError(prevErrors))
-          ) {
+          if (display || (revalidate && hasError(prevErrors))) {
             return mergeErrors(
               prevErrors,
               getErrorObject(native, validator, fieldNames, [id]),
@@ -238,34 +243,20 @@ export function displayErrors(
   }
 
   // Global form errors
-  if (!useNativeValidation) {
-    setErrors((prevErrors) => {
-      if (
-        mode === 'check' ||
-        mode === 'change' ||
-        (mode === 'fix' && hasError(prevErrors))
-      ) {
-        return mergeErrors(prevErrors, errors);
-      }
-      return prevErrors;
-    });
-  } else if (mode === 'check' || mode === 'change') {
-    if (!names) {
-      form.reportValidity();
-    } else if (errors.main) {
-      const name = errors.main.names[0];
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      const input = form.elements[name] as HTMLInputElement;
-      input.reportValidity();
+  setErrors((prevErrors) => {
+    if (display || (revalidate && hasError(prevErrors))) {
+      return mergeErrors(prevErrors, errors);
     }
-  }
+    return prevErrors;
+  });
 }
 
 export function validateForm(
   form: HTMLFormElement,
   validatorMap: Map<string, Set<ISetValidatorParams>>,
   setErrors: Dispatch<SetStateAction<IError>>,
-  mode: IFormMode,
+  display: boolean,
+  revalidate: boolean,
   useNativeValidation: boolean,
   messages?: IValidityMessages,
   names?: string[],
@@ -297,7 +288,8 @@ export function validateForm(
     form,
     validatorEntries,
     setErrors,
-    mode,
+    display,
+    revalidate,
     useNativeValidation,
     names,
   );
