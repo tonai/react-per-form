@@ -47,17 +47,20 @@ export type IRemoveValidator = (params: ISetValidatorParams) => void;
 
 export interface IMainError {
   error: string;
+  global: boolean;
   id: string;
   names: string[];
 }
 
 export interface IValidatorError {
   error: string;
+  global: boolean;
   names: string[];
 }
 
 export interface IError {
   all: Record<string, string>;
+  global: Record<string, IValidatorError>;
   main?: IMainError;
   native: Record<string, string>;
   validator: Record<string, IValidatorError>;

@@ -21,6 +21,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -41,6 +42,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -49,8 +51,10 @@ describe('useInputs hook', () => {
         bar: 'Constraints not satisfied',
         foo: '',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -84,6 +88,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Validator error',
+      global: false,
       id: 'foo,bar',
       names: ['foo', 'bar'],
     });
@@ -92,8 +97,10 @@ describe('useInputs hook', () => {
         bar: 'Validator error',
         foo: 'Validator error',
       },
+      global: {},
       main: {
         error: 'Validator error',
+        global: false,
         id: 'foo,bar',
         names: ['foo', 'bar'],
       },
@@ -104,6 +111,7 @@ describe('useInputs hook', () => {
       validator: {
         'foo,bar': {
           error: 'Validator error',
+          global: false,
           names: ['foo', 'bar'],
         },
       },
@@ -132,6 +140,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Custom error',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -140,8 +149,10 @@ describe('useInputs hook', () => {
         bar: 'Custom error',
         foo: '',
       },
+      global: {},
       main: {
         error: 'Custom error',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -168,6 +179,7 @@ describe('useInputs hook', () => {
     fireEvent.blur(screen.getByTestId('rfv-input'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -175,8 +187,10 @@ describe('useInputs hook', () => {
       all: {
         bar: 'Constraints not satisfied',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -206,6 +220,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: { bar: '' },
+      global: {},
       native: { bar: '' },
       validator: {},
     });
@@ -216,6 +231,7 @@ describe('useInputs hook', () => {
     act(() => jest.runAllTimers());
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -223,8 +239,10 @@ describe('useInputs hook', () => {
       all: {
         bar: 'Constraints not satisfied',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -250,6 +268,7 @@ describe('useInputs hook', () => {
     fireEvent.blur(screen.getByTestId('rfv-input'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -257,8 +276,10 @@ describe('useInputs hook', () => {
       all: {
         bar: 'Constraints not satisfied',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -275,6 +296,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: { bar: '' },
+      global: {},
       native: { bar: '' },
       validator: {},
     });
@@ -295,6 +317,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -303,8 +326,10 @@ describe('useInputs hook', () => {
         bar: 'Constraints not satisfied',
         foo: '',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -322,6 +347,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: { bar: '', foo: '' },
+      global: {},
       native: { bar: '', foo: '' },
       validator: {},
     });
@@ -342,6 +368,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -350,8 +377,10 @@ describe('useInputs hook', () => {
         bar: 'Constraints not satisfied',
         foo: '',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -368,6 +397,7 @@ describe('useInputs hook', () => {
     act(() => jest.runAllTimers());
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'bar',
       names: ['bar'],
     });
@@ -376,8 +406,10 @@ describe('useInputs hook', () => {
         bar: 'Constraints not satisfied',
         foo: '',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'bar',
         names: ['bar'],
       },
@@ -393,6 +425,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: { bar: '', foo: '' },
+      global: {},
       native: { bar: '', foo: '' },
       validator: {},
     });

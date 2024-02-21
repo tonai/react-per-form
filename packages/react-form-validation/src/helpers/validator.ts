@@ -65,7 +65,12 @@ export function setMainError(
     ([, error]) => error !== '',
   );
   if (native) {
-    errors.main = { error: native[1], id: native[0], names: [native[0]] };
+    errors.main = {
+      error: native[1],
+      global: false,
+      id: native[0],
+      names: [native[0]],
+    };
   } else {
     const validator = Object.entries(errors.validator).find(
       ([, { error }]) => error !== '',
@@ -73,6 +78,7 @@ export function setMainError(
     if (validator) {
       errors.main = {
         error: validator[1].error,
+        global: validator[1].global,
         id: validator[0],
         names: validator[1].names,
       };
@@ -105,6 +111,9 @@ export function getErrorObject(
 ): IError {
   const native = getFilteredErrors(nativeErrors, names);
   const validator = getFilteredErrors(validatorErrors, ids);
+  const global = Object.fromEntries(
+    Object.entries(validator).filter(([, { global }]) => global),
+  );
   const all = Object.values(validator).reduce<Record<string, string>>(
     (acc, { error, names }) => {
       for (const name of names) {
@@ -121,6 +130,7 @@ export function getErrorObject(
   }
   const errors: IError = {
     all,
+    global,
     native,
     validator,
   };
@@ -133,6 +143,10 @@ export function mergeErrors(prevErrors: IError, errors: IError): IError {
     all: {
       ...prevErrors.all,
       ...errors.all,
+    },
+    global: {
+      ...prevErrors.global,
+      ...errors.global,
     },
     native: {
       ...prevErrors.native,
@@ -177,7 +191,7 @@ export function getValidatorError(
 
   for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {
-      const { id, names: fieldNames, validator } = params;
+      const { id, names: fieldNames, setErrors, validator } = params;
       if (id in validatorErrors || !validator) {
         continue;
       }
@@ -187,7 +201,7 @@ export function getValidatorError(
       if (!input.validationMessage && error) {
         input.setCustomValidity(error);
       }
-      validatorErrors[id] = { error, names: fieldNames };
+      validatorErrors[id] = { error, global: !setErrors, names: fieldNames };
     }
   }
 
@@ -242,7 +256,7 @@ export function displayErrors(
     }
   }
 
-  // Global form errors
+  // Form errors
   setErrors((prevErrors) => {
     if (display || (revalidate && hasError(prevErrors))) {
       return mergeErrors(prevErrors, errors);

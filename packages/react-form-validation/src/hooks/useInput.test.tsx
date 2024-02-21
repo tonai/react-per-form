@@ -19,6 +19,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -37,6 +38,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -44,6 +46,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
+      global: false,
       id: 'foo',
       names: ['foo'],
     });
@@ -51,8 +54,10 @@ describe('useInputs hook', () => {
       all: {
         foo: 'Constraints not satisfied',
       },
+      global: {},
       main: {
         error: 'Constraints not satisfied',
+        global: false,
         id: 'foo',
         names: ['foo'],
       },
@@ -83,6 +88,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -90,6 +96,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Validator error',
+      global: false,
       id: 'foo',
       names: ['foo'],
     });
@@ -97,8 +104,10 @@ describe('useInputs hook', () => {
       all: {
         foo: 'Validator error',
       },
+      global: {},
       main: {
         error: 'Validator error',
+        global: false,
         id: 'foo',
         names: ['foo'],
       },
@@ -108,6 +117,7 @@ describe('useInputs hook', () => {
       validator: {
         foo: {
           error: 'Validator error',
+          global: false,
           names: ['foo'],
         },
       },
@@ -134,6 +144,7 @@ describe('useInputs hook', () => {
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -141,6 +152,7 @@ describe('useInputs hook', () => {
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(result.current.error).toEqual({
       error: 'Custom error',
+      global: false,
       id: 'foo',
       names: ['foo'],
     });
@@ -148,8 +160,10 @@ describe('useInputs hook', () => {
       all: {
         foo: 'Custom error',
       },
+      global: {},
       main: {
         error: 'Custom error',
+        global: false,
         id: 'foo',
         names: ['foo'],
       },

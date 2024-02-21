@@ -26,7 +26,7 @@ describe('Submit component', () => {
   it('should be enabled (valid form)', () => {
     render(
       <Form>
-        <input />
+        <input name="foo" />
         <Submit disableOnError />
       </Form>,
     );
@@ -36,7 +36,7 @@ describe('Submit component', () => {
   it('should be disabled (invalid form)', () => {
     render(
       <Form>
-        <input required />
+        <input name="foo" required />
         <Submit disableOnError />
       </Form>,
     );

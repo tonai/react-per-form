@@ -17,7 +17,7 @@ describe('Reset component', () => {
   it('should reset the form', () => {
     render(
       <Form>
-        <input data-testid="rfv-input" />
+        <input data-testid="rfv-input" name="foo" />
         <Reset />
       </Form>,
     );

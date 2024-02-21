@@ -25,7 +25,8 @@ export interface IUseInputsResult {
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
   const { id, names, messages, validator } = props;
 
-  const { removeValidator, setValidator } = useContext(formContext);
+  const context = useContext(formContext);
+  const { removeValidator, setValidator } = context;
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Form, Reset, Submit } from 'react-form-validation';
+import { Error, Form, Reset, Submit } from 'react-form-validation';
 import Input from '../../components/Input/Input';
 import Filters from '../../components/Filters/Filters';
 import { globalValidatorMultiple } from '../../helpers/validators';
@@ -17,16 +17,18 @@ export default function ComponentSimpleForm() {
       <Form
         {...hookProps}
         className="form"
+        data-testid="form"
         messages={messages}
         validators={{
           foobar: { validator: globalValidatorMultiple, names: ['foo'] },
         }}
       >
         <Input name="foo" required />
+        <Error className="error" global />
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit disableOnError />
+          <Submit data-testid="rfv-submit-disabled" disableOnError />
         </div>
       </Form>
     </>

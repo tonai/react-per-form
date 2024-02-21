@@ -6,7 +6,7 @@ describe('Form component', () => {
   it('should render the children', () => {
     render(
       <Form>
-        <input data-testid="rfv-input" />
+        <input data-testid="rfv-input" name="foo" />
       </Form>,
     );
     expect(screen.getByTestId('rfv-form')).toBeVisible();
@@ -17,7 +17,7 @@ describe('Form component', () => {
     const onSubmit = jest.fn();
     render(
       <Form onSubmit={onSubmit}>
-        <input />
+        <input name="foo" />
       </Form>,
     );
     fireEvent.submit(screen.getByTestId('rfv-form'));
@@ -28,7 +28,7 @@ describe('Form component', () => {
     const onSubmit = jest.fn();
     render(
       <Form onSubmit={onSubmit}>
-        <input required />
+        <input name="foo" required />
       </Form>,
     );
     fireEvent.submit(screen.getByTestId('rfv-form'));
