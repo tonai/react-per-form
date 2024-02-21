@@ -7,6 +7,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm());
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });
@@ -37,6 +38,7 @@ describe('useForm hook', () => {
     );
     expect(result.current.errors).toEqual({
       all: {},
+      global: {},
       native: {},
       validator: {},
     });

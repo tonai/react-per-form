@@ -13,12 +13,17 @@ export default function ComponentDynamicForm() {
   return (
     <>
       <Filters {...filtersProps} />
-      <Form {...hookProps} className="form" messages={messages}>
+      <Form
+        {...hookProps}
+        className="form"
+        data-testid="form"
+        messages={messages}
+      >
         <Dynamic />
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit disableOnError />
+          <Submit data-testid="rfv-submit-disabled" disableOnError />
         </div>
       </Form>
     </>

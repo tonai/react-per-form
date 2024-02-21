@@ -1,5 +1,7 @@
 import type { IError, ISetValidatorParams } from '../types';
 
+import { initialError } from '../constants';
+
 import {
   displayErrors,
   getData,
@@ -35,13 +37,14 @@ describe('validator helper', () => {
 
   describe('displayErrors', () => {
     it('should not display any error if there is no error (non native form validation)', () => {
-      const errors = { all: {}, native: {}, validator: {} };
+      const errors = initialError;
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
@@ -49,6 +52,7 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, true, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
@@ -56,6 +60,7 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, false, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
@@ -63,25 +68,28 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
     });
 
     it('should display the form errors (non native form validation)', () => {
-      const errors = {
+      const errors: IError = {
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       displayErrors(errors, form, [], formErrors, true, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
@@ -89,7 +97,8 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, true, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
@@ -97,6 +106,7 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, false, true, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
@@ -104,23 +114,25 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], formErrors, false, false, false);
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
     });
 
     it('should display the input errors (non native input validation)', () => {
-      const errors = {
+      const errors: IError = {
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       const validators: [string, Set<ISetValidatorParams>][] = [
         [
@@ -140,13 +152,15 @@ describe('validator helper', () => {
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
@@ -157,13 +171,15 @@ describe('validator helper', () => {
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
@@ -174,11 +190,13 @@ describe('validator helper', () => {
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
@@ -189,18 +207,20 @@ describe('validator helper', () => {
       ]);
       expect(inputErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
     });
 
     it('should trigger form reportValidity function (native form validation)', () => {
-      const errors = { all: {}, native: {}, validator: {} };
+      const errors = initialError;
       const spy = jest.spyOn(form, 'reportValidity');
       displayErrors(errors, form, [], () => '', true, true, true);
       expect(spy).toHaveBeenCalled();
@@ -218,9 +238,10 @@ describe('validator helper', () => {
 
     it('should trigger input reportValidity function (native input validation)', () => {
       input1.setAttribute('required', '');
-      const errors = {
+      const errors: IError = {
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       };
@@ -251,33 +272,40 @@ describe('validator helper', () => {
     it('should create the error object', () => {
       expect(getErrorObject({}, {})).toEqual({
         all: {},
+        global: {},
         native: {},
         validator: {},
       });
       expect(getErrorObject({ foo: 'error' }, {})).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
         validator: {},
       });
       expect(
-        getErrorObject({}, { foobar: { error: 'error', names: ['foo'] } }),
+        getErrorObject(
+          {},
+          { foobar: { error: 'error', global: true, names: ['foo'] } },
+        ),
       ).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foobar', names: ['foo'] },
+        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        main: { error: 'error', global: true, id: 'foobar', names: ['foo'] },
         native: {},
-        validator: { foobar: { error: 'error', names: ['foo'] } },
+        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
       });
       expect(
         getErrorObject(
           { foo: 'error' },
-          { foobar: { error: 'error', names: ['foo'] } },
+          { foobar: { error: 'error', global: true, names: ['foo'] } },
         ),
       ).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
-        validator: { foobar: { error: 'error', names: ['foo'] } },
+        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
       });
     });
   });
@@ -372,7 +400,7 @@ describe('validator helper', () => {
         ],
       ];
       expect(getValidatorError(form, validators)).toEqual({
-        foo: { error: 'Custom error', names: ['foo'] },
+        foo: { error: 'Custom error', global: true, names: ['foo'] },
       });
     });
 
@@ -396,7 +424,7 @@ describe('validator helper', () => {
         ],
       ];
       expect(getValidatorError(form, validators)).toEqual({
-        foobar: { error: 'Custom error', names: ['foo', 'bar'] },
+        foobar: { error: 'Custom error', global: true, names: ['foo', 'bar'] },
       });
       expect(validator).toHaveBeenCalledTimes(1);
     });
@@ -440,17 +468,12 @@ describe('validator helper', () => {
 
   describe('hasError', () => {
     it('should check if error object has some error', () => {
-      expect(
-        hasError({
-          all: {},
-          native: {},
-          validator: {},
-        }),
-      ).toEqual(false);
+      expect(hasError(initialError)).toEqual(false);
       expect(
         hasError({
           all: { foo: 'error' },
-          main: { error: 'error', id: 'foo', names: ['foo'] },
+          global: {},
+          main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
           native: { foo: 'error' },
           validator: {},
         }),
@@ -461,65 +484,76 @@ describe('validator helper', () => {
   describe('mergeErrors', () => {
     it('should merge the error objects', () => {
       expect(
-        mergeErrors(
-          {
-            all: {},
-            native: {},
-            validator: {},
+        mergeErrors(initialError, {
+          all: { foo: 'error' },
+          global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+          main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+          native: { foo: 'error' },
+          validator: {
+            foobar: { error: 'error', global: true, names: ['foo'] },
           },
-          {
-            all: { foo: 'error' },
-            main: { error: 'error', id: 'foo', names: ['foo'] },
-            native: { foo: 'error' },
-            validator: { foobar: { error: 'error', names: ['foo'] } },
-          },
-        ),
+        }),
       ).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
-        validator: { foobar: { error: 'error', names: ['foo'] } },
+        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
       });
       expect(
         mergeErrors(
           {
             all: { foo: 'error' },
-            main: { error: 'error', id: 'foo', names: ['foo'] },
+            global: {
+              foobar: { error: 'error', global: true, names: ['foo'] },
+            },
+            main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
             native: { foo: 'error' },
-            validator: { foobar: { error: 'error', names: ['foo'] } },
+            validator: {
+              foobar: { error: 'error', global: true, names: ['foo'] },
+            },
           },
-          {
-            all: {},
-            native: {},
-            validator: {},
-          },
+          initialError,
         ),
       ).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
-        validator: { foobar: { error: 'error', names: ['foo'] } },
+        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
       });
       expect(
         mergeErrors(
           {
             all: { foo: 'prevError' },
-            main: { error: 'prevError', id: 'foo', names: ['foo'] },
+            global: {},
+            main: {
+              error: 'prevError',
+              global: false,
+              id: 'foo',
+              names: ['foo'],
+            },
             native: { foo: 'prevError' },
             validator: {},
           },
           {
             all: { foo: 'error' },
-            main: { error: 'error', id: 'foo', names: ['foo'] },
+            global: {
+              foobar: { error: 'error', global: true, names: ['foo'] },
+            },
+            main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
             native: { foo: 'error' },
-            validator: { foobar: { error: 'error', names: ['foo'] } },
+            validator: {
+              foobar: { error: 'error', global: true, names: ['foo'] },
+            },
           },
         ),
       ).toEqual({
         all: { foo: 'error' },
-        main: { error: 'error', id: 'foo', names: ['foo'] },
+        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         native: { foo: 'error' },
-        validator: { foobar: { error: 'error', names: ['foo'] } },
+        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
       });
     });
   });
@@ -527,37 +561,50 @@ describe('validator helper', () => {
   describe('setMainError', () => {
     it('should set the main error', () => {
       expect(
-        setMainError({ native: { foo: 'native' }, validator: {} }),
-      ).toEqual({ error: 'native', id: 'foo', names: ['foo'] });
+        setMainError({ global: {}, native: { foo: 'native' }, validator: {} }),
+      ).toEqual({ error: 'native', global: false, id: 'foo', names: ['foo'] });
       expect(
         setMainError({
+          global: {},
           native: { foo: 'native' },
-          validator: { foo: { error: 'validator', names: ['foo', 'bar'] } },
+          validator: {
+            foo: { error: 'validator', global: false, names: ['foo'] },
+          },
         }),
-      ).toEqual({ error: 'native', id: 'foo', names: ['foo'] });
+      ).toEqual({ error: 'native', global: false, id: 'foo', names: ['foo'] });
       expect(
         setMainError({
+          global: {},
           native: { foo: '' },
-          validator: { foo: { error: 'validator', names: ['foo', 'bar'] } },
+          validator: {
+            foo: { error: 'validator', global: false, names: ['foo'] },
+          },
         }),
-      ).toEqual({ error: 'validator', id: 'foo', names: ['foo', 'bar'] });
+      ).toEqual({
+        error: 'validator',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      });
     });
   });
 
   describe('validateForm', () => {
     it('should validate the form (no error)', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       expect(
         validateForm(form, new Map(), formErrors, true, true, false),
       ).toEqual({
         all: { bar: '', foo: '' },
+        global: {},
         native: { bar: '', foo: '' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { bar: '', foo: '' },
+        global: {},
         native: { bar: '', foo: '' },
         validator: {},
       });
@@ -566,14 +613,16 @@ describe('validator helper', () => {
     it('should return the required error', () => {
       input1.setAttribute('required', '');
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       expect(
         validateForm(form, new Map(), formErrors, true, true, false),
       ).toEqual({
         all: { bar: '', foo: 'Constraints not satisfied' },
+        global: {},
         main: {
           error: 'Constraints not satisfied',
+          global: false,
           id: 'foo',
           names: ['foo'],
         },
@@ -582,8 +631,10 @@ describe('validator helper', () => {
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { bar: '', foo: 'Constraints not satisfied' },
+        global: {},
         main: {
           error: 'Constraints not satisfied',
+          global: false,
           id: 'foo',
           names: ['foo'],
         },
@@ -594,7 +645,7 @@ describe('validator helper', () => {
 
     it('should return the validator error', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d({ all: {}, native: {}, validator: {} }) : d,
+        typeof d === 'function' ? d(initialError) : d,
       );
       const validators = new Map([
         [
@@ -612,23 +663,51 @@ describe('validator helper', () => {
         validateForm(form, validators, formErrors, true, true, false),
       ).toEqual({
         all: { bar: 'Custom error', foo: 'Custom error' },
+        global: {
+          foobar: {
+            error: 'Custom error',
+            global: true,
+            names: ['foo', 'bar'],
+          },
+        },
         main: {
           error: 'Custom error',
+          global: true,
           id: 'foobar',
           names: ['foo', 'bar'],
         },
         native: { bar: '', foo: '' },
-        validator: { foobar: { error: 'Custom error', names: ['foo', 'bar'] } },
+        validator: {
+          foobar: {
+            error: 'Custom error',
+            global: true,
+            names: ['foo', 'bar'],
+          },
+        },
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { bar: 'Custom error', foo: 'Custom error' },
+        global: {
+          foobar: {
+            error: 'Custom error',
+            global: true,
+            names: ['foo', 'bar'],
+          },
+        },
         main: {
           error: 'Custom error',
+          global: true,
           id: 'foobar',
           names: ['foo', 'bar'],
         },
         native: { bar: '', foo: '' },
-        validator: { foobar: { error: 'Custom error', names: ['foo', 'bar'] } },
+        validator: {
+          foobar: {
+            error: 'Custom error',
+            global: true,
+            names: ['foo', 'bar'],
+          },
+        },
       });
     });
   });
