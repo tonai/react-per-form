@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { getErrorMessage, goto } from './helpers';
 
-const url = '/';
+const url = '/component-simple';
 const submitMsg = 'Submit!';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
 
-test.describe('Hook Simple Input Native', () => {
+test.describe('Component Simple Input Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
   // We also don't know if the reportValidity function was called or not.
   // So we can't really test the different modes, which is why we only test the submit mode here.
