@@ -51,12 +51,12 @@ export default function HookDoubleForm() {
               type="number"
             />
             {errors.native?.double2 && (
-              <div className="error" data-testid="double-1-error">
+              <div className="error" data-testid="double-2-error">
                 {errors.native.double2}
               </div>
             )}
           </div>
-          {errors.validator?.double && (
+          {errors.validator?.double?.error && (
             <div className="error" data-testid="double-validator-error">
               {errors.validator.double.error}
             </div>

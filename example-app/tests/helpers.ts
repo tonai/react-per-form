@@ -32,3 +32,9 @@ export async function selectRevalidateMode(
   await select.selectOption(mode);
   await expect(select).toHaveValue(mode);
 }
+
+export function getErrorMessage(page: Page, testId: string): Promise<string> {
+  return page
+    .getByTestId(testId)
+    .evaluate((element) => (element as HTMLInputElement).validationMessage);
+}

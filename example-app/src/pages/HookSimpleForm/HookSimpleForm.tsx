@@ -3,7 +3,7 @@ import { Reset, Submit, formContext, useForm } from 'react-form-validation';
 import Filters from '../../components/Filters/Filters';
 import {
   nativeFooValidator,
-  globalValidatorMultiple,
+  globalFooValidator,
 } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
@@ -16,7 +16,7 @@ export default function HookSimpleForm() {
   const validators = useMemo(
     () => ({
       foo: nativeFooValidator,
-      foobar: { validator: globalValidatorMultiple, names: ['foo'] },
+      foobar: { validator: globalFooValidator, names: ['foo'] },
     }),
     [],
   );

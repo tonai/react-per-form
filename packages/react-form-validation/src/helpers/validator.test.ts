@@ -4,6 +4,7 @@ import { initialError } from '../constants';
 
 import {
   displayErrors,
+  getAllError,
   getData,
   getErrorObject,
   getFieldMessages,
@@ -258,6 +259,25 @@ describe('validator helper', () => {
       displayErrors(errors, form, [], () => '', false, false, true, ['foo']);
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
+    });
+  });
+
+  describe('getAllError', () => {
+    it('should get the all error object', () => {
+      expect(getAllError({}, {})).toEqual({});
+      expect(getAllError({ foo: 'error' }, {})).toEqual({ foo: 'error' });
+      expect(
+        getAllError(
+          {},
+          { foobar: { error: 'error', global: true, names: ['foo'] } },
+        ),
+      ).toEqual({ foo: 'error' });
+      expect(
+        getAllError(
+          { foo: 'error' },
+          { foobar: { error: 'error', global: true, names: ['foo'] } },
+        ),
+      ).toEqual({ foo: 'error' });
     });
   });
 

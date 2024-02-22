@@ -1,12 +1,14 @@
-import { useId, useMemo } from 'react';
 import { useInputs } from 'react-form-validation';
 import { doubleValidator } from '../../helpers/validators';
 
+const names = ['double-1', 'double-2'];
+
 function Double() {
-  const id1 = useId();
-  const id2 = useId();
-  const names = useMemo(() => [id1, id2], [id1, id2]);
-  const { errors } = useInputs({ names, validator: doubleValidator });
+  const { errors } = useInputs({
+    id: 'double',
+    names,
+    validator: doubleValidator,
+  });
 
   return (
     <>
@@ -14,13 +16,13 @@ function Double() {
         <input
           autoComplete="off"
           data-testid="double-1"
-          name={id1}
+          name="double-1"
           required
           type="number"
         />
-        {errors.all?.[id1] && (
+        {errors.all?.['double-1'] && (
           <div className="error" data-testid="double-1-error">
-            {errors.native[id1]}
+            {errors.native['double-1']}
           </div>
         )}
       </div>
@@ -28,13 +30,13 @@ function Double() {
         <input
           autoComplete="off"
           data-testid="double-2"
-          name={id2}
+          name="double-2"
           required
           type="number"
         />
-        {errors.all?.[id2] && (
+        {errors.all?.['double-2'] && (
           <div className="error" data-testid="double-2-error">
-            {errors.native[id2]}
+            {errors.native['double-2']}
           </div>
         )}
       </div>
