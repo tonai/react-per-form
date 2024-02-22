@@ -1,12 +1,11 @@
-import { useId, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useInputs } from 'react-form-validation';
 import { dynamicValidator } from '../../helpers/validators';
 
 function Dynamic() {
-  const name = useId();
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
-  const names = useMemo(() => ids.map((id) => `${name}-${id}`), [ids, name]);
+  const names = useMemo(() => ids.map((id) => `$dynamic-${id}`), [ids]);
   const { errors } = useInputs({
     id: 'dynamic',
     names,
@@ -32,7 +31,7 @@ function Dynamic() {
           <input
             autoComplete="off"
             data-testid={`dynamic-${id}`}
-            name={`${name}-${id}`}
+            name={`dynamic-${id}`}
             required
             type="number"
           />
@@ -44,9 +43,9 @@ function Dynamic() {
           >
             Remove
           </button>
-          {errors.all?.[`${name}-${id}`] && (
+          {errors.all?.[`dynamic-${id}`] && (
             <div className="error" data-testid={`dynamic-${id}-error`}>
-              {errors.native?.[`${name}-${id}`]}
+              {errors.native?.[`dynamic-${id}`]}
             </div>
           )}
         </div>

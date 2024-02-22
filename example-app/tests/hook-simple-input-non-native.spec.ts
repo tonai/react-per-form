@@ -1,4 +1,4 @@
-import { /*  */ expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import {
   disableNativeValidation,
   goto,
@@ -6,14 +6,14 @@ import {
   selectRevalidateMode,
 } from './helpers';
 
-const url = '/component-simple';
+const url = '/';
 const submitMsg = 'Submit!';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
 
-test.describe('Component Simple Input', () => {
-  test('non native, mode=submit', async ({ page }) => {
+test.describe('Hook Simple Input Non Native', () => {
+  test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -48,12 +48,12 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -73,7 +73,7 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
   });
 
-  test('non native, mode=change', async ({ page }) => {
+  test('mode=change', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'change');
@@ -104,12 +104,12 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -134,7 +134,7 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
   });
 
-  test('non native, mode=blur', async ({ page }) => {
+  test('mode=blur', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'blur');
@@ -167,13 +167,13 @@ test.describe('Component Simple Input', () => {
     await page.getByTestId('simple').fill('foo');
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
@@ -195,7 +195,7 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
   });
 
-  test('non native, mode=all', async ({ page }) => {
+  test('mode=all', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'all');
@@ -226,12 +226,12 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -256,7 +256,7 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
   });
 
-  test('non native, revalidateMode=change', async ({ page }) => {
+  test('revalidateMode=change', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectRevalidateMode(page, 'change');
@@ -287,12 +287,12 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -317,7 +317,7 @@ test.describe('Component Simple Input', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
   });
 
-  test('non native, revalidateMode=blur', async ({ page }) => {
+  test('revalidateMode=blur', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectRevalidateMode(page, 'blur');
@@ -350,13 +350,13 @@ test.describe('Component Simple Input', () => {
     await page.getByTestId('simple').fill('foo');
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
-    await expect(page.getByTestId('rfv-error')).toHaveText(barError);
+    await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();

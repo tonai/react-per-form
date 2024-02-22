@@ -25,7 +25,7 @@ export function dynamicValidator(values: IFormValues) {
     : 'The sum must be equal to 12';
 }
 
-export function globalValidatorMultiple(values: IFormValues) {
+export function globalFooValidator(values: IFormValues) {
   return String(values.foo).includes('bar')
     ? ''
     : 'Value should also contains "bar"';

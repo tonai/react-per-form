@@ -1,7 +1,7 @@
 import { Error, Form, Reset, Submit } from 'react-form-validation';
 import Input from '../../components/Input/Input';
 import Filters from '../../components/Filters/Filters';
-import { globalValidatorMultiple } from '../../helpers/validators';
+import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
 const messages = {
@@ -20,7 +20,7 @@ export default function ComponentSimpleForm() {
         data-testid="form"
         messages={messages}
         validators={{
-          foobar: { validator: globalValidatorMultiple, names: ['foo'] },
+          foobar: { validator: globalFooValidator, names: ['foo'] },
         }}
       >
         <Input name="foo" required />

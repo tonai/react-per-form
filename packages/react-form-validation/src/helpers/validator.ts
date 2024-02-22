@@ -103,6 +103,27 @@ export function getValidatorIds(
   return [...ids];
 }
 
+export function getAllError(
+  nativeErrors: Record<string, string>,
+  validatorErrors: Record<string, IValidatorError>,
+): Record<string, string> {
+  const all = Object.values(validatorErrors).reduce<Record<string, string>>(
+    (acc, { error, names }) => {
+      for (const name of names) {
+        acc[name] ||= error;
+      }
+      return acc;
+    },
+    {},
+  );
+  for (const [name, value] of Object.entries(nativeErrors)) {
+    if (value || !all[name]) {
+      all[name] = value;
+    }
+  }
+  return all;
+}
+
 export function getErrorObject(
   nativeErrors: Record<string, string>,
   validatorErrors: Record<string, IValidatorError>,
@@ -114,20 +135,7 @@ export function getErrorObject(
   const global = Object.fromEntries(
     Object.entries(validator).filter(([, { global }]) => global),
   );
-  const all = Object.values(validator).reduce<Record<string, string>>(
-    (acc, { error, names }) => {
-      for (const name of names) {
-        acc[name] ||= error;
-      }
-      return acc;
-    },
-    {},
-  );
-  for (const [name, value] of Object.entries(native)) {
-    if (value || !all[name]) {
-      all[name] = value;
-    }
-  }
+  const all = getAllError(native, validator);
   const errors: IError = {
     all,
     global,
@@ -139,23 +147,23 @@ export function getErrorObject(
 }
 
 export function mergeErrors(prevErrors: IError, errors: IError): IError {
+  const native = {
+    ...prevErrors.native,
+    ...errors.native,
+  };
+  const validator = {
+    ...prevErrors.validator,
+    ...errors.validator,
+  };
+  const all = getAllError(native, validator);
   const newErrors = {
-    all: {
-      ...prevErrors.all,
-      ...errors.all,
-    },
+    all,
     global: {
       ...prevErrors.global,
       ...errors.global,
     },
-    native: {
-      ...prevErrors.native,
-      ...errors.native,
-    },
-    validator: {
-      ...prevErrors.validator,
-      ...errors.validator,
-    },
+    native,
+    validator,
   };
   setMainError(newErrors);
   return newErrors;
