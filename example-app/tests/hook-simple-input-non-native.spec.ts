@@ -4,10 +4,10 @@ import {
   goto,
   selectMode,
   selectRevalidateMode,
+  submitMsg,
 } from './helpers';
 
 const url = '/';
-const submitMsg = 'Submit!';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';

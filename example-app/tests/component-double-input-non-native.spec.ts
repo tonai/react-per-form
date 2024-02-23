@@ -4,10 +4,10 @@ import {
   goto,
   selectMode,
   selectRevalidateMode,
+  submitMsg,
 } from './helpers';
 
 const url = '/component-double';
-const submitMsg = 'Submit!';
 const missError = 'Did you miss something ?';
 const validatorError = 'Second value must be greater than first value';
 
@@ -95,7 +95,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -107,7 +107,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
@@ -201,7 +201,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -213,7 +213,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
@@ -307,7 +307,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -319,7 +319,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
@@ -413,7 +413,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -425,7 +425,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
@@ -519,7 +519,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -531,7 +531,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
@@ -625,7 +625,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     expect(await consoleMsg).toEqual(submitMsg);
-    // // manual reset
+    // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
@@ -637,7 +637,7 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('7');
     await page.getByTestId('double-1').blur();
-    // // reset button
+    // reset button
     await page.getByTestId('rfv-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');

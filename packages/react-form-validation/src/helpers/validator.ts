@@ -206,7 +206,7 @@ export function getValidatorError(
       const error = validator(getData(formData, fieldNames), fieldNames);
       // @ts-expect-error access HTMLFormControlsCollection with input name
       const input = form.elements[name] as HTMLInputElement;
-      if (!input.validationMessage && error) {
+      if (input && !input.validationMessage && error) {
         input.setCustomValidity(error);
       }
       validatorErrors[id] = { error, global: !setErrors, names: fieldNames };
