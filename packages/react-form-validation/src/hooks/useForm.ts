@@ -169,21 +169,18 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       ref.current &&
       (mode === 'all' || mode === 'blur' || revalidateMode === 'blur')
     ) {
-      const inputs = getFormInputs(ref.current);
-      const listeners = inputs.map<[HTMLInputElement, () => void]>((input) => {
-        const eventHandler = (): boolean =>
+      const form = ref.current;
+      const handleFocusOut = (event: FocusEvent): void => {
+        if (event.target instanceof HTMLInputElement) {
           validate(
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',
-            input.getAttribute('name'),
+            event.target.getAttribute('name'),
           );
-        input.addEventListener('blur', eventHandler);
-        return [input, eventHandler];
-      });
-      return () =>
-        listeners.forEach(([input, eventHandler]) =>
-          input.removeEventListener('blur', eventHandler),
-        );
+        }
+      };
+      form.addEventListener('focusout', handleFocusOut);
+      return () => form.removeEventListener('focusout', handleFocusOut);
     }
     return undefined;
   }, [mode, revalidateMode, validate]);

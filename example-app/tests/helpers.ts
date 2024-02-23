@@ -1,12 +1,19 @@
 import { Page, expect } from '@playwright/test';
 import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
 
+export const submitMsg = 'Submit!';
+
 export async function goto(page: Page, url: string) {
   await page.goto(url);
   await expect(page.getByTestId('form')).toBeVisible();
   return {
     consoleMsg: new Promise((resolve) => {
-      page.on('console', (msg) => resolve(msg.text()));
+      page.on('console', (msg) => {
+        const text = msg.text();
+        if (text === submitMsg) {
+          resolve(text);
+        }
+      });
     }),
   };
 }

@@ -5,7 +5,7 @@ import { dynamicValidator } from '../../helpers/validators';
 function Dynamic() {
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
-  const names = useMemo(() => ids.map((id) => `$dynamic-${id}`), [ids]);
+  const names = useMemo(() => ids.map((id) => `dynamic-${id}`), [ids]);
   const { errors } = useInputs({
     id: 'dynamic',
     names,

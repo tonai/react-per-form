@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { getErrorMessage, goto } from './helpers';
+import { getErrorMessage, goto, submitMsg } from './helpers';
 
 const url = '/component-simple';
-const submitMsg = 'Submit!';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
