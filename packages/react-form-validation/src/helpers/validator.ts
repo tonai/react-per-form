@@ -214,6 +214,22 @@ export function getValidatorError(
   return validatorErrors;
 }
 
+export function focusError(
+  inputs: HTMLInputElement[],
+  main?: IMainError,
+): boolean {
+  if (main) {
+    const focusInput = inputs.find((input) =>
+      main.names.includes(input.getAttribute('name') as string),
+    );
+    if (focusInput) {
+      focusInput.focus();
+      return true;
+    }
+  }
+  return false;
+}
+
 export function displayErrors(
   errors: IError,
   form: HTMLFormElement,
@@ -222,9 +238,20 @@ export function displayErrors(
   display: boolean,
   revalidate: boolean,
   useNativeValidation: boolean,
+  focusOnError?: boolean,
   names?: string[],
 ): void {
   const { native, validator } = errors;
+  const inputs = getFormInputs(form);
+
+  // Focus management
+  let focus = false;
+  function getFocus(): boolean {
+    return focus;
+  }
+  function setFocus(value: boolean): void {
+    focus = value;
+  }
 
   // Native validation
   if (useNativeValidation) {
@@ -251,10 +278,13 @@ export function displayErrors(
       if (setErrors) {
         setErrors((prevErrors) => {
           if (display || (revalidate && hasError(prevErrors))) {
-            return mergeErrors(
-              prevErrors,
-              getErrorObject(native, validator, fieldNames, [id]),
-            );
+            const fieldErrors = getErrorObject(native, validator, fieldNames, [
+              id,
+            ]);
+            if (focusOnError && !getFocus()) {
+              setFocus(focusError(inputs, fieldErrors.main));
+            }
+            return mergeErrors(prevErrors, fieldErrors);
           }
           return prevErrors;
         });
@@ -265,6 +295,9 @@ export function displayErrors(
   // Form errors
   setErrors((prevErrors) => {
     if (display || (revalidate && hasError(prevErrors))) {
+      if (focusOnError && !getFocus()) {
+        setFocus(focusError(inputs, errors.main));
+      }
       return mergeErrors(prevErrors, errors);
     }
     return prevErrors;
@@ -279,6 +312,7 @@ export function validateForm(
   revalidate: boolean,
   useNativeValidation: boolean,
   messages?: IValidityMessages,
+  focusOnError?: boolean,
   names?: string[],
 ): IError {
   const inputs = getFormInputs(form);
@@ -311,7 +345,9 @@ export function validateForm(
     display,
     revalidate,
     useNativeValidation,
+    focusOnError,
     names,
   );
+
   return errors;
 }

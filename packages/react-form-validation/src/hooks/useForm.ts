@@ -18,6 +18,7 @@ import { initialError } from '../constants';
 import { getFormInputs, getValidatorMap, validateForm } from '../helpers';
 
 export interface IUseFormProps {
+  focusOnError?: boolean;
   messages?: IValidityMessages;
   mode?: IFormMode;
   onSubmit?: (event: FormEvent<HTMLFormElement>, values: IFormValues) => void;
@@ -38,6 +39,7 @@ export interface IUseFormResult extends IFormContext {
 
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
+    focusOnError = true,
     onSubmit,
     messages,
     mode = 'submit',
@@ -63,12 +65,16 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   }, []);
 
   const validate = useCallback(
-    (display = false, revalidate = false, names?: string[] | string | null) => {
+    (
+      display = false,
+      revalidate = false,
+      focusOnError = false,
+      names?: string[] | string | null,
+    ) => {
       if (!ref.current) {
         return false;
       }
 
-      // field validation
       const validatorMap = getValidatorMap(
         fields.current,
         validators,
@@ -84,6 +90,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         revalidate,
         useNativeValidation,
         messages,
+        focusOnError,
         names instanceof Array ? names : names ? [names] : undefined,
       );
 
@@ -98,10 +105,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (
       display?: boolean,
       revalidate?: boolean,
+      focusOnError?: boolean,
       names?: string[] | string | null,
     ) => {
       clearTimeout(timer.current);
-      timer.current = setTimeout(() => validate(display, revalidate, names), 0);
+      timer.current = setTimeout(
+        () => validate(display, revalidate, focusOnError, names),
+        0,
+      );
     },
     [validate],
   );
@@ -127,6 +138,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       debouncedValidate(
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
+        false,
         (event.target as HTMLInputElement).name,
       );
     },
@@ -149,14 +161,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      if (validate(true) && ref.current) {
+      if (validate(true, false, focusOnError) && ref.current) {
         const formData = new FormData(ref.current);
         onSubmit?.(event, Object.fromEntries(formData.entries()));
       } else {
         event.preventDefault();
       }
     },
-    [onSubmit, validate],
+    [focusOnError, onSubmit, validate],
   );
 
   useEffect(() => {
@@ -175,6 +187,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           validate(
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',
+            false,
             event.target.getAttribute('name'),
           );
         }

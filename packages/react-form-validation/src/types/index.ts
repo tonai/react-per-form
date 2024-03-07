@@ -13,6 +13,7 @@ export type IValidate = (
 export type IFormValidate = (
   display?: boolean,
   revalidate?: boolean,
+  focusOnError?: boolean,
   name?: string[] | string,
 ) => boolean;
 

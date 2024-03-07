@@ -37,7 +37,7 @@ export function getValidatorMap(
 ): Map<string, Set<ISetValidatorParams>> {
   const validatorMap = new Map<string, Set<ISetValidatorParams>>();
 
-  // field validators
+  // Field validators
   for (const params of fieldValidators.values()) {
     for (const name of params.names) {
       insertInMapSet(validatorMap, name, params);

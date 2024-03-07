@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { getErrorMessage, goto, submitMsg } from './helpers';
+import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-simple';
 const missError = 'Did you miss something ?';
@@ -28,6 +28,7 @@ test.describe('Component Simple Input Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -36,6 +37,7 @@ test.describe('Component Simple Input Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -44,6 +46,7 @@ test.describe('Component Simple Input Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -52,8 +55,9 @@ test.describe('Component Simple Input Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual('');
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual('');
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);

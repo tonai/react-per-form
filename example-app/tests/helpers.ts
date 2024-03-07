@@ -10,8 +10,8 @@ export async function goto(page: Page, url: string) {
     consoleMsg: new Promise((resolve) => {
       page.on('console', (msg) => {
         const text = msg.text();
-        if (text === submitMsg) {
-          resolve(text);
+        if (text.includes(submitMsg)) {
+          resolve(true);
         }
       });
     }),
