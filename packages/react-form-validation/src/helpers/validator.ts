@@ -193,7 +193,7 @@ export function getValidatorError(
   validatorEntries: [string, Set<ISetValidatorParams>][],
 ): Record<string, IValidatorError> {
   const validatorErrors: Record<string, IValidatorError> = {};
-  const formData: FormData = new FormData(form);
+  const formData = new FormData(form);
 
   for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {

@@ -6,7 +6,9 @@ import { useForm } from '../../hooks';
 
 type IElementProps = JSX.IntrinsicElements['form'];
 
-export interface IFormProps extends IUseFormProps, IElementProps {
+export interface IFormProps
+  extends IUseFormProps,
+    Omit<IElementProps, 'onSubmit'> {
   children: ReactNode;
 }
 

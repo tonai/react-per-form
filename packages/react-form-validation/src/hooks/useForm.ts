@@ -4,6 +4,7 @@ import type {
   IFormMode,
   IFormRevalidateMode,
   IFormValidator,
+  IFormValues,
   ISetValidatorParams,
   ISubscriber,
   IValidator,
@@ -19,7 +20,7 @@ import { getFormInputs, getValidatorMap, validateForm } from '../helpers';
 export interface IUseFormProps {
   messages?: IValidityMessages;
   mode?: IFormMode;
-  onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (event: FormEvent<HTMLFormElement>, values: IFormValues) => void;
   revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
   validators?: IFormValidator[] | Record<string, IFormValidator | IValidator>;
@@ -148,8 +149,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      if (validate(true)) {
-        onSubmit?.(event);
+      if (validate(true) && ref.current) {
+        const formData = new FormData(ref.current);
+        onSubmit?.(event, Object.fromEntries(formData.entries()));
       } else {
         event.preventDefault();
       }
