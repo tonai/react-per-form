@@ -1,9 +1,7 @@
 import type {
   IError,
-  IFormValues,
   IMainError,
   IValidator,
-  IValidatorMultiple,
   IValidityMessages,
 } from '../types';
 
@@ -26,18 +24,12 @@ export interface IUseInputResult {
 export function useInput(props: IUseInputProps): IUseInputResult {
   const { id, name, messages, validator } = props;
 
-  const validatorMultiple: IValidatorMultiple | undefined = useMemo(() => {
-    if (validator) {
-      return (values: IFormValues) => validator(values[name], name);
-    }
-    return undefined;
-  }, [name, validator]);
   const names = useMemo(() => [name], [name]);
   const { errors } = useInputs({
     id: id ?? name,
     messages,
     names,
-    validator: validatorMultiple,
+    validator,
   });
 
   return { error: errors.main, errors };

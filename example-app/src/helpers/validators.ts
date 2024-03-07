@@ -1,11 +1,7 @@
 import { IFormValues } from 'react-form-validation';
 
-export function hookFooValidator(value: FormDataEntryValue | null) {
-  return String(value).includes('foo') ? '' : 'Value does not include "foo"';
-}
-
-export function nativeFooValidator(value: IFormValues) {
-  return String(value.foo).includes('foo')
+export function fooValidator(values: IFormValues) {
+  return String(values.foo).includes('foo')
     ? ''
     : 'Value does not include "foo"';
 }

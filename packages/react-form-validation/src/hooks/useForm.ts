@@ -6,7 +6,7 @@ import type {
   IFormValidator,
   ISetValidatorParams,
   ISubscriber,
-  IValidatorMultiple,
+  IValidator,
   IValidityMessages,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
@@ -22,9 +22,7 @@ export interface IUseFormProps {
   onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
   revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
-  validators?:
-    | IFormValidator[]
-    | Record<string, IFormValidator | IValidatorMultiple>;
+  validators?: IFormValidator[] | Record<string, IFormValidator | IValidator>;
 }
 
 export interface IUseFormResult extends IFormContext {

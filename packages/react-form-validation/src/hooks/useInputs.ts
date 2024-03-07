@@ -1,7 +1,7 @@
 import type {
   IError,
   IMainError,
-  IValidatorMultiple,
+  IValidator,
   IValidityMessages,
 } from '../types';
 
@@ -14,7 +14,7 @@ export interface IUseInputsProps {
   id?: string;
   messages?: IValidityMessages;
   names: string[];
-  validator?: IValidatorMultiple;
+  validator?: IValidator;
 }
 
 export interface IUseInputsResult {

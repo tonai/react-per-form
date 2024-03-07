@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
+  IFormValues,
   IMainError,
   ISetValidatorParams,
   IValidatorError,
@@ -29,10 +30,7 @@ export function getNativeErrorKey(
   return null;
 }
 
-export function getData(
-  formData: FormData,
-  names: string[],
-): Record<string, FormDataEntryValue | null> {
+export function getData(formData: FormData, names: string[]): IFormValues {
   return Object.fromEntries(names.map((name) => [name, formData.get(name)]));
 }
 

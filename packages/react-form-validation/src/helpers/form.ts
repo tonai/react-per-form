@@ -1,7 +1,7 @@
 import type {
   IFormValidator,
   ISetValidatorParams,
-  IValidatorMultiple,
+  IValidator,
   IValidityMessages,
 } from '../types';
 
@@ -32,7 +32,7 @@ export function getValidatorMap(
   fieldValidators: Set<ISetValidatorParams>,
   formValidators?:
     | IFormValidator[]
-    | Record<string, IFormValidator | IValidatorMultiple>,
+    | Record<string, IFormValidator | IValidator>,
   messages?: IValidityMessages,
 ): Map<string, Set<ISetValidatorParams>> {
   const validatorMap = new Map<string, Set<ISetValidatorParams>>();
