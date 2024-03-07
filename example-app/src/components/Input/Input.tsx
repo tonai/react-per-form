@@ -1,12 +1,12 @@
 import { useId } from 'react';
 import { useInput } from 'react-form-validation';
-import { hookFooValidator } from '../../helpers/validators';
+import { fooValidator } from '../../helpers/validators';
 
 function Input(props: JSX.IntrinsicElements['input']) {
   const id = useId();
   const { error } = useInput({
     name: props.name ?? id,
-    validator: hookFooValidator,
+    validator: fooValidator,
   });
 
   return (

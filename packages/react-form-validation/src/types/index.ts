@@ -18,19 +18,11 @@ export type IFormValidate = (
 
 export type IFormValues = Record<string, FormDataEntryValue | null>;
 
-export type IValidator = (
-  value: FormDataEntryValue | null,
-  name: string,
-) => string;
-
-export type IValidatorMultiple = (
-  values: IFormValues,
-  names: string[],
-) => string;
+export type IValidator = (values: IFormValues, names: string[]) => string;
 
 export interface IFormValidator {
   names: string[];
-  validator: IValidatorMultiple;
+  validator: IValidator;
 }
 
 export interface ISetValidatorParams {
@@ -38,7 +30,7 @@ export interface ISetValidatorParams {
   messages?: IValidityMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
-  validator?: IValidatorMultiple;
+  validator?: IValidator;
 }
 
 export type ISetValidator = (params: ISetValidatorParams) => void;
