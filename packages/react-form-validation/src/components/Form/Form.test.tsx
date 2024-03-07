@@ -22,6 +22,20 @@ describe('Form component', () => {
     );
     fireEvent.submit(screen.getByTestId('rfv-form'));
     expect(onSubmit).toHaveBeenCalled();
+    expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: '' });
+  });
+
+  it('should get the form values in the onSubmit function', () => {
+    const onSubmit = jest.fn();
+    render(
+      <Form onSubmit={onSubmit}>
+        <input data-testid="foo" name="foo" />
+      </Form>,
+    );
+    fireEvent.change(screen.getByTestId('foo'), { target: { value: 'bar' } });
+    fireEvent.submit(screen.getByTestId('rfv-form'));
+    expect(onSubmit).toHaveBeenCalled();
+    expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: 'bar' });
   });
 
   it('should not call the onSubmit function (form invalid)', () => {

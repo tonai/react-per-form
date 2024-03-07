@@ -1,5 +1,9 @@
 import { FormEvent, useState } from 'react';
-import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import {
+  IFormMode,
+  IFormRevalidateMode,
+  IFormValues,
+} from 'react-form-validation';
 
 export function useFilters() {
   const [mode, setMode] = useState<IFormMode>('submit');
@@ -7,9 +11,9 @@ export function useFilters() {
     useState<IFormRevalidateMode>('submit');
   const [useNativeValidation, setUseNativeValidation] = useState(true);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: FormEvent<HTMLFormElement>, values: IFormValues) {
     event.preventDefault();
-    console.log('Submit!');
+    console.log('Submit!', values);
   }
 
   return {
