@@ -4,6 +4,7 @@ import { initialError } from '../constants';
 
 import {
   displayErrors,
+  focusError,
   getAllError,
   getData,
   getErrorObject,
@@ -121,6 +122,32 @@ describe('validator helper', () => {
       });
     });
 
+    it('should focus the error field (non native form validation)', () => {
+      const errors: IError = {
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      };
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const spy = jest.spyOn(input1, 'focus');
+      displayErrors(errors, form, [], formErrors, true, true, false, true);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], formErrors, true, false, false, true);
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], formErrors, false, true, false, true);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(errors, form, [], formErrors, false, false, false, true);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
     it('should display the input errors (non native input validation)', () => {
       const errors: IError = {
         all: { foo: 'error' },
@@ -148,9 +175,17 @@ describe('validator helper', () => {
           ]),
         ],
       ];
-      displayErrors(errors, form, validators, formErrors, true, true, false, [
-        'foo',
-      ]);
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        true,
+        true,
+        false,
+        false,
+        ['foo'],
+      );
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
@@ -167,9 +202,17 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, true, false, false, [
-        'foo',
-      ]);
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        true,
+        false,
+        false,
+        false,
+        ['foo'],
+      );
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
@@ -186,9 +229,17 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, false, true, false, [
-        'foo',
-      ]);
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        false,
+        true,
+        false,
+        false,
+        ['foo'],
+      );
       expect(inputErrors.mock.results[0].value).toEqual({
         all: {},
         global: {},
@@ -203,9 +254,17 @@ describe('validator helper', () => {
       });
       formErrors.mockClear();
       inputErrors.mockClear();
-      displayErrors(errors, form, validators, formErrors, false, false, false, [
-        'foo',
-      ]);
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        false,
+        false,
+        false,
+        false,
+        ['foo'],
+      );
       expect(inputErrors.mock.results[0].value).toEqual({
         all: {},
         global: {},
@@ -218,6 +277,88 @@ describe('validator helper', () => {
         native: {},
         validator: {},
       });
+    });
+
+    it('should focus the error field (non native input validation)', () => {
+      const errors: IError = {
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        native: { foo: 'error' },
+        validator: {},
+      };
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const validators: [string, Set<ISetValidatorParams>][] = [
+        [
+          'foo',
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              setErrors: inputErrors,
+              validator: () => '',
+            },
+          ]),
+        ],
+      ];
+      const spy = jest.spyOn(input1, 'focus');
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        true,
+        true,
+        false,
+        true,
+        ['foo'],
+      );
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        true,
+        false,
+        false,
+        true,
+        ['foo'],
+      );
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        false,
+        true,
+        false,
+        true,
+        ['foo'],
+      );
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockClear();
+      displayErrors(
+        errors,
+        form,
+        validators,
+        formErrors,
+        false,
+        false,
+        false,
+        true,
+        ['foo'],
+      );
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
     });
 
     it('should trigger form reportValidity function (native form validation)', () => {
@@ -247,16 +388,90 @@ describe('validator helper', () => {
         validator: {},
       };
       const spy = jest.spyOn(input1, 'reportValidity');
-      displayErrors(errors, form, [], () => '', true, true, true, ['foo']);
+      displayErrors(errors, form, [], () => '', true, true, true, false, [
+        'foo',
+      ]);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', true, false, true, ['foo']);
+      displayErrors(errors, form, [], () => '', true, false, true, false, [
+        'foo',
+      ]);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', false, true, true, ['foo']);
+      displayErrors(errors, form, [], () => '', false, true, true, false, [
+        'foo',
+      ]);
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
-      displayErrors(errors, form, [], () => '', false, false, true, ['foo']);
+      displayErrors(errors, form, [], () => '', false, false, true, false, [
+        'foo',
+      ]);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+  });
+
+  describe('focusError', () => {
+    it('should not set the focus (no error)', () => {
+      const spy = jest.spyOn(input1, 'focus');
+      expect(
+        focusError(Array.from(form.elements) as HTMLInputElement[]),
+      ).toEqual(false);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('should set the focus on the right field', () => {
+      const spy1 = jest.spyOn(input1, 'focus');
+      const spy2 = jest.spyOn(input2, 'focus');
+      expect(
+        focusError(Array.from(form.elements) as HTMLInputElement[], {
+          error: 'error',
+          global: false,
+          id: 'foo',
+          names: ['foo'],
+        }),
+      ).toEqual(true);
+      expect(spy1).toHaveBeenCalled();
+      expect(spy2).not.toHaveBeenCalled();
+      spy1.mockClear();
+      spy2.mockClear();
+      expect(
+        focusError(Array.from(form.elements) as HTMLInputElement[], {
+          error: 'error',
+          global: false,
+          id: 'foobar',
+          names: ['foo', 'bar'],
+        }),
+      ).toEqual(true);
+      expect(spy1).toHaveBeenCalled();
+      expect(spy2).not.toHaveBeenCalled();
+      spy1.mockClear();
+      spy2.mockClear();
+      expect(
+        focusError(Array.from(form.elements) as HTMLInputElement[], {
+          error: 'error',
+          global: false,
+          id: 'bar',
+          names: ['bar'],
+        }),
+      ).toEqual(true);
+      expect(spy1).not.toHaveBeenCalled();
+      expect(spy2).toHaveBeenCalled();
+      spy1.mockRestore();
+      spy2.mockRestore();
+    });
+
+    it('should not set the focus (error is for another field)', () => {
+      const spy = jest.spyOn(input1, 'focus');
+      expect(
+        focusError(Array.from(form.elements) as HTMLInputElement[], {
+          error: 'error',
+          global: false,
+          id: 'baz',
+          names: ['baz'],
+        }),
+      ).toEqual(false);
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });

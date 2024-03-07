@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { getErrorMessage, goto, submitMsg } from './helpers';
+import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-double';
 const missError = 'Did you miss something ?';
@@ -33,6 +33,8 @@ test.describe('Hook Double Input Native', () => {
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
     // fix native error 1
@@ -44,6 +46,8 @@ test.describe('Hook Double Input Native', () => {
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
     // fix native error 2
@@ -55,6 +59,8 @@ test.describe('Hook Double Input Native', () => {
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
     // fix validator error
@@ -66,9 +72,11 @@ test.describe('Hook Double Input Native', () => {
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);

@@ -4,7 +4,6 @@ import {
   goto,
   selectMode,
   selectRevalidateMode,
-  submitMsg,
 } from './helpers';
 
 const url = '/hook-dynamic';
@@ -50,6 +49,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -70,6 +70,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -90,10 +91,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -112,6 +114,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -132,6 +136,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
@@ -211,6 +217,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -231,6 +238,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -247,10 +255,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -273,6 +282,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -289,6 +300,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
@@ -374,6 +387,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -394,6 +408,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -412,10 +427,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -436,6 +452,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -454,6 +472,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
@@ -537,6 +557,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -557,6 +578,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -573,10 +595,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -599,6 +622,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -615,6 +640,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
@@ -690,6 +717,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -710,6 +738,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -726,10 +755,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -748,6 +778,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -764,6 +796,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
@@ -835,6 +869,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).toHaveText(missError);
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -855,6 +890,7 @@ test.describe('Hook Dynamic Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -873,10 +909,11 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // Add input
     await page.getByTestId('dynamic-add').click();
     await expect(page.getByTestId('dynamic-1')).toBeVisible();
@@ -895,6 +932,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).toHaveText(
@@ -913,6 +952,8 @@ test.describe('Hook Dynamic Input Non Native', () => {
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('dynamic-0')).not.toBeFocused();
+    expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     await expect(page.getByTestId('dynamic-0-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-1-error')).not.toBeVisible();
     await expect(page.getByTestId('dynamic-validator-error')).not.toBeVisible();

@@ -4,7 +4,6 @@ import {
   goto,
   selectMode,
   selectRevalidateMode,
-  submitMsg,
 } from './helpers';
 
 const url = '/component-double';
@@ -43,6 +42,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -57,6 +58,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -71,6 +74,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -91,10 +96,12 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
@@ -149,6 +156,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -163,6 +172,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -181,6 +192,8 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -197,10 +210,12 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
@@ -255,6 +270,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -269,6 +286,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -285,6 +304,8 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -303,10 +324,12 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
@@ -361,6 +384,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -375,6 +400,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -393,6 +420,8 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -409,10 +438,12 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
@@ -467,6 +498,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -481,6 +514,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -499,6 +534,8 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -515,10 +552,12 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
@@ -573,6 +612,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).toHaveText(missError);
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -587,6 +628,8 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).toHaveText(missError);
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
@@ -603,6 +646,8 @@ test.describe('Component Double Input Non Native', () => {
     );
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).toHaveText(
@@ -621,10 +666,12 @@ test.describe('Component Double Input Non Native', () => {
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('double-1')).not.toBeFocused();
+    expect(page.getByTestId('double-2')).not.toBeFocused();
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();
     await expect(page.getByTestId('double-2-error')).not.toBeVisible();
     await expect(page.getByTestId('double-validator-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('double-1').fill('');
     await expect(page.getByTestId('double-1-error')).not.toBeVisible();

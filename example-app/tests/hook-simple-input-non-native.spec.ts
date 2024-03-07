@@ -4,7 +4,6 @@ import {
   goto,
   selectMode,
   selectRevalidateMode,
-  submitMsg,
 } from './helpers';
 
 const url = '/';
@@ -32,6 +31,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -40,6 +40,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -48,6 +49,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -56,8 +58,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -93,6 +96,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -101,6 +105,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -109,6 +114,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -117,8 +123,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
@@ -154,6 +161,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -162,6 +170,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -170,6 +179,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -178,8 +188,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -215,6 +226,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -223,6 +235,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -231,6 +244,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -239,8 +253,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
@@ -276,6 +291,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -284,6 +300,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -292,6 +309,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -300,8 +318,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -337,6 +356,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // fix native error
     await page.getByTestId('simple').fill('f');
@@ -345,6 +365,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     // fix custom error
     await page.getByTestId('simple').fill('foo');
@@ -353,6 +374,7 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     // fix global error
     await page.getByTestId('simple').fill('foobar');
@@ -361,8 +383,9 @@ test.describe('Hook Simple Input Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    expect(await consoleMsg).toEqual(submitMsg);
+    expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();

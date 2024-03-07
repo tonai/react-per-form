@@ -72,3 +72,12 @@ button:focus-visible {
 .error {
   color: red;
 }
+
+input:not([type='reset'], [type='submit']) {
+  border: 2px solid white;
+}
+
+input:invalid {
+  border-color: red;
+  outline-offset: 2px;
+}
