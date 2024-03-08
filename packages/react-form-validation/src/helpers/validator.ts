@@ -353,7 +353,10 @@ export function validateForm(
   // Native errors
   const nativeErrors = inputs.reduce<Record<string, string>>((acc, input) => {
     const inputName = input.getAttribute('name') ?? '';
-    acc[inputName] = getNativeError(input, fieldMessages[inputName]);
+    acc[inputName] = getNativeError(
+      input,
+      fieldMessages[inputName] ?? messages,
+    );
     return acc;
   }, {});
 

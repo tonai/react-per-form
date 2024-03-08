@@ -906,6 +906,41 @@ describe('validator helper', () => {
       });
     });
 
+    it('should return the required error with custom message', () => {
+      input1.setAttribute('required', '');
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      expect(
+        validateForm(form, new Map(), formErrors, true, true, false, {
+          valueMissing: 'Did you miss something ?',
+        }),
+      ).toEqual({
+        all: { bar: '', foo: 'Did you miss something ?' },
+        global: {},
+        main: {
+          error: 'Did you miss something ?',
+          global: false,
+          id: 'foo',
+          names: ['foo'],
+        },
+        native: { bar: '', foo: 'Did you miss something ?' },
+        validator: {},
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: { bar: '', foo: 'Did you miss something ?' },
+        global: {},
+        main: {
+          error: 'Did you miss something ?',
+          global: false,
+          id: 'foo',
+          names: ['foo'],
+        },
+        native: { bar: '', foo: 'Did you miss something ?' },
+        validator: {},
+      });
+    });
+
     it('should return the validator error', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
