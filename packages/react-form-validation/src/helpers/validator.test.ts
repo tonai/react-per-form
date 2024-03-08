@@ -1,4 +1,4 @@
-import type { IError, ISetValidatorParams } from '../types';
+import type { IError, ISetValidatorsParams } from '../types';
 
 import { initialError } from '../constants';
 
@@ -15,6 +15,8 @@ import {
   getValidatorError,
   getValidatorIds,
   hasError,
+  isValidator,
+  isValidatorObject,
   mergeErrors,
   setMainError,
   validateForm,
@@ -162,7 +164,7 @@ describe('validator helper', () => {
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<ISetValidatorParams>][] = [
+      const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
           new Set([
@@ -293,7 +295,7 @@ describe('validator helper', () => {
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<ISetValidatorParams>][] = [
+      const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
           new Set([
@@ -622,7 +624,7 @@ describe('validator helper', () => {
     });
 
     it('should return the validator error', () => {
-      const validators: [string, Set<ISetValidatorParams>][] = [
+      const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
           new Set([
@@ -641,7 +643,7 @@ describe('validator helper', () => {
 
     it('should not run the validator twice', () => {
       const validator = jest.fn(() => 'Custom error');
-      const validators: [string, Set<ISetValidatorParams>][] = [
+      const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
           new Set([
@@ -667,7 +669,7 @@ describe('validator helper', () => {
 
   describe('getValidatorIds', () => {
     it('should return the id list of validators', () => {
-      const validators: [string, Set<ISetValidatorParams>][] = [
+      const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
           new Set([
@@ -713,6 +715,32 @@ describe('validator helper', () => {
           validator: {},
         }),
       ).toEqual(true);
+    });
+  });
+
+  describe('isValidator', () => {
+    it('should test if param is validator or not', () => {
+      expect(isValidator(() => '')).toEqual(true);
+      expect(isValidator({ names: ['foo'], validator: () => '' })).toEqual(
+        false,
+      );
+      expect(isValidator({ foo: () => '' })).toEqual(false);
+      expect(
+        isValidator({ foo: { names: ['foo'], validator: () => '' } }),
+      ).toEqual(false);
+    });
+  });
+
+  describe('isValidatorObject', () => {
+    it('should test if param is validatorObject or not', () => {
+      expect(isValidatorObject(() => '')).toEqual(false);
+      expect(
+        isValidatorObject({ names: ['foo'], validator: () => '' }),
+      ).toEqual(true);
+      expect(isValidatorObject({ foo: () => '' })).toEqual(false);
+      expect(
+        isValidatorObject({ foo: { names: ['foo'], validator: () => '' } }),
+      ).toEqual(false);
     });
   });
 

@@ -26,12 +26,23 @@ export type IFormValues = Record<string, FormDataEntryValue | null>;
 
 export type IValidator = (values: IFormValues, names: string[]) => string;
 
-export interface IFormValidator {
+export interface IValidatorObject {
   names: string[];
   validator: IValidator;
 }
 
-export interface ISetValidatorParams {
+export interface ISetValidatorsParams {
+  id: string;
+  messages?: IValidityMessages;
+  names: string[];
+  setErrors?: Dispatch<SetStateAction<IError>>;
+  validators?:
+    | IValidator
+    | IValidatorObject
+    | Record<string, IValidator | IValidatorObject>;
+}
+
+export interface IFormValidator {
   id: string;
   messages?: IValidityMessages;
   names: string[];
@@ -39,9 +50,9 @@ export interface ISetValidatorParams {
   validator?: IValidator;
 }
 
-export type ISetValidator = (params: ISetValidatorParams) => void;
+export type ISetValidators = (params: ISetValidatorsParams) => void;
 
-export type IRemoveValidator = (params: ISetValidatorParams) => void;
+export type IRemoveValidators = (params: ISetValidatorsParams) => void;
 
 export interface IMainError {
   error: string;
@@ -73,9 +84,9 @@ export interface IFormContext {
   messages?: IValidityMessages;
   mode: IFormMode;
   ref: RefObject<HTMLFormElement>;
-  removeValidator: IRemoveValidator;
+  removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;
-  setValidator: ISetValidator;
+  setValidators: ISetValidators;
   subscribe: (subscriber: ISubscriber) => IUnSubscribe;
   useNativeValidation: boolean;
   validate: IFormValidate;

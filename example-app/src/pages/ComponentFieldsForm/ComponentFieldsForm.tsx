@@ -1,7 +1,6 @@
 import { Error, Form, Reset, Submit } from 'react-form-validation';
 import Fields from '../../components/Fields/Fields';
 import Filters from '../../components/Filters/Filters';
-import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
 const messages = {
@@ -19,9 +18,6 @@ export default function ComponentFieldsForm() {
         className="form"
         data-testid="form"
         messages={messages}
-        validators={{
-          foobar: { validator: globalFooValidator, names: ['foo'] },
-        }}
       >
         <Fields />
         <Error className="error" global />

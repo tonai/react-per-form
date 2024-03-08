@@ -2,6 +2,7 @@ import type {
   IError,
   IMainError,
   IValidator,
+  IValidatorObject,
   IValidityMessages,
 } from '../types';
 
@@ -14,7 +15,10 @@ export interface IUseInputsProps {
   id?: string;
   messages?: IValidityMessages;
   names: string[];
-  validator?: IValidator;
+  validators?:
+    | IValidator
+    | IValidatorObject
+    | Record<string, IValidator | IValidatorObject>;
 }
 
 export interface IUseInputsResult {
@@ -23,10 +27,10 @@ export interface IUseInputsResult {
 }
 
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
-  const { id, names, messages, validator } = props;
+  const { id, names, messages, validators } = props;
 
   const context = useContext(formContext);
-  const { removeValidator, setValidator } = context;
+  const { removeValidators, setValidators } = context;
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {
@@ -35,11 +39,11 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
       messages,
       names,
       setErrors,
-      validator,
+      validators,
     };
-    setValidator(params);
-    return () => removeValidator(params);
-  }, [id, messages, names, removeValidator, setValidator, validator]);
+    setValidators(params);
+    return () => removeValidators(params);
+  }, [id, messages, names, removeValidators, setValidators, validators]);
 
   return { error: errors.main, errors };
 }

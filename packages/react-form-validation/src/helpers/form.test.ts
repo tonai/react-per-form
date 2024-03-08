@@ -1,4 +1,9 @@
-import { getFormInputs, getValidatorMap, insertInMapSet } from './form';
+import {
+  getFormInputs,
+  getValidatorMap,
+  insertInMapSet,
+  isFormElement,
+} from './form';
 
 describe('form helper', () => {
   describe('getFormInputs', () => {
@@ -20,12 +25,113 @@ describe('form helper', () => {
   });
 
   describe('getValidatorMap', () => {
-    it('should add simple field validator', () => {
+    it('should add field without validator', () => {
       const validatorMap = getValidatorMap(
         new Set([{ id: 'foo', names: ['foo'] }]),
       );
       expect(validatorMap).toEqual(
         new Map([['foo', new Set([{ id: 'foo', names: ['foo'] }])]]),
+      );
+    });
+
+    it('should add field with validator function', () => {
+      const validatorMap = getValidatorMap(
+        new Set([{ id: 'foo', names: ['foo'], validators: () => '' }]),
+      );
+      expect(validatorMap).toEqual(
+        new Map([
+          [
+            'foo',
+            new Set([
+              {
+                id: 'foo',
+                names: ['foo'],
+              },
+              {
+                id: 'foo',
+                names: ['foo'],
+                validator: expect.any(Function) as () => void,
+              },
+            ]),
+          ],
+        ]),
+      );
+    });
+
+    it('should add field with validator object', () => {
+      const validatorMap = getValidatorMap(
+        new Set([
+          {
+            id: 'foo',
+            names: ['foo'],
+            validators: { names: ['foo'], validator: () => '' },
+          },
+        ]),
+      );
+      expect(validatorMap).toEqual(
+        new Map([
+          [
+            'foo',
+            new Set([
+              {
+                id: 'foo',
+                names: ['foo'],
+              },
+              {
+                id: 'foo',
+                names: ['foo'],
+                validator: expect.any(Function) as () => void,
+              },
+            ]),
+          ],
+        ]),
+      );
+    });
+
+    it('should add field with validator map object', () => {
+      const validatorMap = getValidatorMap(
+        new Set([
+          {
+            id: 'foobar',
+            names: ['foo', 'bar'],
+            validators: {
+              bar: { names: ['bar'], validator: () => '' },
+              foo: () => '',
+            },
+          },
+        ]),
+      );
+      expect(validatorMap).toEqual(
+        new Map([
+          [
+            'bar',
+            new Set([
+              {
+                id: 'foobar',
+                names: ['foo', 'bar'],
+              },
+              {
+                id: 'bar',
+                names: ['bar'],
+                validator: expect.any(Function) as () => void,
+              },
+            ]),
+          ],
+          [
+            'foo',
+            new Set([
+              {
+                id: 'foobar',
+                names: ['foo', 'bar'],
+              },
+              {
+                id: 'foo',
+                names: ['foo'],
+                validator: expect.any(Function) as () => void,
+              },
+            ]),
+          ],
+        ]),
       );
     });
 
@@ -69,7 +175,7 @@ describe('form helper', () => {
             id: 'foo',
             messages: { valueMissing: 'Input' },
             names: ['foo'],
-            validator: () => '',
+            validators: () => '',
           },
         ]),
         { bar: () => '' },
@@ -80,6 +186,11 @@ describe('form helper', () => {
           [
             'foo',
             new Set([
+              {
+                id: 'foo',
+                messages: { valueMissing: 'Input' },
+                names: ['foo'],
+              },
               {
                 id: 'foo',
                 messages: { valueMissing: 'Input' },
@@ -115,6 +226,15 @@ describe('form helper', () => {
       const map = new Map<string, Set<unknown>>([['foo', new Set(['bar'])]]);
       insertInMapSet(map, 'foo', 'baz');
       expect(map).toEqual(new Map([['foo', new Set(['bar', 'baz'])]]));
+    });
+  });
+
+  describe('isFormElement', () => {
+    it('should test if param is formElement or not', () => {
+      expect(isFormElement(document.createElement('div'))).toEqual(false);
+      expect(isFormElement(document.createElement('input'))).toEqual(true);
+      expect(isFormElement(document.createElement('select'))).toEqual(true);
+      expect(isFormElement(document.createElement('textarea'))).toEqual(true);
     });
   });
 });

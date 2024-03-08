@@ -73,7 +73,7 @@ describe('useInputs hook', () => {
       () =>
         useInput({
           name: 'foo',
-          validator: () => 'Validator error',
+          validators: () => 'Validator error',
         }),
       {
         wrapper: ({ children }) => (
