@@ -23,12 +23,13 @@ export function insertInMapSet<T>(
 }
 
 export function isFormElement(
-  input: Element | EventTarget,
+  input: Element | EventTarget | RadioNodeList,
 ): input is IFormElement {
   return (
     input instanceof HTMLInputElement ||
     input instanceof HTMLSelectElement ||
-    input instanceof HTMLTextAreaElement
+    input instanceof HTMLTextAreaElement ||
+    input instanceof RadioNodeList
   );
 }
 

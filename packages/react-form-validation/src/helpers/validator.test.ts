@@ -1,4 +1,4 @@
-import type { IError, ISetValidatorsParams } from '../types';
+import type { IError, IFormElement, ISetValidatorsParams } from '../types';
 
 import { initialError } from '../constants';
 
@@ -10,6 +10,7 @@ import {
   getErrorObject,
   getFieldMessages,
   getFilteredErrors,
+  getFormInput,
   getNativeError,
   getNativeErrorKey,
   getValidatorError,
@@ -26,6 +27,8 @@ describe('validator helper', () => {
   let form: HTMLFormElement;
   let input1: HTMLInputElement;
   let input2: HTMLInputElement;
+  let input3: HTMLInputElement;
+  let input4: HTMLInputElement;
 
   beforeEach(() => {
     form = document.createElement('form');
@@ -37,6 +40,16 @@ describe('validator helper', () => {
     input2.setAttribute('name', 'bar');
     input2.setAttribute('value', '');
     form.appendChild(input2);
+    input3 = document.createElement('input');
+    input3.setAttribute('name', 'radio');
+    input3.setAttribute('type', 'checkbox');
+    input3.setAttribute('value', '1');
+    form.appendChild(input3);
+    input4 = document.createElement('input');
+    input4.setAttribute('name', 'radio');
+    input4.setAttribute('type', 'checkbox');
+    input4.setAttribute('value', '2');
+    form.appendChild(input4);
   });
 
   describe('displayErrors', () => {
@@ -588,6 +601,17 @@ describe('validator helper', () => {
     });
   });
 
+  describe('getFormInput', () => {
+    it('should return the form input', () => {
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.foo as IFormElement)).toEqual(input1);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.bar as IFormElement)).toEqual(input2);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.radio as IFormElement)).toEqual(input3);
+    });
+  });
+
   describe('getNativeError', () => {
     it('should not return any error (valid)', () => {
       expect(getNativeError(input1, {})).toEqual('');
@@ -860,15 +884,15 @@ describe('validator helper', () => {
       expect(
         validateForm(form, new Map(), formErrors, true, true, false),
       ).toEqual({
-        all: { bar: '', foo: '' },
+        all: { bar: '', foo: '', radio: '' },
         global: {},
-        native: { bar: '', foo: '' },
+        native: { bar: '', foo: '', radio: '' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
-        all: { bar: '', foo: '' },
+        all: { bar: '', foo: '', radio: '' },
         global: {},
-        native: { bar: '', foo: '' },
+        native: { bar: '', foo: '', radio: '' },
         validator: {},
       });
     });
@@ -881,7 +905,7 @@ describe('validator helper', () => {
       expect(
         validateForm(form, new Map(), formErrors, true, true, false),
       ).toEqual({
-        all: { bar: '', foo: 'Constraints not satisfied' },
+        all: { bar: '', foo: 'Constraints not satisfied', radio: '' },
         global: {},
         main: {
           error: 'Constraints not satisfied',
@@ -889,11 +913,11 @@ describe('validator helper', () => {
           id: 'foo',
           names: ['foo'],
         },
-        native: { bar: '', foo: 'Constraints not satisfied' },
+        native: { bar: '', foo: 'Constraints not satisfied', radio: '' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
-        all: { bar: '', foo: 'Constraints not satisfied' },
+        all: { bar: '', foo: 'Constraints not satisfied', radio: '' },
         global: {},
         main: {
           error: 'Constraints not satisfied',
@@ -901,7 +925,7 @@ describe('validator helper', () => {
           id: 'foo',
           names: ['foo'],
         },
-        native: { bar: '', foo: 'Constraints not satisfied' },
+        native: { bar: '', foo: 'Constraints not satisfied', radio: '' },
         validator: {},
       });
     });
@@ -916,7 +940,7 @@ describe('validator helper', () => {
           valueMissing: 'Did you miss something ?',
         }),
       ).toEqual({
-        all: { bar: '', foo: 'Did you miss something ?' },
+        all: { bar: '', foo: 'Did you miss something ?', radio: '' },
         global: {},
         main: {
           error: 'Did you miss something ?',
@@ -924,11 +948,11 @@ describe('validator helper', () => {
           id: 'foo',
           names: ['foo'],
         },
-        native: { bar: '', foo: 'Did you miss something ?' },
+        native: { bar: '', foo: 'Did you miss something ?', radio: '' },
         validator: {},
       });
       expect(formErrors.mock.results[0].value).toEqual({
-        all: { bar: '', foo: 'Did you miss something ?' },
+        all: { bar: '', foo: 'Did you miss something ?', radio: '' },
         global: {},
         main: {
           error: 'Did you miss something ?',
@@ -936,7 +960,7 @@ describe('validator helper', () => {
           id: 'foo',
           names: ['foo'],
         },
-        native: { bar: '', foo: 'Did you miss something ?' },
+        native: { bar: '', foo: 'Did you miss something ?', radio: '' },
         validator: {},
       });
     });
@@ -960,7 +984,7 @@ describe('validator helper', () => {
       expect(
         validateForm(form, validators, formErrors, true, true, false),
       ).toEqual({
-        all: { bar: 'Custom error', foo: 'Custom error' },
+        all: { bar: 'Custom error', foo: 'Custom error', radio: '' },
         global: {
           foobar: {
             error: 'Custom error',
@@ -974,7 +998,7 @@ describe('validator helper', () => {
           id: 'foobar',
           names: ['foo', 'bar'],
         },
-        native: { bar: '', foo: '' },
+        native: { bar: '', foo: '', radio: '' },
         validator: {
           foobar: {
             error: 'Custom error',
@@ -984,7 +1008,7 @@ describe('validator helper', () => {
         },
       });
       expect(formErrors.mock.results[0].value).toEqual({
-        all: { bar: 'Custom error', foo: 'Custom error' },
+        all: { bar: 'Custom error', foo: 'Custom error', radio: '' },
         global: {
           foobar: {
             error: 'Custom error',
@@ -998,7 +1022,7 @@ describe('validator helper', () => {
           id: 'foobar',
           names: ['foo', 'bar'],
         },
-        native: { bar: '', foo: '' },
+        native: { bar: '', foo: '', radio: '' },
         validator: {
           foobar: {
             error: 'Custom error',

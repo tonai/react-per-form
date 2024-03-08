@@ -3,7 +3,8 @@ import type { Dispatch, RefObject, SetStateAction } from 'react';
 export type IFormElement =
   | HTMLInputElement
   | HTMLSelectElement
-  | HTMLTextAreaElement;
+  | HTMLTextAreaElement
+  | RadioNodeList;
 
 export type IFormMode = 'all' | 'blur' | 'change' | 'submit';
 

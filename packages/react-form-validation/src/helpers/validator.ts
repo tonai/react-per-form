@@ -198,10 +198,20 @@ export function hasError(errors: IError): boolean {
   return Boolean(errors.main);
 }
 
+export function getFormInput(
+  input: IFormElement,
+): Exclude<IFormElement, RadioNodeList> {
+  if (input instanceof RadioNodeList) {
+    return input[0] as HTMLInputElement;
+  }
+  return input;
+}
+
 export function getNativeError(
   input: IFormElement,
   fieldMessages: IValidityMessages = {},
 ): string {
+  input = getFormInput(input);
   input.setCustomValidity('');
   const { validity } = input;
   const validityKey = getNativeErrorKey(validity);
@@ -231,8 +241,8 @@ export function getValidatorError(
       const error = validator(getData(formData, fieldNames), fieldNames);
       for (const name of fieldNames) {
         // @ts-expect-error access HTMLFormControlsCollection with input name
-        const input = form.elements[name] as IFormElement;
-        if (input && !input.validationMessage && error) {
+        const input = getFormInput(form.elements[name] as IFormElement);
+        if (input && error && !input.validationMessage) {
           input.setCustomValidity(error);
         }
       }
@@ -246,10 +256,10 @@ export function getValidatorError(
 export function focusError(inputs: IFormElement[], main?: IMainError): boolean {
   if (main) {
     const focusInput = inputs.find((input) =>
-      main.names.includes(input.getAttribute('name') as string),
+      main.names.includes(getFormInput(input).getAttribute('name') as string),
     );
     if (focusInput) {
-      focusInput.focus();
+      getFormInput(focusInput).focus();
       return true;
     }
   }
@@ -288,7 +298,7 @@ export function displayErrors(
     } else if (errors.main && (display || revalidate)) {
       const name = errors.main.names[0];
       // @ts-expect-error access HTMLFormControlsCollection with input name
-      const input = form.elements[name] as IFormElement;
+      const input = getFormInput(form.elements[name] as IFormElement);
       input.reportValidity();
     }
     return;
@@ -352,7 +362,7 @@ export function validateForm(
 
   // Native errors
   const nativeErrors = inputs.reduce<Record<string, string>>((acc, input) => {
-    const inputName = input.getAttribute('name') ?? '';
+    const inputName = getFormInput(input).getAttribute('name') ?? '';
     acc[inputName] = getNativeError(
       input,
       fieldMessages[inputName] ?? messages,

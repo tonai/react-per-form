@@ -49,3 +49,14 @@ export function getErrorMessage(page: Page, testId: string): Promise<string> {
     .getByTestId(testId)
     .evaluate((element) => (element as IFormElement).validationMessage);
 }
+
+export async function setFile(
+  page: Page,
+  testId: string,
+  file: string | string[],
+) {
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByTestId(testId).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(file);
+}
