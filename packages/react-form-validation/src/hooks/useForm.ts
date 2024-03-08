@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { initialError } from '../constants';
 import {
+  getFormInput,
   getFormInputs,
   getValidatorMap,
   isFormElement,
@@ -145,7 +146,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
         false,
-        (event.target as IFormElement).name,
+        getFormInput(event.target as IFormElement).name,
       );
     },
     [mode, debouncedValidate, revalidateMode],

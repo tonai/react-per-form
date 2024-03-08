@@ -6,7 +6,7 @@ function Input(props: JSX.IntrinsicElements['input']) {
   const id = useId();
   const { error } = useInput({
     name: props.name ?? id,
-    validator: fooValidator,
+    validators: fooValidator,
   });
 
   return (
