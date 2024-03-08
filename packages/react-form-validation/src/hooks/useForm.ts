@@ -1,6 +1,7 @@
 import type {
   IError,
   IFormContext,
+  IFormElement,
   IFormMode,
   IFormRevalidateMode,
   IFormValidator,
@@ -15,7 +16,12 @@ import type { FormEvent, RefObject } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { initialError } from '../constants';
-import { getFormInputs, getValidatorMap, validateForm } from '../helpers';
+import {
+  getFormInputs,
+  getValidatorMap,
+  isFormElement,
+  validateForm,
+} from '../helpers';
 
 export interface IUseFormProps {
   focusOnError?: boolean;
@@ -139,7 +145,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
         false,
-        (event.target as HTMLInputElement).name,
+        (event.target as IFormElement).name,
       );
     },
     [mode, debouncedValidate, revalidateMode],
@@ -183,7 +189,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     ) {
       const form = ref.current;
       const handleFocusOut = (event: FocusEvent): void => {
-        if (event.target instanceof HTMLInputElement) {
+        if (event.target && isFormElement(event.target)) {
           validate(
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',

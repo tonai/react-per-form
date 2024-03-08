@@ -44,6 +44,11 @@ export default function Layout(props: ILayoutProps): ReactElement {
               Component Dynamic Input
             </Link>
           </li>
+          <li>
+            <Link className="layout__link" to="/component-fields">
+              Component Fields Input
+            </Link>
+          </li>
         </ul>
       </nav>
       {children}

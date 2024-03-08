@@ -1,5 +1,9 @@
 import { Page, expect } from '@playwright/test';
-import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import {
+  IFormElement,
+  IFormMode,
+  IFormRevalidateMode,
+} from 'react-form-validation';
 
 export const submitMsg = 'Submit!';
 
@@ -43,5 +47,5 @@ export async function selectRevalidateMode(
 export function getErrorMessage(page: Page, testId: string): Promise<string> {
   return page
     .getByTestId(testId)
-    .evaluate((element) => (element as HTMLInputElement).validationMessage);
+    .evaluate((element) => (element as IFormElement).validationMessage);
 }

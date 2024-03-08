@@ -73,11 +73,46 @@ button:focus-visible {
   color: red;
 }
 
-input:not([type='reset'], [type='submit']) {
-  border: 2px solid white;
+input:not([type='reset'], [type='submit'], [type='button'], [type='image']),
+select,
+textarea {
+  border: 2px solid grey;
 }
 
-input:invalid {
-  border-color: red;
-  outline-offset: 2px;
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: red !important;
+  outline-offset: 2px !important;
+}
+
+.field {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+
+.field > label {
+  flex: 0.3;
+}
+
+.field > .input {
+  flex: 0.6;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-items: stretch;
+}
+
+.input > input[type='color'],
+.input > .error {
+  align-self: center;
+}
+
+.radio {
+  display: flex;
+  justify-content: space-around;
 }

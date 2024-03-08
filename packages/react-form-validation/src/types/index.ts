@@ -1,5 +1,10 @@
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 
+export type IFormElement =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;
+
 export type IFormMode = 'all' | 'blur' | 'change' | 'submit';
 
 export type IFormRevalidateMode = 'blur' | 'change' | 'submit';

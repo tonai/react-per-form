@@ -26,3 +26,12 @@ export function globalFooValidator(values: IFormValues) {
     ? ''
     : 'Value should also contains "bar"';
 }
+
+export function colorValidator(values: IFormValues) {
+  const red = parseInt(String(values.color).slice(1, 3), 16);
+  return red > 200 ? '' : 'The red part should be greater than 200';
+}
+
+export function rangeValidator(values: IFormValues) {
+  return Number(values.range) > 75 ? '' : 'The value should be greater than 75';
+}
