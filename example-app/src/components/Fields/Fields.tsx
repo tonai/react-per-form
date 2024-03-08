@@ -1,5 +1,9 @@
 import { useInputs } from 'react-form-validation';
-import { colorValidator, rangeValidator } from '../../helpers/validators';
+import {
+  colorValidator,
+  radioValidator,
+  rangeValidator,
+} from '../../helpers/validators';
 
 function Fields() {
   const { errors } = useInputs({
@@ -27,6 +31,7 @@ function Fields() {
     ],
     validators: {
       color: colorValidator,
+      radio: radioValidator,
       range: rangeValidator,
     },
   });
@@ -202,7 +207,7 @@ function Fields() {
             <input
               type="radio"
               autoComplete="off"
-              data-testid="radio"
+              data-testid="radio-1"
               name="radio"
               id="radio"
               value="1"
@@ -211,7 +216,7 @@ function Fields() {
             <input
               type="radio"
               autoComplete="off"
-              data-testid="radio"
+              data-testid="radio-2"
               name="radio"
               value="2"
               required
@@ -219,7 +224,7 @@ function Fields() {
             <input
               type="radio"
               autoComplete="off"
-              data-testid="radio"
+              data-testid="radio-3"
               name="radio"
               value="3"
               required

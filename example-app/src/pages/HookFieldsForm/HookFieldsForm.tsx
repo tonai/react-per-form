@@ -7,7 +7,11 @@ import {
 } from 'react-form-validation';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
-import { colorValidator, rangeValidator } from '../../helpers/validators';
+import {
+  colorValidator,
+  radioValidator,
+  rangeValidator,
+} from '../../helpers/validators';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -15,6 +19,7 @@ const messages = {
 
 const validators = {
   color: colorValidator,
+  radio: radioValidator,
   range: rangeValidator,
 };
 
@@ -201,7 +206,7 @@ export default function HookFieldsForm() {
                 <input
                   type="radio"
                   autoComplete="off"
-                  data-testid="radio"
+                  data-testid="radio-1"
                   name="radio"
                   id="radio"
                   value="1"
@@ -210,7 +215,7 @@ export default function HookFieldsForm() {
                 <input
                   type="radio"
                   autoComplete="off"
-                  data-testid="radio"
+                  data-testid="radio-2"
                   name="radio"
                   value="2"
                   required
@@ -218,7 +223,7 @@ export default function HookFieldsForm() {
                 <input
                   type="radio"
                   autoComplete="off"
-                  data-testid="radio"
+                  data-testid="radio-3"
                   name="radio"
                   value="3"
                   required
