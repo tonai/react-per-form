@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
+  IFormElement,
   IFormValues,
   IMainError,
   ISetValidatorParams,
@@ -172,7 +173,7 @@ export function hasError(errors: IError): boolean {
 }
 
 export function getNativeError(
-  input: HTMLInputElement,
+  input: IFormElement,
   fieldMessages: IValidityMessages = {},
 ): string {
   input.setCustomValidity('');
@@ -195,17 +196,19 @@ export function getValidatorError(
   const validatorErrors: Record<string, IValidatorError> = {};
   const formData = new FormData(form);
 
-  for (const [name, set] of validatorEntries) {
+  for (const [, set] of validatorEntries) {
     for (const params of set.values()) {
       const { id, names: fieldNames, setErrors, validator } = params;
       if (id in validatorErrors || !validator) {
         continue;
       }
       const error = validator(getData(formData, fieldNames), fieldNames);
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      const input = form.elements[name] as HTMLInputElement;
-      if (input && !input.validationMessage && error) {
-        input.setCustomValidity(error);
+      for (const name of fieldNames) {
+        // @ts-expect-error access HTMLFormControlsCollection with input name
+        const input = form.elements[name] as IFormElement;
+        if (input && !input.validationMessage && error) {
+          input.setCustomValidity(error);
+        }
       }
       validatorErrors[id] = { error, global: !setErrors, names: fieldNames };
     }
@@ -214,10 +217,7 @@ export function getValidatorError(
   return validatorErrors;
 }
 
-export function focusError(
-  inputs: HTMLInputElement[],
-  main?: IMainError,
-): boolean {
+export function focusError(inputs: IFormElement[], main?: IMainError): boolean {
   if (main) {
     const focusInput = inputs.find((input) =>
       main.names.includes(input.getAttribute('name') as string),
@@ -262,7 +262,7 @@ export function displayErrors(
     } else if (errors.main && (display || revalidate)) {
       const name = errors.main.names[0];
       // @ts-expect-error access HTMLFormControlsCollection with input name
-      const input = form.elements[name] as HTMLInputElement;
+      const input = form.elements[name] as IFormElement;
       input.reportValidity();
     }
     return;

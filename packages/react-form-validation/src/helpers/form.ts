@@ -1,4 +1,5 @@
 import type {
+  IFormElement,
   IFormValidator,
   ISetValidatorParams,
   IValidator,
@@ -18,14 +19,24 @@ export function insertInMapSet<T>(
   }
 }
 
+export function isFormElement(
+  input: Element | EventTarget,
+): input is IFormElement {
+  return (
+    input instanceof HTMLInputElement ||
+    input instanceof HTMLSelectElement ||
+    input instanceof HTMLTextAreaElement
+  );
+}
+
 const disallowedInputTypes = ['submit', 'reset'];
-export function getFormInputs(form: HTMLFormElement): HTMLInputElement[] {
+export function getFormInputs(form: HTMLFormElement): IFormElement[] {
   return [...form.elements].filter(
     (input) =>
-      input instanceof HTMLInputElement &&
+      isFormElement(input) &&
       input.getAttribute('name') &&
       !disallowedInputTypes.includes(input.type),
-  ) as HTMLInputElement[];
+  ) as IFormElement[];
 }
 
 export function getValidatorMap(
