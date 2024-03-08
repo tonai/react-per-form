@@ -4,11 +4,11 @@ import type {
   IFormElement,
   IFormMode,
   IFormRevalidateMode,
-  IFormValidator,
   IFormValues,
-  ISetValidatorParams,
+  ISetValidatorsParams,
   ISubscriber,
   IValidator,
+  IValidatorObject,
   IValidityMessages,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
@@ -30,7 +30,7 @@ export interface IUseFormProps {
   onSubmit?: (event: FormEvent<HTMLFormElement>, values: IFormValues) => void;
   revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
-  validators?: IFormValidator[] | Record<string, IFormValidator | IValidator>;
+  validators?: Record<string, IValidator | IValidatorObject>;
 }
 
 export interface IUseFormResult extends IFormContext {
@@ -54,7 +54,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     validators,
   } = props;
   const ref = useRef<HTMLFormElement>(null);
-  const fields = useRef<Set<ISetValidatorParams>>(new Set());
+  const fields = useRef<Set<ISetValidatorsParams>>(new Set());
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -123,16 +123,16 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [validate],
   );
 
-  const removeValidator = useCallback(
-    (params: ISetValidatorParams) => {
+  const removeValidators = useCallback(
+    (params: ISetValidatorsParams) => {
       fields.current.delete(params);
       debouncedValidate();
     },
     [debouncedValidate],
   );
 
-  const setValidator = useCallback(
-    (params: ISetValidatorParams) => {
+  const setValidators = useCallback(
+    (params: ISetValidatorsParams) => {
       fields.current.add(params);
       debouncedValidate();
     },
@@ -222,9 +222,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       messages,
       mode,
       ref,
-      removeValidator,
+      removeValidators,
       revalidateMode,
-      setValidator,
+      setValidators,
       subscribe,
       useNativeValidation,
       validate,
@@ -234,9 +234,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       formProps,
       messages,
       mode,
-      removeValidator,
+      removeValidators,
       revalidateMode,
-      setValidator,
+      setValidators,
       subscribe,
       useNativeValidation,
       validate,

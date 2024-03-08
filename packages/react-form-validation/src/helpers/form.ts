@@ -1,10 +1,13 @@
 import type {
   IFormElement,
   IFormValidator,
-  ISetValidatorParams,
+  ISetValidatorsParams,
   IValidator,
+  IValidatorObject,
   IValidityMessages,
 } from '../types';
+
+import { isValidator, isValidatorObject } from './validator';
 
 export function insertInMapSet<T>(
   map: Map<string, Set<T>>,
@@ -40,25 +43,65 @@ export function getFormInputs(form: HTMLFormElement): IFormElement[] {
 }
 
 export function getValidatorMap(
-  fieldValidators: Set<ISetValidatorParams>,
-  formValidators?:
-    | IFormValidator[]
-    | Record<string, IFormValidator | IValidator>,
+  fieldValidators: Set<ISetValidatorsParams>,
+  formValidators?: Record<string, IValidator | IValidatorObject>,
   messages?: IValidityMessages,
-): Map<string, Set<ISetValidatorParams>> {
-  const validatorMap = new Map<string, Set<ISetValidatorParams>>();
+): Map<string, Set<IFormValidator>> {
+  const validatorMap = new Map<string, Set<IFormValidator>>();
 
   // Field validators
   for (const params of fieldValidators.values()) {
+    const { validators, ...validatorParams } = params;
     for (const name of params.names) {
-      insertInMapSet(validatorMap, name, params);
+      insertInMapSet(validatorMap, name, validatorParams);
+    }
+
+    if (!validators) {
+      continue;
+    } else if (isValidator(validators)) {
+      for (const name of params.names) {
+        insertInMapSet(validatorMap, name, {
+          ...validatorParams,
+          validator: validators,
+        });
+      }
+    } else if (isValidatorObject(validators)) {
+      const { names: validatorNames, validator } = validators;
+      for (const name of validatorNames) {
+        insertInMapSet(validatorMap, name, {
+          ...validatorParams,
+          names: validatorNames,
+          validator,
+        });
+      }
+    } else {
+      for (const [id, value] of Object.entries(validators)) {
+        if (isValidator(value)) {
+          insertInMapSet(validatorMap, id, {
+            ...validatorParams,
+            id,
+            names: [id],
+            validator: value,
+          });
+        } else {
+          const { names: validatorNames, validator } = value;
+          for (const name of validatorNames) {
+            insertInMapSet(validatorMap, name, {
+              ...validatorParams,
+              id,
+              names: validatorNames,
+              validator,
+            });
+          }
+        }
+      }
     }
   }
 
   // Form validators
   if (formValidators) {
     for (const [id, value] of Object.entries(formValidators)) {
-      if (typeof value === 'function') {
+      if (isValidator(value)) {
         insertInMapSet(validatorMap, id, {
           id,
           messages,

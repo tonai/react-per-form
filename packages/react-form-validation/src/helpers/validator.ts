@@ -2,16 +2,42 @@
 import type {
   IError,
   IFormElement,
+  IFormValidator,
   IFormValues,
   IMainError,
-  ISetValidatorParams,
+  IValidator,
   IValidatorError,
+  IValidatorObject,
   IValidityMessages,
 } from '../types';
 import type { Dispatch, SetStateAction } from 'react';
 
 import { intersection } from './array';
 import { getFormInputs } from './form';
+
+export function isValidator(
+  validator?:
+    | IValidator
+    | IValidatorObject
+    | Record<string, IValidator | IValidatorObject>,
+): validator is IValidator {
+  return typeof validator === 'function';
+}
+
+export function isValidatorObject(
+  validator?:
+    | IValidator
+    | IValidatorObject
+    | Record<string, IValidator | IValidatorObject>,
+): validator is IValidatorObject {
+  return Boolean(
+    validator &&
+      'names' in validator &&
+      validator.names instanceof Array &&
+      'validator' in validator &&
+      typeof validator.validator === 'function',
+  );
+}
 
 export function getNativeErrorKey(
   validity?: ValidityState,
@@ -36,7 +62,7 @@ export function getData(formData: FormData, names: string[]): IFormValues {
 }
 
 export function getFieldMessages(
-  set: Set<ISetValidatorParams>,
+  set: Set<IFormValidator>,
   messages: IValidityMessages = {},
 ): IValidityMessages {
   return Array.from(set).reduce<IValidityMessages>(
@@ -87,7 +113,7 @@ export function setMainError(
 }
 
 export function getValidatorIds(
-  validatorEntries: [string, Set<ISetValidatorParams>][],
+  validatorEntries: [string, Set<IFormValidator>][],
   names?: string[],
 ): string[] {
   const ids = new Set<string>();
@@ -191,7 +217,7 @@ export function getNativeError(
 
 export function getValidatorError(
   form: HTMLFormElement,
-  validatorEntries: [string, Set<ISetValidatorParams>][],
+  validatorEntries: [string, Set<IFormValidator>][],
 ): Record<string, IValidatorError> {
   const validatorErrors: Record<string, IValidatorError> = {};
   const formData = new FormData(form);
@@ -233,7 +259,7 @@ export function focusError(inputs: IFormElement[], main?: IMainError): boolean {
 export function displayErrors(
   errors: IError,
   form: HTMLFormElement,
-  validatorEntries: [string, Set<ISetValidatorParams>][],
+  validatorEntries: [string, Set<IFormValidator>][],
   setErrors: Dispatch<SetStateAction<IError>>,
   display: boolean,
   revalidate: boolean,
@@ -306,7 +332,7 @@ export function displayErrors(
 
 export function validateForm(
   form: HTMLFormElement,
-  validatorMap: Map<string, Set<ISetValidatorParams>>,
+  validatorMap: Map<string, Set<IFormValidator>>,
   setErrors: Dispatch<SetStateAction<IError>>,
   display: boolean,
   revalidate: boolean,

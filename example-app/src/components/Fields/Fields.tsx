@@ -1,11 +1,11 @@
-import { useInput, useInputs } from 'react-form-validation';
+import { useInputs } from 'react-form-validation';
 import { colorValidator, rangeValidator } from '../../helpers/validators';
 
 function Fields() {
   const { errors } = useInputs({
     names: [
       'checkbox',
-      // 'color',
+      'color',
       'date',
       'datetime-local',
       'email',
@@ -14,7 +14,7 @@ function Fields() {
       'number',
       'password',
       'radio',
-      // 'range',
+      'range',
       'search',
       'tel',
       'text',
@@ -25,14 +25,10 @@ function Fields() {
       'datalist',
       'textarea',
     ],
-  });
-  const { error: colorError } = useInput({
-    name: 'color',
-    validator: colorValidator,
-  });
-  const { error: rangeError } = useInput({
-    name: 'range',
-    validator: rangeValidator,
+    validators: {
+      color: colorValidator,
+      range: rangeValidator,
+    },
   });
 
   return (
@@ -66,9 +62,9 @@ function Fields() {
             id="color"
             required
           />
-          {colorError && (
+          {errors.all.color && (
             <div className="error" data-testid="color-error">
-              {colorError.error}
+              {errors.all.color}
             </div>
           )}
         </div>
@@ -246,9 +242,9 @@ function Fields() {
             name="range"
             id="range"
           />
-          {rangeError && (
+          {errors.all.range && (
             <div className="error" data-testid="range-error">
-              {rangeError.error}
+              {errors.all.range}
             </div>
           )}
         </div>

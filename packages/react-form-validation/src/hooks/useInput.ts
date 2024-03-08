@@ -2,6 +2,7 @@ import type {
   IError,
   IMainError,
   IValidator,
+  IValidatorObject,
   IValidityMessages,
 } from '../types';
 
@@ -13,7 +14,10 @@ export interface IUseInputProps {
   id?: string;
   messages?: IValidityMessages;
   name: string;
-  validator?: IValidator;
+  validators?:
+    | IValidator
+    | IValidatorObject
+    | Record<string, IValidator | IValidatorObject>;
 }
 
 export interface IUseInputResult {
@@ -22,14 +26,14 @@ export interface IUseInputResult {
 }
 
 export function useInput(props: IUseInputProps): IUseInputResult {
-  const { id, name, messages, validator } = props;
+  const { id, name, messages, validators } = props;
 
   const names = useMemo(() => [name], [name]);
   const { errors } = useInputs({
     id: id ?? name,
     messages,
     names,
-    validator,
+    validators,
   });
 
   return { error: errors.main, errors };

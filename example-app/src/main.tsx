@@ -8,6 +8,7 @@ import HookDynamicForm from './pages/HookDynamicForm/HookDynamicForm';
 import ComponentSimpleForm from './pages/ComponentSimpleForm/ComponentSimpleForm';
 import ComponentDoubleForm from './pages/ComponentDoubleForm/ComponentDoubleForm';
 import ComponentDynamicForm from './pages/ComponentDynamicForm/ComponentDynamicForm';
+import ComponentFieldsForm from './pages/ComponentFieldsForm/ComponentFieldsForm';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <ComponentDynamicForm />
+      </Layout>
+    ),
+  },
+  {
+    path: '/component-fields',
+    element: (
+      <Layout>
+        <ComponentFieldsForm />
       </Layout>
     ),
   },
