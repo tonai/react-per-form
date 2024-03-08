@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Reset, Submit, formContext, useForm } from 'react-form-validation';
 import Filters from '../../components/Filters/Filters';
 import { doubleValidator } from '../../helpers/validators';
@@ -8,14 +7,12 @@ const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
+const validators = {
+  double: { validator: doubleValidator, names: ['double1', 'double2'] },
+};
+
 export default function HookDoubleForm() {
   const { filtersProps, hookProps } = useFilters();
-  const validators = useMemo(
-    () => ({
-      double: { validator: doubleValidator, names: ['double1', 'double2'] },
-    }),
-    [],
-  );
   const { formProps, ...context } = useForm({
     ...hookProps,
     messages,

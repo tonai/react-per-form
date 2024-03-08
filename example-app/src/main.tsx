@@ -5,6 +5,7 @@ import Layout from './components/Layout/Layout';
 import HookSimpleForm from './pages/HookSimpleForm/HookSimpleForm';
 import HookDoubleForm from './pages/HookDoubleForm/HookDoubleForm';
 import HookDynamicForm from './pages/HookDynamicForm/HookDynamicForm';
+import HookFieldsForm from './pages/HookFieldsForm/HookFieldsForm';
 import ComponentSimpleForm from './pages/ComponentSimpleForm/ComponentSimpleForm';
 import ComponentDoubleForm from './pages/ComponentDoubleForm/ComponentDoubleForm';
 import ComponentDynamicForm from './pages/ComponentDynamicForm/ComponentDynamicForm';
@@ -33,6 +34,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <HookDynamicForm />
+      </Layout>
+    ),
+  },
+  {
+    path: '/hook-fields',
+    element: (
+      <Layout>
+        <HookFieldsForm />
       </Layout>
     ),
   },

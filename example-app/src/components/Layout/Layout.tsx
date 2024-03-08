@@ -27,6 +27,11 @@ export default function Layout(props: ILayoutProps): ReactElement {
               Hook Dynamic Input
             </Link>
           </li>
+          <li>
+            <Link className="layout__link" to="/hook-fields">
+              Hook Fields Input
+            </Link>
+          </li>
         </ul>
         <ul className="layout__list">
           <li>
