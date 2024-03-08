@@ -9,7 +9,7 @@ function Dynamic() {
   const { errors } = useInputs({
     id: 'dynamic',
     names,
-    validator: dynamicValidator,
+    validators: dynamicValidator,
   });
 
   function handleAdd() {

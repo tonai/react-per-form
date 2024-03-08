@@ -9,9 +9,9 @@ export const formContext = createContext<IFormContext>({
   errors: initialError,
   mode: 'submit',
   ref: { current: null },
-  removeValidator() {},
+  removeValidators() {},
   revalidateMode: 'submit',
-  setValidator() {},
+  setValidators() {},
   subscribe() {
     return () => {};
   },

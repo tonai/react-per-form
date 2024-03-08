@@ -7,7 +7,7 @@ function Double() {
   const { errors } = useInputs({
     id: 'double',
     names,
-    validator: doubleValidator,
+    validators: doubleValidator,
   });
 
   return (
