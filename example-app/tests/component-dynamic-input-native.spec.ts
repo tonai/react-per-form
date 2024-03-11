@@ -62,16 +62,16 @@ test.describe('Hook Dynamic Input Native', () => {
     // fix native error 2
     await page.getByTestId('dynamic-1').fill('7');
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'dynamic-1')).toEqual('');
+    expect(await getErrorMessage(page, 'dynamic-1')).toEqual(validatorError);
     await page.getByTestId('dynamic-1').blur();
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'dynamic-1')).toEqual('');
+    expect(await getErrorMessage(page, 'dynamic-1')).toEqual(validatorError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('dynamic-0')).toBeFocused();
     expect(page.getByTestId('dynamic-1')).not.toBeFocused();
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'dynamic-1')).toEqual('');
+    expect(await getErrorMessage(page, 'dynamic-1')).toEqual(validatorError);
     // fix validator error 2
     await page.getByTestId('dynamic-0').fill('5');
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual('');
@@ -89,10 +89,10 @@ test.describe('Hook Dynamic Input Native', () => {
     // manual reset
     await page.getByTestId('dynamic-0').fill('');
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual(missError);
-    expect(await getErrorMessage(page, 'dynamic-1')).toEqual('');
+    expect(await getErrorMessage(page, 'dynamic-1')).toEqual(validatorError);
     await page.getByTestId('dynamic-0').blur();
     expect(await getErrorMessage(page, 'dynamic-0')).toEqual(missError);
-    expect(await getErrorMessage(page, 'dynamic-1')).toEqual('');
+    expect(await getErrorMessage(page, 'dynamic-1')).toEqual(validatorError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('dynamic-0').fill('5');
     await page.getByTestId('dynamic-0').blur();

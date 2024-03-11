@@ -15,9 +15,7 @@ const radioError = 'Select the third value';
 const rangeError = 'The value should be greater than 75';
 
 test.describe('Hook Fields Input Non Native', () => {
-  // For native errors, we cannot detect whether the error message is displayed or not.
-  // We also don't know if the reportValidity function was called or not.
-  // So we can't really test the different modes, which is why we only test the submit mode here.
+  // Only test the all mode for now (other modes are tested in other pages)
   test('mode=all', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
