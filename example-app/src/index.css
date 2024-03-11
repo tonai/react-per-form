@@ -74,15 +74,22 @@ button:focus-visible {
   text-align: center;
 }
 
-input:not([type='reset'], [type='submit'], [type='button'], [type='image']),
+input:not(
+    [type='reset'],
+    [type='submit'],
+    [type='button'],
+    [type='image'],
+    .MuiInputBase-input
+  ),
 select,
 textarea {
-  border: 2px solid grey;
+  border: 1px solid grey;
 }
 
 input:invalid,
 select:invalid,
-textarea:invalid {
+textarea:invalid,
+input:invalid ~ .MuiOutlinedInput-notchedOutline {
   border-color: red !important;
   outline-offset: 2px !important;
 }
@@ -116,4 +123,30 @@ textarea:invalid {
 .radio {
   display: flex;
   justify-content: space-around;
+}
+
+.MuiInputBase-root,
+.MuiInputAdornment-root,
+.MuiButtonBase-root {
+  color: currentColor !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: grey !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button,
+  .button {
+    background-color: #f9f9f9;
+  }
 }

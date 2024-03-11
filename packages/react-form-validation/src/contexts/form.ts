@@ -8,6 +8,7 @@ import { initialError } from '../constants';
 export const formContext = createContext<IFormContext>({
   errors: initialError,
   mode: 'submit',
+  onChange: () => () => null,
   ref: { current: null },
   removeValidators() {},
   revalidateMode: 'submit',

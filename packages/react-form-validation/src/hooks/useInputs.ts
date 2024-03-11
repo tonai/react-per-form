@@ -1,6 +1,7 @@
 import type {
   IError,
   IMainError,
+  IOnChangeHandler,
   IValidator,
   IValidatorObject,
   IValidityMessages,
@@ -24,13 +25,14 @@ export interface IUseInputsProps {
 export interface IUseInputsResult {
   error?: IMainError;
   errors: IError;
+  onChange: IOnChangeHandler;
 }
 
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
   const { id, names, messages, validators } = props;
 
   const context = useContext(formContext);
-  const { removeValidators, setValidators } = context;
+  const { onChange, removeValidators, setValidators } = context;
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {
@@ -45,5 +47,5 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     return () => removeValidators(params);
   }, [id, messages, names, removeValidators, setValidators, validators]);
 
-  return { error: errors.main, errors };
+  return { error: errors.main, errors, onChange };
 }

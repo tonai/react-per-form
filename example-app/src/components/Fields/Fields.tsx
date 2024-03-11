@@ -5,6 +5,12 @@ import {
   rangeValidator,
 } from '../../helpers/validators';
 
+const validators = {
+  color: colorValidator,
+  radio: radioValidator,
+  range: rangeValidator,
+};
+
 function Fields() {
   const { errors } = useInputs({
     names: [
@@ -29,11 +35,7 @@ function Fields() {
       'datalist',
       'textarea',
     ],
-    validators: {
-      color: colorValidator,
-      radio: radioValidator,
-      range: rangeValidator,
-    },
+    validators,
   });
 
   return (

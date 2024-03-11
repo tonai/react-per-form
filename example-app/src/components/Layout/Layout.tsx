@@ -32,6 +32,11 @@ export default function Layout(props: ILayoutProps): ReactElement {
               Hook Fields Input
             </Link>
           </li>
+          <li>
+            <Link className="layout__link" to="/hook-lib">
+              Hook Lib Input
+            </Link>
+          </li>
         </ul>
         <ul className="layout__list">
           <li>
@@ -52,6 +57,11 @@ export default function Layout(props: ILayoutProps): ReactElement {
           <li>
             <Link className="layout__link" to="/component-fields">
               Component Fields Input
+            </Link>
+          </li>
+          <li>
+            <Link className="layout__link" to="/component-lib">
+              Component Lib Input
             </Link>
           </li>
         </ul>

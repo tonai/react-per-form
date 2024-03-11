@@ -23,7 +23,7 @@ export type IFormValidate = (
   name?: string[] | string,
 ) => boolean;
 
-export type IFormValues = Record<string, FormDataEntryValue | null>;
+export type IFormValues = Record<string, unknown>;
 
 export type IValidator = (values: IFormValues, names: string[]) => string;
 
@@ -80,10 +80,17 @@ export type ISubscriber = (form: HTMLFormElement | null) => void;
 
 export type IUnSubscribe = () => void;
 
+export type IOnChangeHandler = (
+  name: string,
+  transformer?: (value: unknown) => unknown,
+  callback?: (...args: unknown[]) => void,
+) => (...args: unknown[]) => void;
+
 export interface IFormContext {
   errors: IError;
   messages?: IValidityMessages;
   mode: IFormMode;
+  onChange: IOnChangeHandler;
   ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;

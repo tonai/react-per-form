@@ -57,8 +57,16 @@ export function getNativeErrorKey(
   return null;
 }
 
-export function getData(formData: FormData, names: string[]): IFormValues {
-  return Object.fromEntries(names.map((name) => [name, formData.get(name)]));
+export function getData(
+  formData: FormData,
+  values: Record<string, unknown> = {},
+  names?: string[],
+): IFormValues {
+  return Object.fromEntries(
+    Array.from(formData.entries())
+      .filter(([name]) => !names || names.includes(name))
+      .map(([name, value]) => [name, name in values ? values[name] : value]),
+  );
 }
 
 export function getFieldMessages(
@@ -228,6 +236,7 @@ export function getNativeError(
 export function getValidatorError(
   form: HTMLFormElement,
   validatorEntries: [string, Set<IFormValidator>][],
+  values: Record<string, unknown> = {},
 ): Record<string, IValidatorError> {
   const validatorErrors: Record<string, IValidatorError> = {};
   const formData = new FormData(form);
@@ -238,7 +247,10 @@ export function getValidatorError(
       if (id in validatorErrors || !validator) {
         continue;
       }
-      const error = validator(getData(formData, fieldNames), fieldNames);
+      const error = validator(
+        getData(formData, values, fieldNames),
+        fieldNames,
+      );
       for (const name of fieldNames) {
         // @ts-expect-error access HTMLFormControlsCollection with input name
         const input = getFormInput(form.elements[name] as IFormElement);
@@ -347,6 +359,7 @@ export function validateForm(
   display: boolean,
   revalidate: boolean,
   useNativeValidation: boolean,
+  values: Record<string, unknown> = {},
   messages?: IValidityMessages,
   focusOnError?: boolean,
   names?: string[],
@@ -371,7 +384,7 @@ export function validateForm(
   }, {});
 
   // Custom validator errors
-  const validatorErrors = getValidatorError(form, validatorEntries);
+  const validatorErrors = getValidatorError(form, validatorEntries, values);
 
   // IError object
   const ids = getValidatorIds(validatorEntries, names);

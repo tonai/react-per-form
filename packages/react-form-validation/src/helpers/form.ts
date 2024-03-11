@@ -125,3 +125,25 @@ export function getValidatorMap(
 
   return validatorMap;
 }
+
+export function isEvent(event: unknown): event is Event {
+  return Boolean(
+    typeof event === 'object' && event !== null && 'target' in event,
+  );
+}
+
+export function isCheckbox(target: EventTarget): target is HTMLInputElement {
+  return Boolean('type' in target && target.type === 'checkbox');
+}
+
+export default function getValue(event: unknown): unknown {
+  if (isEvent(event) && event.target) {
+    if (isCheckbox(event.target)) {
+      return event.target.checked;
+    }
+    if ('value' in event.target) {
+      return event.target.value;
+    }
+  }
+  return event;
+}
