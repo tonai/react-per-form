@@ -1,5 +1,9 @@
 import { Page, expect } from '@playwright/test';
 import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import path from 'node:path';
+import * as url from 'node:url';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const submitMsg = 'Submit!';
 
@@ -54,5 +58,9 @@ export async function setFile(
   const fileChooserPromise = page.waitForEvent('filechooser');
   await page.getByTestId(testId).click();
   const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles(file);
+  const files =
+    typeof file === 'string'
+      ? path.join(__dirname, file)
+      : file.map((f) => path.join(__dirname, f));
+  await fileChooser.setFiles(files);
 }

@@ -53,16 +53,16 @@ test.describe('Hook Double Input Native', () => {
     // fix native error 2
     await page.getByTestId('double-2').fill('3');
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'double-2')).toEqual('');
+    expect(await getErrorMessage(page, 'double-2')).toEqual(validatorError);
     await page.getByTestId('double-2').blur();
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'double-2')).toEqual('');
+    expect(await getErrorMessage(page, 'double-2')).toEqual(validatorError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('double-1')).toBeFocused();
     expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
-    expect(await getErrorMessage(page, 'double-2')).toEqual('');
+    expect(await getErrorMessage(page, 'double-2')).toEqual(validatorError);
     // fix validator error
     await page.getByTestId('double-2').fill('7');
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
