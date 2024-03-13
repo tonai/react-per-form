@@ -20,10 +20,10 @@ import {
   getData,
   getFormInput,
   getValidatorMap,
+  getValue,
   isFormElement,
   validateForm,
 } from '../helpers';
-import getValue from '../helpers/form';
 
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
@@ -48,7 +48,7 @@ export interface IUseFormResult extends IFormContext {
 
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
-    defaultValues = {},
+    defaultValues,
     focusOnError = true,
     onSubmit,
     messages,
@@ -59,7 +59,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   } = props;
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
-  const values = useRef<Record<string, unknown>>(defaultValues);
+  const values = useRef<Record<string, unknown>>(defaultValues ?? {});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer

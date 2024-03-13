@@ -3,7 +3,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Lib from '../../components/Lib/Lib';
 import Filters from '../../components/Filters/Filters';
-import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
 const messages = {
@@ -22,9 +21,6 @@ export default function ComponentLibForm() {
         className="form"
         data-testid="form"
         messages={messages}
-        validators={{
-          foobar: { validator: globalFooValidator, names: ['foo'] },
-        }}
       >
         <Lib />
         <Error className="error" global />

@@ -136,7 +136,7 @@ export function isCheckbox(target: EventTarget): target is HTMLInputElement {
   return Boolean('type' in target && target.type === 'checkbox');
 }
 
-export default function getValue(event: unknown): unknown {
+export function getValue(event: unknown): unknown {
   if (isEvent(event) && event.target) {
     if (isCheckbox(event.target)) {
       return event.target.checked;

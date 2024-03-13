@@ -515,7 +515,7 @@ describe('validator helper', () => {
     it('should return all form data', () => {
       input1.setAttribute('value', '42');
       input2.setAttribute('value', 'baz');
-      expect(getData(new FormData(form), {})).toEqual({
+      expect(getData(new FormData(form))).toEqual({
         bar: 'baz',
         foo: '42',
       });
@@ -953,9 +953,18 @@ describe('validator helper', () => {
         typeof d === 'function' ? d(initialError) : d,
       );
       expect(
-        validateForm(form, new Map(), formErrors, true, true, false, {
-          valueMissing: 'Did you miss something ?',
-        }),
+        validateForm(
+          form,
+          new Map(),
+          formErrors,
+          true,
+          true,
+          false,
+          {},
+          {
+            valueMissing: 'Did you miss something ?',
+          },
+        ),
       ).toEqual({
         all: { bar: '', foo: 'Did you miss something ?', radio: '' },
         global: {},

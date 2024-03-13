@@ -5,6 +5,28 @@ import {
   rangeValidator,
 } from '../../helpers/validators';
 
+const names = [
+  'checkbox',
+  'color',
+  'date',
+  'datetime-local',
+  'email',
+  'file',
+  'month',
+  'number',
+  'password',
+  'radio',
+  'range',
+  'search',
+  'tel',
+  'text',
+  'time',
+  'url',
+  'week',
+  'select',
+  'datalist',
+  'textarea',
+];
 const validators = {
   color: colorValidator,
   radio: radioValidator,
@@ -13,28 +35,7 @@ const validators = {
 
 function Fields() {
   const { errors } = useInputs({
-    names: [
-      'checkbox',
-      'color',
-      'date',
-      'datetime-local',
-      'email',
-      'file',
-      'month',
-      'number',
-      'password',
-      'radio',
-      'range',
-      'search',
-      'tel',
-      'text',
-      'time',
-      'url',
-      'week',
-      'select',
-      'datalist',
-      'textarea',
-    ],
+    names,
     validators,
   });
 
