@@ -512,9 +512,26 @@ describe('validator helper', () => {
   });
 
   describe('getData', () => {
-    it('should return the form data', () => {
-      input1.setAttribute('value', 'bar');
-      expect(getData(new FormData(form), ['foo'])).toEqual({ foo: 'bar' });
+    it('should return all form data', () => {
+      input1.setAttribute('value', '42');
+      input2.setAttribute('value', 'baz');
+      expect(getData(new FormData(form))).toEqual({
+        bar: 'baz',
+        foo: '42',
+      });
+      expect(getData(new FormData(form), { foo: 42 })).toEqual({
+        bar: 'baz',
+        foo: 42,
+      });
+    });
+
+    it('should return filtered form data', () => {
+      input1.setAttribute('value', '42');
+      input2.setAttribute('value', 'baz');
+      expect(getData(new FormData(form), {}, ['foo'])).toEqual({ foo: '42' });
+      expect(getData(new FormData(form), { foo: 42 }, ['foo'])).toEqual({
+        foo: 42,
+      });
     });
   });
 
@@ -936,9 +953,18 @@ describe('validator helper', () => {
         typeof d === 'function' ? d(initialError) : d,
       );
       expect(
-        validateForm(form, new Map(), formErrors, true, true, false, {
-          valueMissing: 'Did you miss something ?',
-        }),
+        validateForm(
+          form,
+          new Map(),
+          formErrors,
+          true,
+          true,
+          false,
+          {},
+          {
+            valueMissing: 'Did you miss something ?',
+          },
+        ),
       ).toEqual({
         all: { bar: '', foo: 'Did you miss something ?', radio: '' },
         global: {},

@@ -15,6 +15,7 @@ export interface IFormProps
 export function Form(props: IFormProps): ReactElement {
   const {
     children,
+    defaultValues,
     messages,
     mode,
     onSubmit,
@@ -24,6 +25,7 @@ export function Form(props: IFormProps): ReactElement {
     ...restProps
   } = props;
   const { formProps, ...context } = useForm({
+    defaultValues,
     messages,
     mode,
     onSubmit,

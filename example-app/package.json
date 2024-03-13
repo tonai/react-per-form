@@ -12,8 +12,13 @@
     "e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.12",
+    "@mui/x-date-pickers": "^6.19.6",
     "@playwright/test": "^1.41.2",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-form-validation": "0.0.0",

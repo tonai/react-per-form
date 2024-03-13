@@ -1,7 +1,10 @@
 import {
   getFormInputs,
   getValidatorMap,
+  getValue,
   insertInMapSet,
+  isCheckbox,
+  isEvent,
   isFormElement,
 } from './form';
 
@@ -215,6 +218,29 @@ describe('form helper', () => {
     });
   });
 
+  describe('getValue', () => {
+    it('should return the input value', () => {
+      const input = document.createElement('input');
+      expect(getValue({ target: input })).toEqual('');
+      input.value = 'foo';
+      expect(getValue({ target: input })).toEqual('foo');
+    });
+
+    it('should return the checkbox value', () => {
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      expect(getValue({ target: checkbox })).toEqual(false);
+      checkbox.checked = true;
+      expect(getValue({ target: checkbox })).toEqual(true);
+    });
+
+    it('should return the value without modifications', () => {
+      const date = new Date();
+      expect(getValue(date)).toEqual(date);
+      expect(getValue({ target: {} })).toEqual({ target: {} });
+    });
+  });
+
   describe('insertInMapSet', () => {
     it('should create a new set in map', () => {
       const map = new Map<string, Set<unknown>>();
@@ -235,6 +261,23 @@ describe('form helper', () => {
       expect(isFormElement(document.createElement('input'))).toEqual(true);
       expect(isFormElement(document.createElement('select'))).toEqual(true);
       expect(isFormElement(document.createElement('textarea'))).toEqual(true);
+    });
+  });
+
+  describe('isCheckbox', () => {
+    it('should test if param is a checkbox or not', () => {
+      const input = document.createElement('input');
+      expect(isCheckbox(input)).toEqual(false);
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      expect(isCheckbox(checkbox)).toEqual(true);
+    });
+  });
+
+  describe('isEvent', () => {
+    it('should test if param is event or not', () => {
+      expect(isEvent({})).toEqual(false);
+      expect(isEvent(new Event('click'))).toEqual(true);
     });
   });
 });

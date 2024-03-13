@@ -6,10 +6,12 @@ import HookSimpleForm from './pages/HookSimpleForm/HookSimpleForm';
 import HookDoubleForm from './pages/HookDoubleForm/HookDoubleForm';
 import HookDynamicForm from './pages/HookDynamicForm/HookDynamicForm';
 import HookFieldsForm from './pages/HookFieldsForm/HookFieldsForm';
+import HookLibForm from './pages/HookLibForm/HookLibForm';
 import ComponentSimpleForm from './pages/ComponentSimpleForm/ComponentSimpleForm';
 import ComponentDoubleForm from './pages/ComponentDoubleForm/ComponentDoubleForm';
 import ComponentDynamicForm from './pages/ComponentDynamicForm/ComponentDynamicForm';
 import ComponentFieldsForm from './pages/ComponentFieldsForm/ComponentFieldsForm';
+import ComponentLibForm from './pages/ComponentLibForm/ComponentLibForm';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: '/hook-lib',
+    element: (
+      <Layout>
+        <HookLibForm />
+      </Layout>
+    ),
+  },
+  {
     path: '/component-simple',
     element: (
       <Layout>
@@ -74,6 +84,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <ComponentFieldsForm />
+      </Layout>
+    ),
+  },
+  {
+    path: '/component-lib',
+    element: (
+      <Layout>
+        <ComponentLibForm />
       </Layout>
     ),
   },

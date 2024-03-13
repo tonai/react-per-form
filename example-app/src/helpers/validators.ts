@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { IFormValues } from 'react-form-validation';
 
 export function fooValidator(values: IFormValues) {
@@ -38,4 +39,8 @@ export function radioValidator(values: IFormValues) {
 
 export function rangeValidator(values: IFormValues) {
   return Number(values.range) > 75 ? '' : 'The value should be greater than 75';
+}
+
+export function muiValidator(values: IFormValues) {
+  return !values.mui || !(values.mui as Dayjs).isValid() ? 'Choose a date' : '';
 }
