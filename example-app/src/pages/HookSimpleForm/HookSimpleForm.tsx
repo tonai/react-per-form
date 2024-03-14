@@ -26,18 +26,21 @@ export default function HookSimpleForm() {
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
         <form className="form" data-testid="form" {...formProps}>
-          <div>
-            <input
-              autoComplete="off"
-              data-testid="simple"
-              name="foo"
-              required
-            />
-            {errors.all?.foo && (
-              <div className="error" data-testid="simple-error">
-                {errors.all.foo}
-              </div>
-            )}
+          <div className="field">
+            <label htmlFor="file">simple</label>
+            <div className="input">
+              <input
+                autoComplete="off"
+                data-testid="simple"
+                name="foo"
+                required
+              />
+              {errors.all?.foo && (
+                <div className="error" data-testid="simple-error">
+                  {errors.all.foo}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form__actions">
             <Reset />

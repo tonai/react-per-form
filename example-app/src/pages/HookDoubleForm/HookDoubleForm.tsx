@@ -25,33 +25,39 @@ export default function HookDoubleForm() {
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
         <form className="form" data-testid="form" {...formProps}>
-          <div>
-            <input
-              autoComplete="off"
-              data-testid="double-1"
-              name="double1"
-              required
-              type="number"
-            />
-            {errors.native?.double1 && (
-              <div className="error" data-testid="double-1-error">
-                {errors.native.double1}
-              </div>
-            )}
+          <div className="field">
+            <label htmlFor="file">double 1</label>
+            <div className="input">
+              <input
+                autoComplete="off"
+                data-testid="double-1"
+                name="double1"
+                required
+                type="number"
+              />
+              {errors.native?.double1 && (
+                <div className="error" data-testid="double-1-error">
+                  {errors.native.double1}
+                </div>
+              )}
+            </div>
           </div>
-          <div>
-            <input
-              autoComplete="off"
-              data-testid="double-2"
-              name="double2"
-              required
-              type="number"
-            />
-            {errors.native?.double2 && (
-              <div className="error" data-testid="double-2-error">
-                {errors.native.double2}
-              </div>
-            )}
+          <div className="field">
+            <label htmlFor="file">double 2</label>
+            <div className="input">
+              <input
+                autoComplete="off"
+                data-testid="double-2"
+                name="double2"
+                required
+                type="number"
+              />
+              {errors.native?.double2 && (
+                <div className="error" data-testid="double-2-error">
+                  {errors.native.double2}
+                </div>
+              )}
+            </div>
           </div>
           {errors.validator?.double?.error && (
             <div className="error" data-testid="double-validator-error">

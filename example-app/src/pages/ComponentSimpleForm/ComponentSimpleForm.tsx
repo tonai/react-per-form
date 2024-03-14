@@ -1,5 +1,5 @@
 import { Error, Form, Reset, Submit } from 'react-form-validation';
-import Input from '../../components/Input/Input';
+import Simple from '../../components/Simple/Simple';
 import Filters from '../../components/Filters/Filters';
 import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
@@ -23,7 +23,7 @@ export default function ComponentSimpleForm() {
           foobar: { validator: globalFooValidator, names: ['foo'] },
         }}
       >
-        <Input name="foo" required />
+        <Simple name="foo" required />
         <Error className="error" global />
         <div className="form__actions">
           <Reset />

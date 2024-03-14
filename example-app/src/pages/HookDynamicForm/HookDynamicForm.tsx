@@ -42,40 +42,43 @@ export default function HookDynamicForm() {
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
         <form className="form" data-testid="form" {...formProps}>
-          <div>
-            <button data-testid="dynamic-add" onClick={handleAdd} type="button">
-              Add
-            </button>
-            {ids.map((id) => (
-              <div key={id}>
-                <input
-                  autoComplete="off"
-                  data-testid={`dynamic-${id}`}
-                  name={`dynamic-${id}`}
-                  required
-                  type="number"
-                />
-                <button
-                  data-testid={`dynamic-${id}-remove`}
-                  className="inline"
-                  onClick={() => handleRemove(id)}
-                  type="button"
-                >
-                  Remove
-                </button>
+          <button data-testid="dynamic-add" onClick={handleAdd} type="button">
+            Add
+          </button>
+          {ids.map((id) => (
+            <div key={id} className="field">
+              <label htmlFor="file">dynamic {id}</label>
+              <div className="input">
+                <div>
+                  <input
+                    autoComplete="off"
+                    data-testid={`dynamic-${id}`}
+                    name={`dynamic-${id}`}
+                    required
+                    type="number"
+                  />
+                  <button
+                    data-testid={`dynamic-${id}-remove`}
+                    className="inline"
+                    onClick={() => handleRemove(id)}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                </div>
                 {errors.native?.[`dynamic-${id}`] && (
                   <div className="error" data-testid={`dynamic-${id}-error`}>
                     {errors.native?.[`dynamic-${id}`]}
                   </div>
                 )}
               </div>
-            ))}
-            {errors.validator?.dynamic && (
-              <div className="error" data-testid="dynamic-validator-error">
-                {errors.validator.dynamic.error}
-              </div>
-            )}
-          </div>
+            </div>
+          ))}
+          {errors.validator?.dynamic && (
+            <div className="error" data-testid="dynamic-validator-error">
+              {errors.validator.dynamic.error}
+            </div>
+          )}
           <div className="form__actions">
             <Reset />
             <Submit />
