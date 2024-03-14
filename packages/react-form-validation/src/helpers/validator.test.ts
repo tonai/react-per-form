@@ -11,6 +11,7 @@ import {
   getFieldMessages,
   getFilteredErrors,
   getFormInput,
+  getInputValue,
   getNativeError,
   getNativeErrorKey,
   getValidatorError,
@@ -515,11 +516,11 @@ describe('validator helper', () => {
     it('should return all form data', () => {
       input1.setAttribute('value', '42');
       input2.setAttribute('value', 'baz');
-      expect(getData(new FormData(form))).toEqual({
+      expect(getData(form)).toEqual({
         bar: 'baz',
         foo: '42',
       });
-      expect(getData(new FormData(form), { foo: 42 })).toEqual({
+      expect(getData(form, { foo: 42 })).toEqual({
         bar: 'baz',
         foo: 42,
       });
@@ -528,9 +529,30 @@ describe('validator helper', () => {
     it('should return filtered form data', () => {
       input1.setAttribute('value', '42');
       input2.setAttribute('value', 'baz');
-      expect(getData(new FormData(form), {}, ['foo'])).toEqual({ foo: '42' });
-      expect(getData(new FormData(form), { foo: 42 }, ['foo'])).toEqual({
+      expect(getData(form, {}, ['foo'])).toEqual({ foo: '42' });
+      expect(getData(form, { foo: 42 }, ['foo'])).toEqual({
         foo: 42,
+      });
+    });
+
+    it('should return all selected options', () => {
+      const select = document.createElement('select');
+      select.setAttribute('name', 'select');
+      select.setAttribute('multiple', '');
+      const option1 = document.createElement('option');
+      option1.setAttribute('value', 'option 1');
+      option1.setAttribute('selected', '');
+      select.appendChild(option1);
+      const option2 = document.createElement('option');
+      option2.setAttribute('value', 'option 2');
+      option2.setAttribute('selected', '');
+      select.appendChild(option2);
+      const option3 = document.createElement('option');
+      option3.setAttribute('value', 'option 3');
+      select.appendChild(option3);
+      form.appendChild(select);
+      expect(getData(form, {}, ['select'])).toEqual({
+        select: ['option 1', 'option 2'],
       });
     });
   });
@@ -626,6 +648,42 @@ describe('validator helper', () => {
       expect(getFormInput(form.elements.bar as IFormElement)).toEqual(input2);
       // @ts-expect-error access HTMLFormControlsCollection with input name
       expect(getFormInput(form.elements.radio as IFormElement)).toEqual(input3);
+    });
+  });
+
+  describe('getInputValue', () => {
+    it('should return the input value', () => {
+      const text = document.createElement('input');
+      text.setAttribute('name', 'text');
+      text.setAttribute('value', 'some value');
+      expect(getInputValue(text.value, text)).toEqual('some value');
+    });
+
+    it('should return multiple email values', () => {
+      const email = document.createElement('input');
+      email.setAttribute('name', 'email');
+      email.setAttribute('type', 'email');
+      email.setAttribute('multiple', 'email');
+      email.setAttribute('value', 'foo@bar, bar@baz');
+      expect(getInputValue(email.value, email)).toEqual(['foo@bar', 'bar@baz']);
+    });
+
+    it('should return multiple selected values', () => {
+      const select = document.createElement('select');
+      select.setAttribute('name', 'select');
+      select.setAttribute('multiple', '');
+      const option1 = document.createElement('option');
+      option1.setAttribute('value', 'option 1');
+      option1.setAttribute('selected', '');
+      select.appendChild(option1);
+      const option2 = document.createElement('option');
+      option2.setAttribute('value', 'option 2');
+      option2.setAttribute('selected', '');
+      select.appendChild(option2);
+      const option3 = document.createElement('option');
+      option3.setAttribute('value', 'option 3');
+      select.appendChild(option3);
+      expect(getInputValue(select.value, select)).toEqual(['option 1']);
     });
   });
 

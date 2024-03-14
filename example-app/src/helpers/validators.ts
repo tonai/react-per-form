@@ -41,6 +41,15 @@ export function rangeValidator(values: IFormValues) {
   return Number(values.range) > 75 ? '' : 'The value should be greater than 75';
 }
 
+export function multipleValidator(name: string) {
+  return (values: IFormValues) => {
+    const value = values[name];
+    return value && value instanceof Array && value.length > 1
+      ? ''
+      : 'Select at least two options';
+  };
+}
+
 export function muiValidator(values: IFormValues) {
   return !values.mui || !(values.mui as Dayjs).isValid() ? 'Choose a date' : '';
 }
