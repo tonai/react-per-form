@@ -14,54 +14,54 @@ export default function Layout(props: ILayoutProps): ReactElement {
         <ul className="layout__list">
           <li>
             <Link className="layout__link" to="/">
-              Hook Simple Input
+              Hook Simple
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/hook-double">
-              Hook Double Input
+              Hook Double
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/hook-dynamic">
-              Hook Dynamic Input
+              Hook Dynamic
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/hook-fields">
-              Hook Fields Input
+              Hook Fields
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/hook-lib">
-              Hook Lib Input
+              Hook Lib
             </Link>
           </li>
         </ul>
         <ul className="layout__list">
           <li>
             <Link className="layout__link" to="/component-simple">
-              Component Simple Input
+              Component Simple
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/component-double">
-              Component Double Input
+              Component Double
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/component-dynamic">
-              Component Dynamic Input
+              Component Dynamic
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/component-fields">
-              Component Fields Input
+              Component Fields
             </Link>
           </li>
           <li>
             <Link className="layout__link" to="/component-lib">
-              Component Lib Input
+              Component Lib
             </Link>
           </li>
         </ul>

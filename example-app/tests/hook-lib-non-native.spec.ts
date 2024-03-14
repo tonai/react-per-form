@@ -10,7 +10,7 @@ const url = '/hook-lib';
 const missError = 'Did you miss something ?';
 const muiError = 'Choose a date';
 
-test.describe('Hook Lib Input Non Native', () => {
+test.describe('Hook Lib Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);

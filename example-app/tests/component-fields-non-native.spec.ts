@@ -7,7 +7,7 @@ import {
   setFile,
 } from './helpers';
 
-const url = '/hook-fields';
+const url = '/component-fields';
 const file = './logo.svg';
 const missError = 'Did you miss something ?';
 const colorError = 'The red part should be greater than 200';
@@ -15,7 +15,7 @@ const radioError = 'Select the third value';
 const rangeError = 'The value should be greater than 75';
 const multipleError = 'Select at least two options';
 
-test.describe('Hook Fields Input Non Native', () => {
+test.describe('Component Fields Non Native', () => {
   // Only test the all mode for now (other modes are tested in other pages)
   test('mode=all', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);

@@ -10,7 +10,7 @@ const url = '/hook-dynamic';
 const missError = 'Did you miss something ?';
 const validatorError = 'The sum must be equal to 12';
 
-test.describe('Hook Dynamic Input Non Native', () => {
+test.describe('Hook Dynamic Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);

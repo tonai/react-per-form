@@ -5,7 +5,7 @@ const url = '/hook-double';
 const missError = 'Did you miss something ?';
 const validatorError = 'Second value must be greater than first value';
 
-test.describe('Hook Double Input Native', () => {
+test.describe('Hook Double Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
   // We also don't know if the reportValidity function was called or not.
   // So we can't really test the different modes, which is why we only test the submit mode here.

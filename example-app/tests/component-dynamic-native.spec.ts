@@ -5,7 +5,7 @@ const url = '/component-dynamic';
 const missError = 'Did you miss something ?';
 const validatorError = 'The sum must be equal to 12';
 
-test.describe('Hook Dynamic Input Native', () => {
+test.describe('Hook Dynamic Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
   // We also don't know if the reportValidity function was called or not.
   // So we can't really test the different modes, which is why we only test the submit mode here.

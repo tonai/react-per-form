@@ -10,7 +10,7 @@ const url = '/component-lib';
 const missError = 'Did you miss something ?';
 const muiError = 'Choose a date';
 
-test.describe('Component Lib Input Non Native', () => {
+test.describe('Component Lib Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
