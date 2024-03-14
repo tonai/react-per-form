@@ -171,8 +171,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       if (validate(true, false, focusOnError) && ref.current) {
-        const formData = new FormData(ref.current);
-        onSubmit?.(event, getData(formData, values.current));
+        onSubmit?.(event, getData(ref.current, values.current));
       } else {
         event.preventDefault();
       }

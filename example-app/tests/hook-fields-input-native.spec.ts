@@ -7,6 +7,7 @@ const missError = 'Did you miss something ?';
 const colorError = 'The red part should be greater than 200';
 const radioError = 'Select the third value';
 const rangeError = 'The value should be greater than 75';
+const multipleError = 'Select at least two options';
 
 test.describe('Hook Fields Input Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
@@ -19,7 +20,9 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'date')).toEqual(missError);
     expect(await getErrorMessage(page, 'datetime-local')).toEqual(missError);
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'month')).toEqual(missError);
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'password')).toEqual(missError);
@@ -32,6 +35,7 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'url')).toEqual(missError);
     expect(await getErrorMessage(page, 'week')).toEqual(missError);
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'datalist')).toEqual(missError);
     expect(await getErrorMessage(page, 'textarea')).toEqual(missError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
@@ -95,6 +99,22 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
     await page.getByTestId('email').blur();
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
+    // email-multiple
+    await page.getByTestId('email-multiple').focus();
+    await page.getByTestId('email-multiple').blur();
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
+    await page.getByTestId('email-multiple').fill('foo@bar');
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(
+      multipleError,
+    );
+    await page.getByTestId('email-multiple').blur();
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(
+      multipleError,
+    );
+    await page.getByTestId('email-multiple').fill('');
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
+    await page.getByTestId('email-multiple').blur();
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
     // file
     await page.getByTestId('file').focus();
     await page.getByTestId('file').blur();
@@ -107,6 +127,18 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
     await page.getByTestId('file').blur();
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
+    // file-multiple
+    await page.getByTestId('file-multiple').focus();
+    await page.getByTestId('file-multiple').blur();
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
+    await setFile(page, 'file-multiple', file);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(multipleError);
+    await page.getByTestId('file-multiple').blur();
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(multipleError);
+    await setFile(page, 'file-multiple', []);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
+    await page.getByTestId('file-multiple').blur();
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
     // month
     await page.getByTestId('month').focus();
     await page.getByTestId('month').blur();
@@ -247,6 +279,18 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
     await page.getByTestId('select').blur();
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    // select-multiple
+    await page.getByTestId('select-multiple').focus();
+    await page.getByTestId('select-multiple').blur();
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    await page.getByTestId('select').selectOption('option 1');
+    expect(await getErrorMessage(page, 'select')).toEqual('');
+    await page.getByTestId('select').blur();
+    expect(await getErrorMessage(page, 'select')).toEqual('');
+    await page.getByTestId('select').selectOption('');
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    await page.getByTestId('select').blur();
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
     // datalist
     await page.getByTestId('datalist').focus();
     await page.getByTestId('datalist').blur();
@@ -279,7 +323,9 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'date')).toEqual(missError);
     expect(await getErrorMessage(page, 'datetime-local')).toEqual(missError);
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'month')).toEqual(missError);
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'password')).toEqual(missError);
@@ -291,6 +337,7 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'url')).toEqual(missError);
     expect(await getErrorMessage(page, 'week')).toEqual(missError);
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'datalist')).toEqual(missError);
     expect(await getErrorMessage(page, 'textarea')).toEqual(missError);
     // fix error
@@ -314,10 +361,18 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'email')).toEqual('');
     await page.getByTestId('email').blur();
     expect(await getErrorMessage(page, 'email')).toEqual('');
+    await page.getByTestId('email-multiple').fill('foo@bar, bar@baz');
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual('');
+    await page.getByTestId('email-multiple').blur();
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual('');
     await setFile(page, 'file', file);
     expect(await getErrorMessage(page, 'file')).toEqual('');
     await page.getByTestId('file').blur();
     expect(await getErrorMessage(page, 'file')).toEqual('');
+    await setFile(page, 'file-multiple', [file, file]);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual('');
+    await page.getByTestId('file-multiple').blur();
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual('');
     await page.getByTestId('month').fill('2024-01');
     expect(await getErrorMessage(page, 'month')).toEqual('');
     await page.getByTestId('month').blur();
@@ -366,6 +421,12 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'select')).toEqual('');
     await page.getByTestId('select').blur();
     expect(await getErrorMessage(page, 'select')).toEqual('');
+    await page
+      .getByTestId('select-multiple')
+      .selectOption(['option 1', 'option 2']);
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual('');
+    await page.getByTestId('select-multiple').blur();
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual('');
     await page.getByTestId('datalist').fill('option 1');
     expect(await getErrorMessage(page, 'datalist')).toEqual('');
     await page.getByTestId('datalist').blur();
@@ -382,7 +443,9 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'date')).toEqual('');
     expect(await getErrorMessage(page, 'datetime-local')).toEqual('');
     expect(await getErrorMessage(page, 'email')).toEqual('');
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual('');
     expect(await getErrorMessage(page, 'file')).toEqual('');
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual('');
     expect(await getErrorMessage(page, 'month')).toEqual('');
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'password')).toEqual('');
@@ -395,6 +458,7 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'url')).toEqual('');
     expect(await getErrorMessage(page, 'week')).toEqual('');
     expect(await getErrorMessage(page, 'select')).toEqual('');
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual('');
     expect(await getErrorMessage(page, 'datalist')).toEqual('');
     expect(await getErrorMessage(page, 'textarea')).toEqual('');
     expect(await consoleMsg).toBe(true);
@@ -419,10 +483,18 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
     await page.getByTestId('email').blur();
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
+    await page.getByTestId('email-multiple').fill('');
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
+    await page.getByTestId('email-multiple').blur();
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
     await setFile(page, 'file', []);
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
     await page.getByTestId('file').blur();
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
+    await setFile(page, 'file-multiple', []);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
+    await page.getByTestId('file-multiple').blur();
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
     await page.getByTestId('month').fill('');
     expect(await getErrorMessage(page, 'month')).toEqual(missError);
     await page.getByTestId('month').blur();
@@ -471,6 +543,10 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
     await page.getByTestId('select').blur();
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    await page.getByTestId('select-multiple').selectOption([]);
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
+    await page.getByTestId('select-multiple').blur();
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
     await page.getByTestId('datalist').fill('');
     expect(await getErrorMessage(page, 'datalist')).toEqual(missError);
     await page.getByTestId('datalist').blur();
@@ -485,7 +561,9 @@ test.describe('Hook Fields Input Native', () => {
     await page.getByTestId('date').fill('2024-01-01');
     await page.getByTestId('datetime-local').fill('2024-01-01T00:00');
     await page.getByTestId('email').fill('foo@bar');
+    await page.getByTestId('email-multiple').fill('foo@bar, bar@baz');
     await setFile(page, 'file', file);
+    await setFile(page, 'file-multiple', file);
     await page.getByTestId('month').fill('2024-01');
     await page.getByTestId('number').fill('42');
     await page.getByTestId('password').fill('password');
@@ -498,6 +576,7 @@ test.describe('Hook Fields Input Native', () => {
     await page.getByTestId('url').fill('http://localhost');
     await page.getByTestId('week').fill('2024-W01');
     await page.getByTestId('select').selectOption('option 1');
+    await page.getByTestId('select-multiple').selectOption('option 1');
     await page.getByTestId('datalist').fill('option 1');
     await page.getByTestId('textarea').fill('textarea');
     // reset button
@@ -507,7 +586,9 @@ test.describe('Hook Fields Input Native', () => {
     await expect(page.getByTestId('date')).toHaveValue('');
     await expect(page.getByTestId('datetime-local')).toHaveValue('');
     await expect(page.getByTestId('email')).toHaveValue('');
+    await expect(page.getByTestId('email-multiple')).toHaveValue('');
     await expect(page.getByTestId('file')).toHaveValue('');
+    await expect(page.getByTestId('file-multiple')).toHaveValue('');
     await expect(page.getByTestId('month')).toHaveValue('');
     await expect(page.getByTestId('number')).toHaveValue('');
     await expect(page.getByTestId('password')).toHaveValue('');
@@ -520,6 +601,7 @@ test.describe('Hook Fields Input Native', () => {
     await expect(page.getByTestId('url')).toHaveValue('');
     await expect(page.getByTestId('week')).toHaveValue('');
     await expect(page.getByTestId('select')).toHaveValue('');
+    await expect(page.getByTestId('select-multiple')).toHaveValue('');
     await expect(page.getByTestId('datalist')).toHaveValue('');
     await expect(page.getByTestId('textarea')).toHaveValue('');
     expect(await getErrorMessage(page, 'checkbox')).toEqual(missError);
@@ -527,7 +609,9 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'date')).toEqual(missError);
     expect(await getErrorMessage(page, 'datetime-local')).toEqual(missError);
     expect(await getErrorMessage(page, 'email')).toEqual(missError);
+    expect(await getErrorMessage(page, 'email-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'file')).toEqual(missError);
+    expect(await getErrorMessage(page, 'file-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'month')).toEqual(missError);
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'password')).toEqual(missError);
@@ -540,6 +624,7 @@ test.describe('Hook Fields Input Native', () => {
     expect(await getErrorMessage(page, 'url')).toEqual(missError);
     expect(await getErrorMessage(page, 'week')).toEqual(missError);
     expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
     expect(await getErrorMessage(page, 'datalist')).toEqual(missError);
     expect(await getErrorMessage(page, 'textarea')).toEqual(missError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();

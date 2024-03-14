@@ -9,6 +9,7 @@ import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
 import {
   colorValidator,
+  multipleValidator,
   radioValidator,
   rangeValidator,
 } from '../../helpers/validators';
@@ -19,8 +20,11 @@ const messages = {
 
 const validators = {
   color: colorValidator,
+  'email-multiple': multipleValidator('email-multiple'),
+  'file-multiple': multipleValidator('file-multiple'),
   radio: radioValidator,
   range: rangeValidator,
+  'select-multiple': multipleValidator('select-multiple'),
 };
 
 export default function HookFieldsForm() {
@@ -128,6 +132,25 @@ export default function HookFieldsForm() {
             </div>
           </div>
           <div className="field">
+            <label htmlFor="email-multiple">email-multiple</label>
+            <div className="input">
+              <input
+                type="email"
+                autoComplete="off"
+                data-testid="email-multiple"
+                multiple
+                name="email-multiple"
+                id="email-multiple"
+                required
+              />
+              {errors.all['email-multiple'] && (
+                <div className="error" data-testid="email-multiple-error">
+                  {errors.all['email-multiple']}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="field">
             <label htmlFor="file">file</label>
             <div className="input">
               <input
@@ -141,6 +164,25 @@ export default function HookFieldsForm() {
               {errors.all.file && (
                 <div className="error" data-testid="file-error">
                   {errors.all.file}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="field">
+            <label htmlFor="file-multiple">file-multiple</label>
+            <div className="input">
+              <input
+                type="file"
+                autoComplete="off"
+                data-testid="file-multiple"
+                multiple
+                name="file-multiple"
+                id="file-multiple"
+                required
+              />
+              {errors.all['file-multiple'] && (
+                <div className="error" data-testid="file-multiple-error">
+                  {errors.all['file-multiple']}
                 </div>
               )}
             </div>
@@ -379,6 +421,29 @@ export default function HookFieldsForm() {
               {errors.all.select && (
                 <div className="error" data-testid="select-error">
                   {errors.all.select}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="field">
+            <label htmlFor="select-multiple">select-multiple</label>
+            <div className="input">
+              <select
+                autoComplete="off"
+                data-testid="select-multiple"
+                multiple
+                name="select-multiple"
+                id="select-multiple"
+                required
+              >
+                <option value=""></option>
+                <option value="option 1">option 1</option>
+                <option value="option 2">option 2</option>
+                <option value="option 3">option 3</option>
+              </select>
+              {errors.all['select-multiple'] && (
+                <div className="error" data-testid="select-multiple-error">
+                  {errors.all['select-multiple']}
                 </div>
               )}
             </div>

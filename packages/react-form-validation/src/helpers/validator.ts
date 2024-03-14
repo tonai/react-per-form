@@ -57,15 +57,65 @@ export function getNativeErrorKey(
   return null;
 }
 
+export function getFormInput(
+  input: IFormElement,
+): Exclude<IFormElement, RadioNodeList> {
+  if (input instanceof RadioNodeList) {
+    return input[0] as HTMLInputElement;
+  }
+  return input;
+}
+
+export function getInputValue(
+  value: FormDataEntryValue,
+  input?: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+): FormDataEntryValue | FormDataEntryValue[] {
+  if (input && 'multiple' in input && input.multiple) {
+    if (input.type === 'email') {
+      return String(value)
+        .split(',')
+        .map((v) => v.trim());
+    }
+    return [value];
+  }
+  return value;
+}
+
 export function getData(
-  formData: FormData,
+  form: HTMLFormElement,
   values: Record<string, unknown> = {},
   names?: string[],
 ): IFormValues {
+  const formData = new FormData(form);
+  const inputsMap = new Map(
+    getFormInputs(form).map((input) => {
+      input = getFormInput(input);
+      return [input.getAttribute('name'), input];
+    }),
+  );
+  const valuesMap = Array.from(formData.entries())
+    .filter(([name]) => !names || names.includes(name))
+    .reduce<Map<string, [string, FormDataEntryValue | FormDataEntryValue[]]>>(
+      (acc, [name, value]) => {
+        const mapTuple = acc.get(name);
+        if (!mapTuple) {
+          const input = inputsMap.get(name);
+          acc.set(name, [name, getInputValue(value, input)]);
+        } else {
+          const val = mapTuple[1];
+          const newVal: FormDataEntryValue[] =
+            val instanceof Array ? val.concat(value) : [val, value];
+          acc.set(name, [name, newVal]);
+        }
+        return acc;
+      },
+      new Map(),
+    );
   return Object.fromEntries(
-    Array.from(formData.entries())
-      .filter(([name]) => !names || names.includes(name))
-      .map(([name, value]) => [name, name in values ? values[name] : value]),
+    Array.from(valuesMap.values()).map(([name, value]) => [
+      name,
+      name in values ? values[name] : value,
+    ]),
   );
 }
 
@@ -206,15 +256,6 @@ export function hasError(errors: IError): boolean {
   return Boolean(errors.main);
 }
 
-export function getFormInput(
-  input: IFormElement,
-): Exclude<IFormElement, RadioNodeList> {
-  if (input instanceof RadioNodeList) {
-    return input[0] as HTMLInputElement;
-  }
-  return input;
-}
-
 export function getNativeError(
   input: IFormElement,
   fieldMessages: IValidityMessages = {},
@@ -239,7 +280,6 @@ export function getValidatorError(
   values: Record<string, unknown> = {},
 ): Record<string, IValidatorError> {
   const validatorErrors: Record<string, IValidatorError> = {};
-  const formData = new FormData(form);
 
   for (const [, set] of validatorEntries) {
     for (const params of set.values()) {
@@ -247,10 +287,7 @@ export function getValidatorError(
       if (id in validatorErrors || !validator) {
         continue;
       }
-      const error = validator(
-        getData(formData, values, fieldNames),
-        fieldNames,
-      );
+      const error = validator(getData(form, values, fieldNames), fieldNames);
       for (const name of fieldNames) {
         // @ts-expect-error access HTMLFormControlsCollection with input name
         const input = getFormInput(form.elements[name] as IFormElement);
