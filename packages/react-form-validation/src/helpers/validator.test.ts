@@ -6,12 +6,14 @@ import {
   displayErrors,
   focusError,
   getAllError,
+  getCustomMessage,
   getData,
   getErrorObject,
   getFieldMessages,
   getFilteredErrors,
   getFormInput,
   getInputValue,
+  getManualError,
   getNativeError,
   getNativeErrorKey,
   getValidatorError,
@@ -547,6 +549,17 @@ describe('validator helper', () => {
     });
   });
 
+  describe('getCustomMessage', () => {
+    it('should return the custom message if exists', () => {
+      expect(getCustomMessage(null)).toEqual('');
+      expect(getCustomMessage('')).toEqual('');
+      expect(getCustomMessage('custom')).toEqual('custom');
+      expect(getCustomMessage('custom', { custom: 'Custom message' })).toEqual(
+        'Custom message',
+      );
+    });
+  });
+
   describe('getData', () => {
     it('should return all form data', () => {
       input1.setAttribute('value', '42');
@@ -765,6 +778,50 @@ describe('validator helper', () => {
     });
   });
 
+  describe('getManualError', () => {
+    it('should not return any error', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      expect(getManualError(form)).toEqual({});
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('should return the manual error', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      expect(getManualError(form, { foo: 'manual' })).toEqual({
+        foo: 'manual',
+      });
+      expect(spy).toHaveBeenCalledWith('manual');
+      spy.mockRestore();
+    });
+
+    it('should return the manual error with custom message', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      expect(
+        getManualError(
+          form,
+          { foo: 'manual' },
+          { foo: { manual: 'Manual error' } },
+        ),
+      ).toEqual({
+        foo: 'Manual error',
+      });
+      expect(spy).toHaveBeenCalledWith('Manual error');
+      spy.mockRestore();
+    });
+
+    it('should return the manual error with custom message fallback', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      expect(
+        getManualError(form, { foo: 'manual' }, {}, { manual: 'Manual error' }),
+      ).toEqual({
+        foo: 'Manual error',
+      });
+      expect(spy).toHaveBeenCalledWith('Manual error');
+      spy.mockRestore();
+    });
+  });
+
   describe('getNativeError', () => {
     it('should not return any error (valid)', () => {
       expect(getNativeError(input1, {})).toEqual('');
@@ -797,10 +854,14 @@ describe('validator helper', () => {
 
   describe('getValidatorError', () => {
     it('should not return any error (no validators)', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
       expect(getValidatorError(form, [])).toEqual({});
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
     });
 
     it('should return the validator error', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
       const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
@@ -808,18 +869,20 @@ describe('validator helper', () => {
             {
               id: 'foo',
               names: ['foo'],
-              validator: () => 'Custom error',
+              validator: () => 'validator',
             },
           ]),
         ],
       ];
       expect(getValidatorError(form, validators)).toEqual({
-        foo: { error: 'Custom error', global: true, names: ['foo'] },
+        foo: { error: 'validator', global: true, names: ['foo'] },
       });
+      expect(spy).toHaveBeenCalledWith('validator');
+      spy.mockRestore();
     });
 
     it('should not run the validator twice', () => {
-      const validator = jest.fn(() => 'Custom error');
+      const validator = jest.fn(() => 'validator');
       const validators: [string, Set<ISetValidatorsParams>][] = [
         [
           'foo',
@@ -838,9 +901,68 @@ describe('validator helper', () => {
         ],
       ];
       expect(getValidatorError(form, validators)).toEqual({
-        foobar: { error: 'Custom error', global: true, names: ['foo', 'bar'] },
+        foobar: { error: 'validator', global: true, names: ['foo', 'bar'] },
       });
       expect(validator).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the validator error with custom message', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      const validators: [string, Set<ISetValidatorsParams>][] = [
+        [
+          'foo',
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              validator: () => 'validator',
+            },
+          ]),
+        ],
+      ];
+      expect(
+        getValidatorError(
+          form,
+          validators,
+          {},
+          {
+            foo: { validator: 'Validator error' },
+          },
+        ),
+      ).toEqual({
+        foo: { error: 'Validator error', global: true, names: ['foo'] },
+      });
+      expect(spy).toHaveBeenCalledWith('Validator error');
+      spy.mockRestore();
+    });
+
+    it('should return the validator error with custom message fallback', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      const validators: [string, Set<ISetValidatorsParams>][] = [
+        [
+          'foo',
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              validator: () => 'validator',
+            },
+          ]),
+        ],
+      ];
+      expect(
+        getValidatorError(
+          form,
+          validators,
+          {},
+          {},
+          { validator: 'Validator error' },
+        ),
+      ).toEqual({
+        foo: { error: 'Validator error', global: true, names: ['foo'] },
+      });
+      expect(spy).toHaveBeenCalledWith('Validator error');
+      spy.mockRestore();
     });
   });
 
@@ -1306,19 +1428,19 @@ describe('validator helper', () => {
         true,
         false,
         {},
-        { foo: null },
+        { foo: '' },
       ),
     ).toEqual({
       all: { bar: '', foo: '', radio: '' },
       global: {},
-      manual: { foo: null },
+      manual: { foo: '' },
       native: { bar: '', foo: '', radio: '' },
       validator: {},
     });
     expect(formErrors.mock.results[0].value).toEqual({
       all: { bar: '', foo: '', radio: '' },
       global: {},
-      manual: { foo: null },
+      manual: { foo: '' },
       native: { bar: '', foo: '', radio: '' },
       validator: {},
     });

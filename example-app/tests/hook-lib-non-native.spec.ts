@@ -9,7 +9,7 @@ import {
 const url = '/hook-lib';
 const missError = 'Did you miss something ?';
 const muiValidatorError = 'Choose a date';
-const muiMinError = 'minDate';
+const muiMinError = 'Select a date in the future';
 
 test.describe('Hook Lib Non Native', () => {
   test('mode=submit', async ({ page }) => {

@@ -5,10 +5,10 @@ import type {
   IFormValidator,
   IFormValues,
   IMainError,
+  IMessages,
   IValidator,
   IValidatorError,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 import type { Dispatch, SetStateAction } from 'react';
 
@@ -121,9 +121,9 @@ export function getData(
 
 export function getFieldMessages(
   set: Set<IFormValidator>,
-  messages: IValidityMessages = {},
-): IValidityMessages {
-  return Array.from(set).reduce<IValidityMessages>(
+  messages: IMessages = {},
+): IMessages {
+  return Array.from(set).reduce<IMessages>(
     (acc, params) => ({ ...acc, ...params.messages }),
     messages,
   );
@@ -279,9 +279,19 @@ export function hasError(errors: IError): boolean {
   return Boolean(errors.main);
 }
 
+export function getCustomMessage(
+  error: string | null,
+  messages: IMessages = {},
+): string {
+  if (!error) {
+    return '';
+  }
+  return messages[error] ?? error;
+}
+
 export function getNativeError(
   input: IFormElement,
-  fieldMessages: IValidityMessages = {},
+  fieldMessages: IMessages = {},
 ): string {
   input = getFormInput(input);
   input.setCustomValidity('');
@@ -297,28 +307,59 @@ export function getNativeError(
   return '';
 }
 
+export function getManualError(
+  form: HTMLFormElement,
+  errors: Record<string, string | null> = {},
+  fieldMessages: Record<string, IMessages> = {},
+  messages?: IMessages,
+): Record<string, string | null> {
+  const manualErrors = Object.fromEntries(
+    Object.entries(errors).map(([name, error]) => [
+      name,
+      getCustomMessage(error, fieldMessages[name] ?? messages),
+    ]),
+  );
+  for (const [name, error] of Object.entries(manualErrors)) {
+    // @ts-expect-error access HTMLFormControlsCollection with input name
+    const input = getFormInput(form.elements[name] as IFormElement);
+    if (input && error && !input.validationMessage) {
+      input.setCustomValidity(error);
+    }
+  }
+  return manualErrors;
+}
+
 export function getValidatorError(
   form: HTMLFormElement,
   validatorEntries: [string, Set<IFormValidator>][],
   values: Record<string, unknown> = {},
+  fieldMessages: Record<string, IMessages> = {},
+  messages?: IMessages,
 ): Record<string, IValidatorError> {
   const validatorErrors: Record<string, IValidatorError> = {};
 
-  for (const [, set] of validatorEntries) {
+  for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {
       const { id, names: fieldNames, setErrors, validator } = params;
       if (id in validatorErrors || !validator) {
         continue;
       }
-      const error = validator(getData(form, values, fieldNames), fieldNames);
-      for (const name of fieldNames) {
+      const error = getCustomMessage(
+        validator(getData(form, values, fieldNames), fieldNames),
+        fieldMessages[name] ?? messages,
+      );
+      for (const fieldName of fieldNames) {
         // @ts-expect-error access HTMLFormControlsCollection with input name
-        const input = getFormInput(form.elements[name] as IFormElement);
+        const input = getFormInput(form.elements[fieldName] as IFormElement);
         if (input && error && !input.validationMessage) {
           input.setCustomValidity(error);
         }
       }
-      validatorErrors[id] = { error, global: !setErrors, names: fieldNames };
+      validatorErrors[id] = {
+        error,
+        global: !setErrors,
+        names: fieldNames,
+      };
     }
   }
 
@@ -425,7 +466,7 @@ export function validateForm(
   useNativeValidation: boolean,
   values: Record<string, unknown> = {},
   manualErrors: Record<string, string | null> = {},
-  messages?: IValidityMessages,
+  messages?: IMessages,
   focusOnError?: boolean,
   names?: string[],
 ): IError {
@@ -449,16 +490,16 @@ export function validateForm(
   }, {});
 
   // Manual errors
-  for (const [name, error] of Object.entries(manualErrors)) {
-    // @ts-expect-error access HTMLFormControlsCollection with input name
-    const input = getFormInput(form.elements[name] as IFormElement);
-    if (input && error && !input.validationMessage) {
-      input.setCustomValidity(error);
-    }
-  }
+  manualErrors = getManualError(form, manualErrors, fieldMessages, messages);
 
   // Custom validator errors
-  const validatorErrors = getValidatorError(form, validatorEntries, values);
+  const validatorErrors = getValidatorError(
+    form,
+    validatorEntries,
+    values,
+    fieldMessages,
+    messages,
+  );
 
   // IError object
   const ids = getValidatorIds(validatorEntries, names);

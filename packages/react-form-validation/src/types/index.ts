@@ -10,6 +10,10 @@ export type IFormMode = 'all' | 'blur' | 'change' | 'submit';
 
 export type IFormRevalidateMode = 'blur' | 'change' | 'submit';
 
+export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;
+
+export type IMessages = Record<string, string>;
+
 export type IValidate = (
   mode: IFormMode,
   formData: FormData,
@@ -34,7 +38,7 @@ export interface IValidatorObject {
 
 export interface ISetValidatorsParams {
   id: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
   validators?:
@@ -45,7 +49,7 @@ export interface ISetValidatorsParams {
 
 export interface IFormValidator {
   id: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
   validator?: IValidator;
@@ -94,7 +98,7 @@ export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
 
 export interface IFormContext {
   errors: IError;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   mode: IFormMode;
   onChange: IOnChangeHandler;
   onError: IOnErrorHandler;
@@ -106,5 +110,3 @@ export interface IFormContext {
   useNativeValidation: boolean;
   validate: IFormValidate;
 }
-
-export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;

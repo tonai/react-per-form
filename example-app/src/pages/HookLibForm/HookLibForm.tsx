@@ -9,14 +9,15 @@ import dayjs from 'dayjs';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
+  minDate: 'Select a date in the future',
 };
-
 const validators = {
   mui: muiValidator,
 };
 
 export default function HookLibForm() {
-  const [value, setValue] = useState(0);
+  const [numberValue, setNumberValue] = useState(0);
+  const [muiValue, setMuiValue] = useState(null);
   const { filtersProps, hookProps } = useFilters();
   const { formProps, ...context } = useForm({
     ...hookProps,
@@ -57,10 +58,10 @@ export default function HookLibForm() {
               <input
                 data-testid="number-controlled"
                 name="number-controlled"
-                onChange={onChange('number-controlled', Number, setValue)}
+                onChange={onChange('number-controlled', Number, setNumberValue)}
                 required
                 type="number"
-                value={value}
+                value={numberValue}
               />
               {errors.all?.['number-controlled'] && (
                 <div className="error" data-testid="number-error">
@@ -75,7 +76,7 @@ export default function HookLibForm() {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange('mui', null)}
+                onChange={onChange('mui', null, setMuiValue)}
                 onError={onError('mui')}
                 slotProps={{
                   textField: {
@@ -83,6 +84,7 @@ export default function HookLibForm() {
                     required: true,
                   },
                 }}
+                value={muiValue}
               />
               {errors.all?.mui && (
                 <div className="error" data-testid="mui-error">

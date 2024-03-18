@@ -1,11 +1,11 @@
 import type {
   IError,
   IMainError,
+  IMessages,
   IOnChangeHandler,
   IOnErrorHandler,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 
 import { useContext, useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ import { formContext } from '../contexts';
 
 export interface IUseInputsProps {
   id?: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   validators?:
     | IValidator

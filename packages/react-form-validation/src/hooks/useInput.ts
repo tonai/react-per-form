@@ -2,9 +2,9 @@ import type { IUseInputsResult } from './useInputs';
 import type {
   IError,
   IMainError,
+  IMessages,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 
 import { useMemo } from 'react';
@@ -13,7 +13,7 @@ import { useInputs } from './useInputs';
 
 export interface IUseInputProps {
   id?: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   name: string;
   validators?:
     | IValidator

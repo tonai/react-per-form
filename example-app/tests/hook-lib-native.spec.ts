@@ -4,7 +4,7 @@ import { getErrorMessage, goto } from './helpers';
 const url = '/hook-lib';
 const missError = 'Did you miss something ?';
 const muiValidatorError = 'Choose a date';
-const muiMinError = 'minDate';
+const muiMinError = 'Select a date in the future';
 
 test.describe('Component Lib Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.

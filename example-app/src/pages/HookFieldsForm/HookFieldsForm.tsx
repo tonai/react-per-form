@@ -17,7 +17,6 @@ import {
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
-
 const validators = {
   color: colorValidator,
   'email-multiple': multipleValidator('email-multiple'),

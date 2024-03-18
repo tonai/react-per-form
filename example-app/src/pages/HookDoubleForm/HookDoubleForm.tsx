@@ -6,7 +6,6 @@ import { useFilters } from '../../hooks/useFilters';
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
-
 const validators = {
   double: { validator: doubleValidator, names: ['double1', 'double2'] },
 };

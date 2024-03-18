@@ -5,6 +5,9 @@ import dayjs from 'dayjs';
 import { muiValidator } from '../../helpers/validators';
 
 const names = ['number', 'number-controlled', 'mui'];
+const messages = {
+  minDate: 'Select a date in the future',
+};
 const validators = {
   mui: muiValidator,
 };
@@ -12,6 +15,7 @@ const validators = {
 function Lib() {
   const [value, setValue] = useState(0);
   const { errors, onChange, onError } = useInputs({
+    messages,
     names,
     validators,
   });

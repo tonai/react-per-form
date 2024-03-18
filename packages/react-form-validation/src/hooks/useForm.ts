@@ -5,11 +5,11 @@ import type {
   IFormMode,
   IFormRevalidateMode,
   IFormValues,
+  IMessages,
   ISetValidatorsParams,
   ISubscriber,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
 
@@ -28,7 +28,7 @@ import {
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
   focusOnError?: boolean;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   mode?: IFormMode;
   onSubmit?: (event: FormEvent<HTMLFormElement>, values: IFormValues) => void;
   revalidateMode?: IFormRevalidateMode;
