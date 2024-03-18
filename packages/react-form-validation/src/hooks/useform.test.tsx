@@ -1,8 +1,10 @@
 import type { FormEvent } from 'react';
 
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { useForm } from './useForm';
+
+jest.useFakeTimers();
 
 describe('useForm hook', () => {
   let form: HTMLFormElement;
@@ -26,6 +28,7 @@ describe('useForm hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -57,6 +60,7 @@ describe('useForm hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -174,6 +178,101 @@ describe('useForm hook', () => {
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: 'baz',
       foo: 42,
+    });
+  });
+
+  it('should set the value with the onChange handler', () => {
+    const onChange = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.onChange('foo', null, onChange)(42);
+    expect(onChange).toHaveBeenCalledWith(42);
+  });
+
+  it('should add a manual error with the onChange handler', () => {
+    const onError = jest.fn(() => 'error');
+    const { result } = renderHook(() =>
+      useForm({
+        mode: 'all',
+        useNativeValidation: false,
+      }),
+    );
+    expect(result.current.errors).toEqual({
+      all: {},
+      global: {},
+      manual: {},
+      native: {},
+      validator: {},
+    });
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.onChange('foo', null, null, onError)(42);
+    expect(onError).toHaveBeenCalledWith(42);
+    act(() => jest.runAllTimers());
+    expect(result.current.errors).toEqual({
+      all: { foo: 'error' },
+      global: {},
+      main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+      manual: { foo: 'error' },
+      native: { foo: '' },
+      validator: {},
+    });
+  });
+
+  it('should add a manual error with the onError handler (mode=all)', () => {
+    const { result } = renderHook(() =>
+      useForm({
+        mode: 'all',
+        useNativeValidation: false,
+      }),
+    );
+    expect(result.current.errors).toEqual({
+      all: {},
+      global: {},
+      manual: {},
+      native: {},
+      validator: {},
+    });
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.onError('foo')('error');
+    act(() => jest.runAllTimers());
+    expect(result.current.errors).toEqual({
+      all: { foo: 'error' },
+      global: {},
+      main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+      manual: { foo: 'error' },
+      native: { foo: '' },
+      validator: {},
+    });
+  });
+
+  it('should add a manual error with the onError handler (mode=change)', () => {
+    const { result } = renderHook(() =>
+      useForm({
+        mode: 'change',
+        useNativeValidation: false,
+      }),
+    );
+    expect(result.current.errors).toEqual({
+      all: {},
+      global: {},
+      manual: {},
+      native: {},
+      validator: {},
+    });
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.onError('foo')('error');
+    act(() => jest.runAllTimers());
+    expect(result.current.errors).toEqual({
+      all: { foo: 'error' },
+      global: {},
+      main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+      manual: { foo: 'error' },
+      native: { foo: '' },
+      validator: {},
     });
   });
 });

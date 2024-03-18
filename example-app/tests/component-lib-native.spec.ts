@@ -3,7 +3,8 @@ import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-lib';
 const missError = 'Did you miss something ?';
-const muiError = 'Choose a date';
+const muiValidatorError = 'Choose a date';
+const muiMinError = 'minDate';
 
 test.describe('Component Lib Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
@@ -21,22 +22,22 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await page.getByTestId('mui').fill('01/01/2024');
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
-    expect(await getErrorMessage(page, 'mui')).toEqual('');
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await page.getByTestId('mui').blur();
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
-    expect(await getErrorMessage(page, 'mui')).toEqual('');
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await page.getByTestId('mui').fill('');
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
-    expect(await getErrorMessage(page, 'mui')).toEqual(muiError);
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await page.getByTestId('mui').blur();
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
-    expect(await getErrorMessage(page, 'mui')).toEqual(muiError);
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     // submit
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
-    expect(await getErrorMessage(page, 'mui')).toEqual(muiError);
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     // fix native error
     await page.getByTestId('number').fill('42');
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -52,6 +53,24 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     // fix custom error
     await page.getByTestId('mui').fill('01/01/2024');
+    expect(await getErrorMessage(page, 'number')).toEqual('');
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
+    await page.getByTestId('mui').blur();
+    expect(await getErrorMessage(page, 'number')).toEqual('');
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    expect(await getErrorMessage(page, 'number')).toEqual('');
+    expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual('');
     await page.getByTestId('mui').blur();

@@ -72,6 +72,7 @@ export interface IError {
   all: Record<string, string>;
   global: Record<string, IValidatorError>;
   main?: IMainError;
+  manual: Record<string, string | null>;
   native: Record<string, string>;
   validator: Record<string, IValidatorError>;
 }
@@ -80,17 +81,23 @@ export type ISubscriber = (form: HTMLFormElement | null) => void;
 
 export type IUnSubscribe = () => void;
 
-export type IOnChangeHandler = (
+export type IErrorHandler = (error: string | null) => void;
+
+export type IOnErrorHandler = (name: string) => IErrorHandler;
+
+export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
   name: string,
-  transformer?: (value: unknown) => unknown,
-  callback?: (...args: unknown[]) => void,
-) => (...args: unknown[]) => void;
+  transformer?: ((value: unknown) => V) | null,
+  callback?: ((value: V, ...args: T) => void) | null,
+  getError?: ((value: V, ...args: T) => string | null) | null,
+) => (value: unknown, ...args: T) => void;
 
 export interface IFormContext {
   errors: IError;
   messages?: IValidityMessages;
   mode: IFormMode;
   onChange: IOnChangeHandler;
+  onError: IOnErrorHandler;
   ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;

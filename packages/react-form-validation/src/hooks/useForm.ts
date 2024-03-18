@@ -60,6 +60,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
   const values = useRef<Record<string, unknown>>(defaultValues ?? {});
+  const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -101,6 +102,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         revalidate,
         useNativeValidation,
         values.current,
+        manualErrors.current,
         messages,
         focusOnError,
         names instanceof Array ? names : names ? [names] : undefined,
@@ -206,16 +208,36 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     return undefined;
   }, [mode, revalidateMode, validate]);
 
+  const onError = useCallback(
+    (name: string) => {
+      return (manualError: string | null) => {
+        manualErrors.current[name] = manualError;
+        debouncedValidate(
+          mode === 'all' || mode === 'change',
+          revalidateMode === 'change',
+          false,
+          name,
+        );
+      };
+    },
+    [debouncedValidate, mode, revalidateMode],
+  );
+
   const onChange = useCallback(
-    (
+    <V, T extends unknown[] = unknown[]>(
       name: string,
-      transformer?: (value: unknown) => unknown,
-      callback?: (...args: unknown[]) => void,
+      transformer?: ((value: unknown) => V) | null,
+      callback?: ((value: V, ...args: T) => void) | null,
+      getError?: ((value: V, ...args: T) => string | null) | null,
     ) => {
-      return (...args: unknown[]) => {
-        values.current[name] = getValue(args[0]);
+      return (value: unknown, ...args: T) => {
+        let val = getValue(value) as V;
         if (transformer) {
-          values.current[name] = transformer(values.current[name]);
+          val = transformer(val);
+        }
+        values.current[name] = val;
+        if (getError) {
+          onError(name)(getError(val, ...args));
         }
         debouncedValidate(
           mode === 'all' || mode === 'change',
@@ -223,10 +245,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           false,
           name,
         );
-        callback?.(...args);
+        callback?.(val, ...args);
       };
     },
-    [debouncedValidate, mode, revalidateMode],
+    [debouncedValidate, mode, onError, revalidateMode],
   );
 
   const formProps = useMemo(
@@ -247,6 +269,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       messages,
       mode,
       onChange,
+      onError,
       ref,
       removeValidators,
       revalidateMode,
@@ -261,6 +284,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       messages,
       mode,
       onChange,
+      onError,
       removeValidators,
       revalidateMode,
       setValidators,

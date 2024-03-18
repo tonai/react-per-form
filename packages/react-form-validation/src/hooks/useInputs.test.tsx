@@ -22,6 +22,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -58,6 +59,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
         foo: '',
@@ -104,6 +106,7 @@ describe('useInputs hook', () => {
         id: 'foo,bar',
         names: ['foo', 'bar'],
       },
+      manual: {},
       native: {
         bar: '',
         foo: '',
@@ -156,6 +159,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Custom error',
         foo: '',
@@ -194,6 +198,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
       },
@@ -221,6 +226,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: { bar: '' },
       global: {},
+      manual: {},
       native: { bar: '' },
       validator: {},
     });
@@ -246,6 +252,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
       },
@@ -283,6 +290,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
       },
@@ -297,6 +305,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: { bar: '' },
       global: {},
+      manual: {},
       native: { bar: '' },
       validator: {},
     });
@@ -333,6 +342,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
         foo: '',
@@ -348,6 +358,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: { bar: '', foo: '' },
       global: {},
+      manual: {},
       native: { bar: '', foo: '' },
       validator: {},
     });
@@ -384,6 +395,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
         foo: '',
@@ -413,6 +425,7 @@ describe('useInputs hook', () => {
         id: 'bar',
         names: ['bar'],
       },
+      manual: {},
       native: {
         bar: 'Constraints not satisfied',
         foo: '',
@@ -426,6 +439,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: { bar: '', foo: '' },
       global: {},
+      manual: {},
       native: { bar: '', foo: '' },
       validator: {},
     });

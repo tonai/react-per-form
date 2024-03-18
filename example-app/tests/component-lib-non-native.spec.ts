@@ -8,7 +8,8 @@ import {
 
 const url = '/component-lib';
 const missError = 'Did you miss something ?';
-const muiError = 'Choose a date';
+const muiValidatorError = 'Choose a date';
+const muiMinError = 'minDate';
 
 test.describe('Component Lib Non Native', () => {
   test('mode=submit', async ({ page }) => {
@@ -60,6 +61,24 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
@@ -100,16 +119,16 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     // submit
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
@@ -131,6 +150,24 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     // fix custom error
     await page.getByTestId('mui').fill('01/01/2024');
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await page.getByTestId('mui').blur();
@@ -173,21 +210,21 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    // Here we have muiError and not missError because when the field is focused
+    // Here we have muiValidatorError and not missError because when the field is focused
     // the value is set to MM/DD/YYYY by mui, that's why it trigger the validation error
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     // submit
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
@@ -211,6 +248,24 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -251,21 +306,21 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    // Here we have muiError and not missError because when the field is focused
+    // Here we have muiValidatorError and not missError because when the field is focused
     // the value is set to MM/DD/YYYY by mui, that's why it trigger the validation error
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiError);
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
     // submit
     await page.getByTestId('rfv-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
@@ -287,6 +342,24 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     // fix custom error
     await page.getByTestId('mui').fill('01/01/2024');
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await page.getByTestId('mui').blur();
@@ -363,6 +436,24 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     // fix custom error
     await page.getByTestId('mui').fill('01/01/2024');
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await page.getByTestId('mui').blur();
@@ -441,6 +532,24 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rfv-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
+    // fix manual error
+    const date = new Intl.DateTimeFormat('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date());
+    await page.getByTestId('mui').fill(date);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
