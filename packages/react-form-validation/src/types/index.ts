@@ -1,4 +1,4 @@
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import type { Dispatch, FormEvent, RefObject, SetStateAction } from 'react';
 
 export type IFormElement =
   | HTMLInputElement
@@ -25,7 +25,7 @@ export type IFormValidate = (
   revalidate?: boolean,
   focusOnError?: boolean,
   name?: string[] | string,
-) => boolean;
+) => [boolean, IError];
 
 export type IFormValues = Record<string, unknown>;
 
@@ -96,12 +96,28 @@ export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
   getError?: ((value: V, ...args: T) => string | null) | null,
 ) => (value: unknown, ...args: T) => void;
 
+export type ISubmitHandler = (
+  event: FormEvent<HTMLFormElement>,
+  values: IFormValues,
+) => void;
+
+export type ISubmitErrorHandler = (
+  event: FormEvent<HTMLFormElement>,
+  error: IError,
+) => void;
+
+export type IOnSubmitHandler = (
+  validCallback?: ISubmitHandler,
+  invalidCallback?: ISubmitErrorHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
+
 export interface IFormContext {
   errors: IError;
   messages?: IMessages;
   mode: IFormMode;
   onChange: IOnChangeHandler;
   onError: IOnErrorHandler;
+  onSubmit: IOnSubmitHandler;
   ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;

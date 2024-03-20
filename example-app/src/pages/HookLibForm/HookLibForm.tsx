@@ -6,6 +6,7 @@ import { muiValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -18,9 +19,9 @@ const validators = {
 export default function HookLibForm() {
   const [numberValue, setNumberValue] = useState(0);
   const [muiValue, setMuiValue] = useState(null);
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
-    ...hookProps,
+    ...formData,
     defaultValues: {
       // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
       mui: null,
@@ -28,13 +29,18 @@ export default function HookLibForm() {
     messages,
     validators,
   });
-  const { errors, onChange, onError } = context;
+  const { errors, onChange, onError, onSubmit } = context;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
-        <form className="form" data-testid="form" {...formProps}>
+        <form
+          {...formProps}
+          className="form"
+          data-testid="form"
+          onSubmit={onSubmit(handleSubmit)}
+        >
           <div className="field">
             <label htmlFor="file">number (uncontrolled)</label>
             <div className="input">

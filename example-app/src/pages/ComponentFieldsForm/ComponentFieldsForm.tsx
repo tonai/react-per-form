@@ -2,22 +2,24 @@ import { Error, Form, Reset, Submit } from 'react-form-validation';
 import Fields from '../../components/Fields/Fields';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
 export default function ComponentFieldsForm() {
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
 
   return (
     <>
       <Filters {...filtersProps} />
       <Form
-        {...hookProps}
+        {...formData}
         className="form"
         data-testid="form"
         messages={messages}
+        onSubmit={handleSubmit}
       >
         <Fields />
         <Error className="error" global />

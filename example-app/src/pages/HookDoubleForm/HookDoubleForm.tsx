@@ -2,6 +2,7 @@ import { Reset, Submit, formContext, useForm } from 'react-form-validation';
 import Filters from '../../components/Filters/Filters';
 import { doubleValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -11,19 +12,24 @@ const validators = {
 };
 
 export default function HookDoubleForm() {
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
-    ...hookProps,
+    ...formData,
     messages,
     validators,
   });
-  const { errors } = context;
+  const { errors, onSubmit } = context;
 
   return (
     <>
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
-        <form className="form" data-testid="form" {...formProps}>
+        <form
+          {...formProps}
+          className="form"
+          data-testid="form"
+          onSubmit={onSubmit(handleSubmit)}
+        >
           <div className="field">
             <label htmlFor="file">double 1</label>
             <div className="input">

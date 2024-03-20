@@ -80,7 +80,45 @@ describe('useForm hook', () => {
     expect(result.current.validate).toBeDefined();
   });
 
-  it('should call the onSubmit handler', () => {
+  it('should call the onSubmitError handler (props)', () => {
+    const preventDefault = jest.fn();
+    const onSubmit = jest.fn();
+    const onSubmitError = jest.fn();
+    const { result } = renderHook(() =>
+      useForm({
+        onSubmit,
+        onSubmitError,
+      }),
+    );
+    input1.setAttribute('required', '');
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).toHaveBeenCalled();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onSubmitError).toHaveBeenCalled();
+  });
+
+  it('should call the onSubmit invalid callback (return)', () => {
+    const preventDefault = jest.fn();
+    const onSubmit = jest.fn();
+    const onSubmitError = jest.fn();
+    const { result } = renderHook(() => useForm());
+    input1.setAttribute('required', '');
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const submitCallback = result.current.onSubmit(onSubmit, onSubmitError);
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).toHaveBeenCalled();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onSubmitError).toHaveBeenCalled();
+  });
+
+  it('should call the onSubmit handler (props)', () => {
     const preventDefault = jest.fn();
     const onSubmit = jest.fn();
     const { result } = renderHook(() =>
@@ -93,10 +131,25 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  it('should call the onSubmit handler with default Values', () => {
+  it('should call the onSubmit valid callback (return)', () => {
+    const preventDefault = jest.fn();
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const submitCallback = result.current.onSubmit(onSubmit);
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('should call the onSubmit handler with default Values (props)', () => {
     const preventDefault = jest.fn();
     const onSubmit = jest.fn();
     const { result } = renderHook(() =>
@@ -110,13 +163,35 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: '',
       foo: 42,
     });
   });
 
-  it('should call the onSubmit handler with the form values', () => {
+  it('should call the onSubmit valid callback with default Values (return)', () => {
+    const preventDefault = jest.fn();
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() =>
+      useForm({
+        defaultValues: { foo: 42 },
+      }),
+    );
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const submitCallback = result.current.onSubmit(onSubmit);
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
+      bar: '',
+      foo: 42,
+    });
+  });
+
+  it('should call the onSubmit handler with the form values (props)', () => {
     const preventDefault = jest.fn();
     const onSubmit = jest.fn();
     const { result } = renderHook(() =>
@@ -131,6 +206,26 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
+      bar: 'baz',
+      foo: '42',
+    });
+  });
+
+  it('should call the onSubmit valid callback with the form values (return)', () => {
+    const preventDefault = jest.fn();
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() => useForm());
+    input1.value = '42';
+    input2.value = 'baz';
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const submitCallback = result.current.onSubmit(onSubmit);
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: 'baz',
       foo: '42',
@@ -153,6 +248,7 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: 'baz',
       foo: 42,
@@ -175,6 +271,7 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
+    expect(preventDefault).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: 'baz',
       foo: 42,

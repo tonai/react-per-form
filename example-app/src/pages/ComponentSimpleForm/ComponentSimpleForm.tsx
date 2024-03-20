@@ -3,22 +3,24 @@ import Simple from '../../components/Simple/Simple';
 import Filters from '../../components/Filters/Filters';
 import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
 export default function ComponentSimpleForm() {
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
 
   return (
     <>
       <Filters {...filtersProps} />
       <Form
-        {...hookProps}
+        {...formData}
         className="form"
         data-testid="form"
         messages={messages}
+        onSubmit={handleSubmit}
         validators={{
           foobar: { validator: globalFooValidator, names: ['foo'] },
         }}
