@@ -1,7 +1,7 @@
 import { useInputs } from 'react-form-validation';
 import { DatePicker } from '@mui/x-date-pickers';
-import { useState } from 'react';
-import dayjs from 'dayjs';
+import { Dispatch, SetStateAction } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import { muiValidator } from '../../helpers/validators';
 
 const names = ['number', 'number-controlled', 'mui'];
@@ -12,8 +12,15 @@ const validators = {
   mui: muiValidator,
 };
 
-function Lib() {
-  const [value, setValue] = useState(0);
+interface ILibProps {
+  muiValue: Dayjs | null;
+  numberValue: number;
+  setMuiValue: Dispatch<SetStateAction<Dayjs | null>>;
+  setNumberValue: Dispatch<SetStateAction<number>>;
+}
+
+function Lib(props: ILibProps) {
+  const { muiValue, numberValue, setMuiValue, setNumberValue } = props;
   const { errors, onChange, onError } = useInputs({
     messages,
     names,
@@ -45,10 +52,10 @@ function Lib() {
           <input
             data-testid="number-controlled"
             name="number-controlled"
-            onChange={onChange('number-controlled', Number, setValue)}
+            onChange={onChange('number-controlled', Number, setNumberValue)}
             required
             type="number"
-            value={value}
+            value={numberValue}
           />
           {errors.all['number-controlled'] && (
             <div className="error" data-testid="number-controlled-error">
@@ -63,7 +70,7 @@ function Lib() {
           <DatePicker
             name="mui"
             minDate={dayjs()}
-            onChange={onChange('mui', null)}
+            onChange={onChange('mui', null, setMuiValue)}
             onError={onError('mui')}
             slotProps={{
               textField: {
@@ -71,6 +78,7 @@ function Lib() {
                 required: true,
               },
             }}
+            value={muiValue}
           />
           {errors.all?.mui && (
             <div className="error" data-testid="mui-error">

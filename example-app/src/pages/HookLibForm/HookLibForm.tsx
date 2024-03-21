@@ -23,13 +23,18 @@ export default function HookLibForm() {
   const { formProps, ...context } = useForm({
     ...formData,
     defaultValues: {
-      // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
-      mui: null,
+      mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
     },
     messages,
     validators,
   });
-  const { errors, onChange, onError, onSubmit } = context;
+  const { errors, onChange, onError, onReset, onSubmit } = context;
+
+  function handleReset() {
+    setNumberValue(0);
+    setMuiValue(null);
+    return { number: 0 }; // We only need to send the number (defaultValues already contains value for mui)
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -39,6 +44,7 @@ export default function HookLibForm() {
           {...formProps}
           className="form"
           data-testid="form"
+          onReset={onReset(handleReset)}
           onSubmit={onSubmit(handleSubmit)}
         >
           <div className="field">

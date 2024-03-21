@@ -8,7 +8,7 @@ type IElementProps = JSX.IntrinsicElements['form'];
 
 export interface IFormProps
   extends IUseFormProps,
-    Omit<IElementProps, 'onSubmit'> {
+    Omit<IElementProps, 'onReset' | 'onSubmit'> {
   children: ReactNode;
 }
 
@@ -18,6 +18,7 @@ export function Form(props: IFormProps): ReactElement {
     defaultValues,
     messages,
     mode,
+    onReset,
     onSubmit,
     revalidateMode,
     useNativeValidation = true,
@@ -28,6 +29,7 @@ export function Form(props: IFormProps): ReactElement {
     defaultValues,
     messages,
     mode,
+    onReset,
     onSubmit,
     revalidateMode,
     useNativeValidation,

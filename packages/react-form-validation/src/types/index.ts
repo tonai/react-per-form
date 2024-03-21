@@ -96,6 +96,15 @@ export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
   getError?: ((value: V, ...args: T) => string | null) | null,
 ) => (value: unknown, ...args: T) => void;
 
+export type IResetHandler = (
+  event: FormEvent<HTMLFormElement>,
+  values: IFormValues,
+) => Record<string, unknown> | null | void;
+
+export type IOnResetHandler = (
+  callback?: IResetHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
+
 export type ISubmitHandler = (
   event: FormEvent<HTMLFormElement>,
   values: IFormValues,
@@ -111,13 +120,17 @@ export type IOnSubmitHandler = (
   invalidCallback?: ISubmitErrorHandler,
 ) => (event: FormEvent<HTMLFormElement>) => void;
 
-export interface IFormContext {
+export interface IFormHandlers {
+  onChange: IOnChangeHandler;
+  onError: IOnErrorHandler;
+  onReset: IOnResetHandler;
+  onSubmit: IOnSubmitHandler;
+}
+
+export interface IFormContext extends IFormHandlers {
   errors: IError;
   messages?: IMessages;
   mode: IFormMode;
-  onChange: IOnChangeHandler;
-  onError: IOnErrorHandler;
-  onSubmit: IOnSubmitHandler;
   ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;
