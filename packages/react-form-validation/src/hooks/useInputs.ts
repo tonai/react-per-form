@@ -1,10 +1,10 @@
 import type {
   IError,
+  IFormHandlers,
   IMainError,
-  IOnChangeHandler,
+  IMessages,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 
 import { useContext, useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ import { formContext } from '../contexts';
 
 export interface IUseInputsProps {
   id?: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   validators?:
     | IValidator
@@ -22,17 +22,23 @@ export interface IUseInputsProps {
     | Record<string, IValidator | IValidatorObject>;
 }
 
-export interface IUseInputsResult {
+export interface IUseInputsResult extends IFormHandlers {
   error?: IMainError;
   errors: IError;
-  onChange: IOnChangeHandler;
 }
 
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
   const { id, names, messages, validators } = props;
 
   const context = useContext(formContext);
-  const { onChange, removeValidators, setValidators } = context;
+  const {
+    onChange,
+    onError,
+    onReset,
+    onSubmit,
+    removeValidators,
+    setValidators,
+  } = context;
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {
@@ -47,5 +53,5 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     return () => removeValidators(params);
   }, [id, messages, names, removeValidators, setValidators, validators]);
 
-  return { error: errors.main, errors, onChange };
+  return { error: errors.main, errors, onChange, onError, onReset, onSubmit };
 }

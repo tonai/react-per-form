@@ -2,6 +2,7 @@ import { Reset, Submit, formContext, useForm } from 'react-form-validation';
 import Filters from '../../components/Filters/Filters';
 import { fooValidator, globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -13,31 +14,39 @@ const validators = {
 };
 
 export default function HookSimpleForm() {
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
-    ...hookProps,
+    ...formData,
     messages,
     validators,
   });
-  const { errors } = context;
+  const { errors, onSubmit } = context;
 
   return (
     <>
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
-        <form className="form" data-testid="form" {...formProps}>
-          <div>
-            <input
-              autoComplete="off"
-              data-testid="simple"
-              name="foo"
-              required
-            />
-            {errors.all?.foo && (
-              <div className="error" data-testid="simple-error">
-                {errors.all.foo}
-              </div>
-            )}
+        <form
+          {...formProps}
+          className="form"
+          data-testid="form"
+          onSubmit={onSubmit(handleSubmit)}
+        >
+          <div className="field">
+            <label htmlFor="file">simple</label>
+            <div className="input">
+              <input
+                autoComplete="off"
+                data-testid="simple"
+                name="foo"
+                required
+              />
+              {errors.all?.foo && (
+                <div className="error" data-testid="simple-error">
+                  {errors.all.foo}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form__actions">
             <Reset />

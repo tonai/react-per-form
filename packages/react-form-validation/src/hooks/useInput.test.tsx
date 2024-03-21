@@ -20,6 +20,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -39,6 +40,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -61,6 +63,7 @@ describe('useInputs hook', () => {
         id: 'foo',
         names: ['foo'],
       },
+      manual: {},
       native: {
         foo: 'Constraints not satisfied',
       },
@@ -89,6 +92,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -111,6 +115,7 @@ describe('useInputs hook', () => {
         id: 'foo',
         names: ['foo'],
       },
+      manual: {},
       native: {
         foo: '',
       },
@@ -145,6 +150,7 @@ describe('useInputs hook', () => {
     expect(result.current.errors).toEqual({
       all: {},
       global: {},
+      manual: {},
       native: {},
       validator: {},
     });
@@ -167,6 +173,7 @@ describe('useInputs hook', () => {
         id: 'foo',
         names: ['foo'],
       },
+      manual: {},
       native: {
         foo: 'Custom error',
       },

@@ -10,7 +10,7 @@ const url = '/component-double';
 const missError = 'Did you miss something ?';
 const validatorError = 'Second value must be greater than first value';
 
-test.describe('Component Double Input Non Native', () => {
+test.describe('Component Double Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);

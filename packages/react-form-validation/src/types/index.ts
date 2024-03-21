@@ -1,4 +1,4 @@
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import type { Dispatch, FormEvent, RefObject, SetStateAction } from 'react';
 
 export type IFormElement =
   | HTMLInputElement
@@ -9,6 +9,10 @@ export type IFormElement =
 export type IFormMode = 'all' | 'blur' | 'change' | 'submit';
 
 export type IFormRevalidateMode = 'blur' | 'change' | 'submit';
+
+export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;
+
+export type IMessages = Record<string, string>;
 
 export type IValidate = (
   mode: IFormMode,
@@ -21,7 +25,7 @@ export type IFormValidate = (
   revalidate?: boolean,
   focusOnError?: boolean,
   name?: string[] | string,
-) => boolean;
+) => [boolean, IError];
 
 export type IFormValues = Record<string, unknown>;
 
@@ -34,7 +38,7 @@ export interface IValidatorObject {
 
 export interface ISetValidatorsParams {
   id: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
   validators?:
@@ -45,7 +49,7 @@ export interface ISetValidatorsParams {
 
 export interface IFormValidator {
   id: string;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   names: string[];
   setErrors?: Dispatch<SetStateAction<IError>>;
   validator?: IValidator;
@@ -72,6 +76,7 @@ export interface IError {
   all: Record<string, string>;
   global: Record<string, IValidatorError>;
   main?: IMainError;
+  manual: Record<string, string | null>;
   native: Record<string, string>;
   validator: Record<string, IValidatorError>;
 }
@@ -80,17 +85,52 @@ export type ISubscriber = (form: HTMLFormElement | null) => void;
 
 export type IUnSubscribe = () => void;
 
-export type IOnChangeHandler = (
-  name: string,
-  transformer?: (value: unknown) => unknown,
-  callback?: (...args: unknown[]) => void,
-) => (...args: unknown[]) => void;
+export type IErrorHandler = (error: string | null) => void;
 
-export interface IFormContext {
-  errors: IError;
-  messages?: IValidityMessages;
-  mode: IFormMode;
+export type IOnErrorHandler = (name: string) => IErrorHandler;
+
+export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
+  name: string,
+  transformer?: ((value: unknown) => V) | null,
+  callback?: ((value: V, ...args: T) => void) | null,
+  getError?: ((value: V, ...args: T) => string | null) | null,
+) => (value: unknown, ...args: T) => void;
+
+export type IResetHandler = (
+  event: FormEvent<HTMLFormElement>,
+  values: IFormValues,
+) => Record<string, unknown> | null | void;
+
+export type IOnResetHandler = (
+  callback?: IResetHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
+
+export type ISubmitHandler = (
+  event: FormEvent<HTMLFormElement>,
+  values: IFormValues,
+) => void;
+
+export type ISubmitErrorHandler = (
+  event: FormEvent<HTMLFormElement>,
+  error: IError,
+) => void;
+
+export type IOnSubmitHandler = (
+  validCallback?: ISubmitHandler,
+  invalidCallback?: ISubmitErrorHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
+
+export interface IFormHandlers {
   onChange: IOnChangeHandler;
+  onError: IOnErrorHandler;
+  onReset: IOnResetHandler;
+  onSubmit: IOnSubmitHandler;
+}
+
+export interface IFormContext extends IFormHandlers {
+  errors: IError;
+  messages?: IMessages;
+  mode: IFormMode;
   ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;
@@ -99,5 +139,3 @@ export interface IFormContext {
   useNativeValidation: boolean;
   validate: IFormValidate;
 }
-
-export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;

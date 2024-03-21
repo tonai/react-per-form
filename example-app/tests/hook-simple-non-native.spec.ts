@@ -11,7 +11,7 @@ const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
 
-test.describe('Hook Simple Input Non Native', () => {
+test.describe('Hook Simple Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);

@@ -13,11 +13,11 @@ import {
   radioValidator,
   rangeValidator,
 } from '../../helpers/validators';
+import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
-
 const validators = {
   color: colorValidator,
   'email-multiple': multipleValidator('email-multiple'),
@@ -28,19 +28,24 @@ const validators = {
 };
 
 export default function HookFieldsForm() {
-  const { filtersProps, hookProps } = useFilters();
+  const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
-    ...hookProps,
+    ...formData,
     messages,
     validators,
   });
-  const { errors } = context;
+  const { errors, onSubmit } = context;
 
   return (
     <>
       <Filters {...filtersProps} />
       <formContext.Provider value={context}>
-        <form className="form" data-testid="form" {...formProps}>
+        <form
+          {...formProps}
+          className="form"
+          data-testid="form"
+          onSubmit={onSubmit(handleSubmit)}
+        >
           <div className="field">
             <label htmlFor="checkbox">checkbox</label>
             <div className="input">

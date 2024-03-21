@@ -1,10 +1,10 @@
 import type {
   IFormElement,
   IFormValidator,
+  IMessages,
   ISetValidatorsParams,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 
 import { isValidator, isValidatorObject } from './validator';
@@ -46,7 +46,7 @@ export function getFormInputs(form: HTMLFormElement): IFormElement[] {
 export function getValidatorMap(
   fieldValidators: Set<ISetValidatorsParams>,
   formValidators?: Record<string, IValidator | IValidatorObject>,
-  messages?: IValidityMessages,
+  messages?: IMessages,
 ): Map<string, Set<IFormValidator>> {
   const validatorMap = new Map<string, Set<IFormValidator>>();
 

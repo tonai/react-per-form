@@ -4,12 +4,14 @@ import type {
   IFormElement,
   IFormMode,
   IFormRevalidateMode,
-  IFormValues,
+  IMessages,
+  IResetHandler,
   ISetValidatorsParams,
+  ISubmitErrorHandler,
+  ISubmitHandler,
   ISubscriber,
   IValidator,
   IValidatorObject,
-  IValidityMessages,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
 
@@ -28,9 +30,11 @@ import {
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
   focusOnError?: boolean;
-  messages?: IValidityMessages;
+  messages?: IMessages;
   mode?: IFormMode;
-  onSubmit?: (event: FormEvent<HTMLFormElement>, values: IFormValues) => void;
+  onReset?: IResetHandler;
+  onSubmit?: ISubmitHandler;
+  onSubmitError?: ISubmitErrorHandler;
   revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
   validators?: Record<string, IValidator | IValidatorObject>;
@@ -40,7 +44,7 @@ export interface IUseFormResult extends IFormContext {
   formProps: {
     noValidate: boolean;
     onChange: (event: FormEvent<HTMLFormElement>) => void;
-    onReset: () => void;
+    onReset: (event: FormEvent<HTMLFormElement>) => void;
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     ref: RefObject<HTMLFormElement>;
   };
@@ -50,7 +54,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     defaultValues,
     focusOnError = true,
+    onReset,
     onSubmit,
+    onSubmitError,
     messages,
     mode = 'submit',
     revalidateMode = 'submit',
@@ -60,6 +66,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
   const values = useRef<Record<string, unknown>>(defaultValues ?? {});
+  const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -81,9 +88,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       revalidate = false,
       focusOnError = false,
       names?: string[] | string | null,
-    ) => {
+    ): [boolean, IError] => {
       if (!ref.current) {
-        return false;
+        return [false, initialError];
       }
 
       const validatorMap = getValidatorMap(
@@ -93,7 +100,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       );
 
       // Validate
-      validateForm(
+      const errors = validateForm(
         ref.current,
         validatorMap,
         setErrors,
@@ -101,13 +108,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         revalidate,
         useNativeValidation,
         values.current,
+        manualErrors.current,
         messages,
         focusOnError,
         names instanceof Array ? names : names ? [names] : undefined,
       );
 
       notify();
-      return Boolean(ref.current.checkValidity());
+      return [Boolean(ref.current.checkValidity()), errors];
     },
     [messages, notify, useNativeValidation, validators],
   );
@@ -145,6 +153,19 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [debouncedValidate],
   );
 
+  const reset = useCallback(() => {
+    setErrors(initialError);
+    const validatorMap = getValidatorMap(fields.current, validators, messages);
+    for (const [, set] of validatorMap.entries()) {
+      for (const params of set.values()) {
+        params.setErrors?.(initialError);
+      }
+    }
+    if (defaultValues) {
+      values.current = defaultValues;
+    }
+  }, [defaultValues, messages, validators]);
+
   const handleChange = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       debouncedValidate(
@@ -157,26 +178,29 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [mode, debouncedValidate, revalidateMode],
   );
 
-  const handleReset = useCallback(() => {
-    setErrors(initialError);
-    const validatorMap = getValidatorMap(fields.current, validators, messages);
-    for (const [, set] of validatorMap.entries()) {
-      for (const params of set.values()) {
-        params.setErrors?.(initialError);
+  const handleReset = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      reset();
+      const resetValues = onReset?.(event, values.current);
+      if (resetValues) {
+        values.current = { ...values.current, ...resetValues };
       }
-    }
-    debouncedValidate();
-  }, [debouncedValidate, messages, validators]);
+      debouncedValidate();
+    },
+    [debouncedValidate, onReset, reset],
+  );
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      if (validate(true, false, focusOnError) && ref.current) {
+      const [isValid, errors] = validate(true, false, focusOnError);
+      if (isValid && ref.current) {
         onSubmit?.(event, getData(ref.current, values.current));
       } else {
         event.preventDefault();
+        onSubmitError?.(event, errors);
       }
     },
-    [focusOnError, onSubmit, validate],
+    [focusOnError, onSubmit, onSubmitError, validate],
   );
 
   useEffect(() => {
@@ -206,16 +230,36 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     return undefined;
   }, [mode, revalidateMode, validate]);
 
-  const onChange = useCallback(
-    (
+  const onErrorHandler = useCallback(
+    (name: string) => {
+      return (manualError: string | null) => {
+        manualErrors.current[name] = manualError;
+        debouncedValidate(
+          mode === 'all' || mode === 'change',
+          revalidateMode === 'change',
+          false,
+          name,
+        );
+      };
+    },
+    [debouncedValidate, mode, revalidateMode],
+  );
+
+  const onChangeHandler = useCallback(
+    <V, T extends unknown[] = unknown[]>(
       name: string,
-      transformer?: (value: unknown) => unknown,
-      callback?: (...args: unknown[]) => void,
+      transformer?: ((value: unknown) => V) | null,
+      callback?: ((value: V, ...args: T) => void) | null,
+      getError?: ((value: V, ...args: T) => string | null) | null,
     ) => {
-      return (...args: unknown[]) => {
-        values.current[name] = getValue(args[0]);
+      return (value: unknown, ...args: T) => {
+        let val = getValue(value) as V;
         if (transformer) {
-          values.current[name] = transformer(values.current[name]);
+          val = transformer(val);
+        }
+        values.current[name] = val;
+        if (getError) {
+          onErrorHandler(name)(getError(val, ...args));
         }
         debouncedValidate(
           mode === 'all' || mode === 'change',
@@ -223,10 +267,39 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           false,
           name,
         );
-        callback?.(...args);
+        callback?.(val, ...args);
       };
     },
-    [debouncedValidate, mode, revalidateMode],
+    [debouncedValidate, mode, onErrorHandler, revalidateMode],
+  );
+
+  const onResetHandler = useCallback(
+    (callback?: IResetHandler) => {
+      return (event: FormEvent<HTMLFormElement>) => {
+        reset();
+        const resetValues = callback?.(event, values.current);
+        if (resetValues) {
+          values.current = { ...values.current, ...resetValues };
+        }
+        debouncedValidate();
+      };
+    },
+    [debouncedValidate, reset],
+  );
+
+  const onSubmitHandler = useCallback(
+    (validCallback?: ISubmitHandler, invalidCallback?: ISubmitErrorHandler) => {
+      return (event: FormEvent<HTMLFormElement>) => {
+        const [isValid, errors] = validate(true, false, focusOnError);
+        if (isValid && ref.current) {
+          validCallback?.(event, getData(ref.current, values.current));
+        } else {
+          event.preventDefault();
+          invalidCallback?.(event, errors);
+        }
+      };
+    },
+    [focusOnError, validate],
   );
 
   const formProps = useMemo(
@@ -246,7 +319,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       formProps,
       messages,
       mode,
-      onChange,
+      onChange: onChangeHandler,
+      onError: onErrorHandler,
+      onReset: onResetHandler,
+      onSubmit: onSubmitHandler,
       ref,
       removeValidators,
       revalidateMode,
@@ -260,7 +336,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       formProps,
       messages,
       mode,
-      onChange,
+      onChangeHandler,
+      onErrorHandler,
+      onResetHandler,
+      onSubmitHandler,
       removeValidators,
       revalidateMode,
       setValidators,

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { getErrorMessage, goto, setFile } from './helpers';
 
-const url = '/component-fields';
+const url = '/hook-fields';
 const file = './logo.svg';
 const missError = 'Did you miss something ?';
 const colorError = 'The red part should be greater than 200';
@@ -9,7 +9,7 @@ const radioError = 'Select the third value';
 const rangeError = 'The value should be greater than 75';
 const multipleError = 'Select at least two options';
 
-test.describe('Component Fields Input Native', () => {
+test.describe('Hook Fields Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
   // We also don't know if the reportValidity function was called or not.
   // So we can't really test the different modes, which is why we only test the submit mode here.
@@ -282,19 +282,15 @@ test.describe('Component Fields Input Native', () => {
     // select-multiple
     await page.getByTestId('select-multiple').focus();
     await page.getByTestId('select-multiple').blur();
-    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
-    await page.getByTestId('select-multiple').selectOption('option 1');
-    expect(await getErrorMessage(page, 'select-multiple')).toEqual(
-      multipleError,
-    );
-    await page.getByTestId('select-multiple').blur();
-    expect(await getErrorMessage(page, 'select-multiple')).toEqual(
-      multipleError,
-    );
-    await page.getByTestId('select-multiple').selectOption([]);
-    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
-    await page.getByTestId('select-multiple').blur();
-    expect(await getErrorMessage(page, 'select-multiple')).toEqual(missError);
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    await page.getByTestId('select').selectOption('option 1');
+    expect(await getErrorMessage(page, 'select')).toEqual('');
+    await page.getByTestId('select').blur();
+    expect(await getErrorMessage(page, 'select')).toEqual('');
+    await page.getByTestId('select').selectOption('');
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
+    await page.getByTestId('select').blur();
+    expect(await getErrorMessage(page, 'select')).toEqual(missError);
     // datalist
     await page.getByTestId('datalist').focus();
     await page.getByTestId('datalist').blur();
