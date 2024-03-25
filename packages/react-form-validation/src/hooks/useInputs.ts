@@ -38,6 +38,7 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     onSubmit,
     removeValidators,
     setValidators,
+    watch,
   } = context;
   const [errors, setErrors] = useState<IError>(initialError);
 
@@ -53,5 +54,13 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     return () => removeValidators(params);
   }, [id, messages, names, removeValidators, setValidators, validators]);
 
-  return { error: errors.main, errors, onChange, onError, onReset, onSubmit };
+  return {
+    error: errors.main,
+    errors,
+    onChange,
+    onError,
+    onReset,
+    onSubmit,
+    watch,
+  };
 }

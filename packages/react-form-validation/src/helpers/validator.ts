@@ -81,11 +81,11 @@ export function getInputValue(
   return value;
 }
 
-export function getData(
+export function getData<V extends IFormValues>(
   form: HTMLFormElement,
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   names?: string[],
-): IFormValues {
+): V {
   const formData = new FormData(form);
   const inputsMap = new Map(
     getFormInputs(form).map((input) => {
@@ -116,7 +116,7 @@ export function getData(
       name,
       name in values ? values[name] : value,
     ]),
-  );
+  ) as V;
 }
 
 export function getFieldMessages(
@@ -332,7 +332,7 @@ export function getManualError(
 export function getValidatorError(
   form: HTMLFormElement,
   validatorEntries: [string, Set<IFormValidator>][],
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   fieldMessages: Record<string, IMessages> = {},
   messages?: IMessages,
 ): Record<string, IValidatorError> {
@@ -464,7 +464,7 @@ export function validateForm(
   display: boolean,
   revalidate: boolean,
   useNativeValidation: boolean,
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   manualErrors: Record<string, string | null> = {},
   messages?: IMessages,
   focusOnError?: boolean,

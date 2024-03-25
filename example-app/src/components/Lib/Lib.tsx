@@ -1,4 +1,4 @@
-import { useInputs } from 'react-form-validation';
+import { useInputs, useWatch } from 'react-form-validation';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Dispatch, SetStateAction } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
@@ -26,6 +26,7 @@ function Lib(props: ILibProps) {
     names,
     validators,
   });
+  const { mui } = useWatch<{ mui: Dayjs | null }>('mui');
 
   return (
     <>
@@ -87,6 +88,7 @@ function Lib(props: ILibProps) {
           )}
         </div>
       </div>
+      <div>Date is {mui?.format('DD/MM/YYYY')}</div>
       {/* Alternative syntax */}
       {/* <div className="field">
         <label htmlFor="file">datepicker</label>

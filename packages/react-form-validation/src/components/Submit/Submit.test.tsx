@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 import { Form } from '../Form/Form';
 
 import { Submit } from './Submit';
+
+jest.useFakeTimers();
 
 describe('Submit component', () => {
   it('should be enabled (disableOnError off)', () => {
@@ -11,6 +13,7 @@ describe('Submit component', () => {
         <Submit />
       </Form>,
     );
+    act(() => jest.runAllTimers());
     expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
   });
 
@@ -20,6 +23,7 @@ describe('Submit component', () => {
         <Submit disableOnError />
       </Form>,
     );
+    act(() => jest.runAllTimers());
     expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
   });
 
@@ -30,6 +34,7 @@ describe('Submit component', () => {
         <Submit disableOnError />
       </Form>,
     );
+    act(() => jest.runAllTimers());
     expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
   });
 
@@ -40,6 +45,7 @@ describe('Submit component', () => {
         <Submit disableOnError />
       </Form>,
     );
+    act(() => jest.runAllTimers());
     expect(screen.getByTestId('rfv-submit')).toBeDisabled();
   });
 });

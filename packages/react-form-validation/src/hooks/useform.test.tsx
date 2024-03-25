@@ -380,6 +380,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')('12');
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -399,11 +400,11 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm({ onSubmit }));
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')('12');
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
     expect(onReset).toHaveBeenCalled();
-    // result.current.onChange('foo', Number)({ target: { value: '42' } });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -425,6 +426,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')(12);
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -449,11 +451,11 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')(12);
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
     expect(onReset).toHaveBeenCalled();
-    // result.current.onChange('foo', Number)({ target: { value: '42' } });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );

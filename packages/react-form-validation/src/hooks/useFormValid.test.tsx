@@ -16,6 +16,7 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
+    act(() => jest.runAllTimers());
     expect(result.current).toEqual(true);
   });
 
@@ -28,6 +29,7 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
+    act(() => jest.runAllTimers());
     expect(result.current).toEqual(false);
   });
 
@@ -40,6 +42,7 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
+    act(() => jest.runAllTimers());
     expect(result.current).toEqual(false);
     fireEvent.change(screen.getByTestId('rfv-input'), {
       target: { value: 'foo' },

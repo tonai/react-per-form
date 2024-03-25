@@ -4,6 +4,7 @@ import type {
   IFormElement,
   IFormMode,
   IFormRevalidateMode,
+  IFormValues,
   IMessages,
   IResetHandler,
   ISetValidatorsParams,
@@ -19,6 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { initialError } from '../constants';
 import {
+  areObjectEquals,
   getData,
   getFormInput,
   getValidatorMap,
@@ -65,6 +67,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   } = props;
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
+  const prevValues = useRef<Record<string, unknown>>(
+    defaultValues ? { ...defaultValues } : {},
+  );
   const values = useRef<Record<string, unknown>>(defaultValues ?? {});
   const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
@@ -79,7 +84,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       subscribers.current.slice(subscribers.current.indexOf(subscriber), 1);
   }, []);
   const notify = useCallback(() => {
-    subscribers.current.forEach((subscriber) => subscriber(ref.current));
+    subscribers.current.forEach((subscriber) =>
+      subscriber({ form: ref.current, values: values.current }),
+    );
   }, []);
 
   const validate = useCallback(
@@ -161,9 +168,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         params.setErrors?.(initialError);
       }
     }
-    if (defaultValues) {
-      values.current = defaultValues;
-    }
+    values.current = defaultValues ?? {};
   }, [defaultValues, messages, validators]);
 
   const handleChange = useCallback(
@@ -204,8 +209,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
 
   useEffect(() => {
-    validate();
-  }, [validate]);
+    debouncedValidate();
+  }, [debouncedValidate]);
 
   // Manage blur event listeners
   useEffect(() => {
@@ -302,6 +307,31 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [focusOnError, validate],
   );
 
+  const watch = useCallback(
+    <V extends IFormValues>(
+      callback: (values: V) => void,
+      names?: string[] | string,
+    ) => {
+      const nameArray =
+        names === undefined ? names : names instanceof Array ? names : [names];
+      return subscribe(({ form, values }) => {
+        if (form) {
+          const newFilteredValues = getData<V>(form, values, nameArray);
+          const prevFilteredValues = getData<V>(
+            form,
+            prevValues.current,
+            nameArray,
+          );
+          if (!areObjectEquals(newFilteredValues, prevFilteredValues)) {
+            callback(newFilteredValues);
+          }
+        }
+        prevValues.current = { ...values };
+      });
+    },
+    [subscribe],
+  );
+
   const formProps = useMemo(
     () => ({
       noValidate: !useNativeValidation,
@@ -330,6 +360,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       subscribe,
       useNativeValidation,
       validate,
+      watch,
     }),
     [
       errors,
@@ -346,6 +377,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       subscribe,
       useNativeValidation,
       validate,
+      watch,
     ],
   );
 }
