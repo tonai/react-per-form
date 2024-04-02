@@ -14,6 +14,7 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { intersection } from './array';
 import { getFormInputs } from './form';
+import { filterObject } from './object';
 
 export function isValidator(
   validator?:
@@ -136,9 +137,7 @@ export function getFilteredErrors<T>(
   if (!names) {
     return errors;
   }
-  return Object.fromEntries(
-    Object.entries(errors).filter(([name]) => names.includes(name)),
-  );
+  return filterObject<T>(errors, ([name]) => names.includes(name));
 }
 
 export function setMainError(
@@ -232,9 +231,7 @@ export function getErrorObject(
   const native = getFilteredErrors(nativeErrors, names);
   const validator = getFilteredErrors(validatorErrors, ids);
   const manual = getFilteredErrors(manualErrors, names);
-  const global = Object.fromEntries(
-    Object.entries(validator).filter(([, { global }]) => global),
-  );
+  const global = filterObject(validator, ([, { global }]) => global);
   const all = getAllError(native, validator, manual);
   const errors: IError = {
     all,

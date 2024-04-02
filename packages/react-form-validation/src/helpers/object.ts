@@ -21,3 +21,10 @@ export function areObjectEquals(
   }
   return true;
 }
+
+export function filterObject<T>(
+  object: Record<string, T>,
+  callback: (param: [string, T]) => boolean,
+): Record<string, T> {
+  return Object.fromEntries(Object.entries(object).filter(callback));
+}
