@@ -110,7 +110,9 @@ export default function HookLibForm() {
               )}
             </div>
           </div>
-          <div>Date is {mui?.format('DD/MM/YYYY')}</div>
+          <div>
+            Date is <span data-testid="watch">{mui?.format('DD/MM/YYYY')}</span>
+          </div>
           {/* Alternative syntax */}
           {/* <div className="field">
             <label htmlFor="file">datepicker</label>
