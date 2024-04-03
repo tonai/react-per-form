@@ -81,7 +81,14 @@ export interface IError {
   validator: Record<string, IValidatorError>;
 }
 
-export type ISubscriber = (form: HTMLFormElement | null) => void;
+export interface ISubscriberParams {
+  form: HTMLFormElement | null;
+  names?: string[];
+  prevValues: IFormValues;
+  values: IFormValues;
+}
+
+export type ISubscriber = (params: ISubscriberParams) => void;
 
 export type IUnSubscribe = () => void;
 
@@ -120,11 +127,17 @@ export type IOnSubmitHandler = (
   invalidCallback?: ISubmitErrorHandler,
 ) => (event: FormEvent<HTMLFormElement>) => void;
 
+export type IWatch = <V extends IFormValues>(
+  callback: (values: V) => void,
+  names?: string[] | string,
+) => IUnSubscribe;
+
 export interface IFormHandlers {
   onChange: IOnChangeHandler;
   onError: IOnErrorHandler;
   onReset: IOnResetHandler;
   onSubmit: IOnSubmitHandler;
+  watch: IWatch;
 }
 
 export interface IFormContext extends IFormHandlers {
@@ -135,7 +148,10 @@ export interface IFormContext extends IFormHandlers {
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;
   setValidators: ISetValidators;
-  subscribe: (subscriber: ISubscriber) => IUnSubscribe;
+  subscribe: (
+    subscriber: ISubscriber,
+    names?: string[] | string,
+  ) => IUnSubscribe;
   useNativeValidation: boolean;
   validate: IFormValidate;
 }

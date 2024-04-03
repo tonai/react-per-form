@@ -8,3 +8,23 @@ export function getProperty<T>(object: object, path: string): T | undefined {
   }
   return index && index === length ? (result as T) : undefined;
 }
+
+export function areObjectEquals(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>,
+): boolean {
+  const allKeys = Array.from(new Set(Object.keys(a).concat(Object.keys(b))));
+  for (const key of allKeys) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function filterObject<T>(
+  object: Record<string, T>,
+  callback: (param: [string, T]) => boolean,
+): Record<string, T> {
+  return Object.fromEntries(Object.entries(object).filter(callback));
+}

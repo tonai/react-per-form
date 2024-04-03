@@ -23,4 +23,5 @@ export const formContext = createContext<IFormContext>({
   validate() {
     return [true, initialError];
   },
+  watch: () => () => null,
 });

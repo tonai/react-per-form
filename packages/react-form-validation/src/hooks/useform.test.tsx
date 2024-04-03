@@ -380,6 +380,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')('12');
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -399,11 +400,11 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm({ onSubmit }));
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')('12');
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
     expect(onReset).toHaveBeenCalled();
-    // result.current.onChange('foo', Number)({ target: { value: '42' } });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -425,6 +426,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')(12);
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -449,17 +451,130 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.ref.current = form;
+    result.current.onChange('foo')(12);
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
     expect(onReset).toHaveBeenCalled();
-    // result.current.onChange('foo', Number)({ target: { value: '42' } });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
     expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
       bar: 'baz',
       foo: 42,
+    });
+  });
+
+  it('should call the watch on initialization', () => {
+    const spy = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.watch(spy);
+    act(() => jest.runAllTimers());
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith({ bar: '', foo: '' });
+  });
+
+  it('should call the watch on value change', () => {
+    const spy = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.watch(spy);
+    act(() => jest.runAllTimers());
+    spy.mockClear();
+    result.current.onChange('foo')(12);
+    act(() => jest.runAllTimers());
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith({ bar: '', foo: 12 });
+  });
+
+  it('should call the watch on reset', () => {
+    const spy = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.watch(spy);
+    act(() => jest.runAllTimers());
+    spy.mockClear();
+    result.current.onChange('foo')(12);
+    act(() => jest.runAllTimers());
+    spy.mockClear();
+    result.current.onReset()({} as unknown as FormEvent<HTMLFormElement>);
+    act(() => jest.runAllTimers());
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith({ bar: '', foo: '' });
+  });
+
+  it('should call not call the watch if value is the same', () => {
+    const spy = jest.fn();
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    result.current.watch(spy);
+    act(() => jest.runAllTimers());
+    spy.mockClear();
+    result.current.onChange('foo')(12);
+    act(() => jest.runAllTimers());
+    result.current.onChange('foo')(12);
+    act(() => jest.runAllTimers());
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith({ bar: '', foo: 12 });
+  });
+
+  it('should validate the form', () => {
+    const { result } = renderHook(() => useForm());
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const [isValid, errors] = result.current.validate();
+    expect(isValid).toEqual(true);
+    expect(errors).toEqual({
+      all: { bar: '', foo: '' },
+      global: {},
+      manual: {},
+      native: { bar: '', foo: '' },
+      validator: {},
+    });
+  });
+
+  it('should not validate the form', () => {
+    const { result } = renderHook(() => useForm());
+    input1.setAttribute('required', '');
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const [isValid, errors] = result.current.validate();
+    expect(isValid).toEqual(false);
+    expect(errors).toEqual({
+      all: { bar: '', foo: 'Constraints not satisfied' },
+      global: {},
+      main: {
+        error: 'Constraints not satisfied',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      },
+      manual: {},
+      native: { bar: '', foo: 'Constraints not satisfied' },
+      validator: {},
+    });
+  });
+
+  it('should validate the field', () => {
+    const { result } = renderHook(() => useForm());
+    input1.setAttribute('required', '');
+    // @ts-expect-error ignore
+    result.current.ref.current = form;
+    const [isValid, errors] = result.current.validate(false, false, false, [
+      'bar',
+    ]);
+    expect(isValid).toEqual(false);
+    expect(errors).toEqual({
+      all: { bar: '' },
+      global: {},
+      manual: {},
+      native: { bar: '' },
+      validator: {},
     });
   });
 });

@@ -14,6 +14,7 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { intersection } from './array';
 import { getFormInputs } from './form';
+import { filterObject } from './object';
 
 export function isValidator(
   validator?:
@@ -81,11 +82,11 @@ export function getInputValue(
   return value;
 }
 
-export function getData(
+export function getData<V extends IFormValues>(
   form: HTMLFormElement,
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   names?: string[],
-): IFormValues {
+): V {
   const formData = new FormData(form);
   const inputsMap = new Map(
     getFormInputs(form).map((input) => {
@@ -116,7 +117,7 @@ export function getData(
       name,
       name in values ? values[name] : value,
     ]),
-  );
+  ) as V;
 }
 
 export function getFieldMessages(
@@ -136,9 +137,7 @@ export function getFilteredErrors<T>(
   if (!names) {
     return errors;
   }
-  return Object.fromEntries(
-    Object.entries(errors).filter(([name]) => names.includes(name)),
-  );
+  return filterObject<T>(errors, ([name]) => names.includes(name));
 }
 
 export function setMainError(
@@ -232,9 +231,7 @@ export function getErrorObject(
   const native = getFilteredErrors(nativeErrors, names);
   const validator = getFilteredErrors(validatorErrors, ids);
   const manual = getFilteredErrors(manualErrors, names);
-  const global = Object.fromEntries(
-    Object.entries(validator).filter(([, { global }]) => global),
-  );
+  const global = filterObject(validator, ([, { global }]) => global);
   const all = getAllError(native, validator, manual);
   const errors: IError = {
     all,
@@ -332,7 +329,7 @@ export function getManualError(
 export function getValidatorError(
   form: HTMLFormElement,
   validatorEntries: [string, Set<IFormValidator>][],
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   fieldMessages: Record<string, IMessages> = {},
   messages?: IMessages,
 ): Record<string, IValidatorError> {
@@ -464,7 +461,7 @@ export function validateForm(
   display: boolean,
   revalidate: boolean,
   useNativeValidation: boolean,
-  values: Record<string, unknown> = {},
+  values: IFormValues = {},
   manualErrors: Record<string, string | null> = {},
   messages?: IMessages,
   focusOnError?: boolean,

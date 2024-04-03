@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-import { useFormValid } from '../../hooks/useFormValid';
+import { useFormValid } from '../../hooks';
 
 type IElementProps = JSX.IntrinsicElements['input'];
 

@@ -1,6 +1,51 @@
-import { getProperty } from './object';
+import { areObjectEquals, filterObject, getProperty } from './object';
 
 describe('object helper', () => {
+  describe('areObjectEquals', () => {
+    it('should check that objects are equals (first level)', () => {
+      const ref = {};
+      expect(areObjectEquals({ foo: 'bar' }, { foo: 'bar' })).toEqual(true);
+      expect(
+        areObjectEquals(
+          { bar: 42, baz: ref, foo: 'bar' },
+          { bar: 42, baz: ref, foo: 'bar' },
+        ),
+      ).toEqual(true);
+      expect(
+        areObjectEquals({ bar: undefined, foo: 'bar' }, { foo: 'bar' }),
+      ).toEqual(true);
+      expect(
+        areObjectEquals({ foo: 'bar' }, { baz: undefined, foo: 'bar' }),
+      ).toEqual(true);
+    });
+
+    it('should check that objects are not equals (first level)', () => {
+      expect(areObjectEquals({ foo: 'bar' }, { foo: 'baz' })).toEqual(false);
+      expect(
+        areObjectEquals(
+          { bar: 42, baz: {}, foo: 'bar' },
+          { bar: 42, baz: {}, foo: 'bar' },
+        ),
+      ).toEqual(false);
+      expect(areObjectEquals({ bar: '', foo: 'bar' }, { foo: 'bar' })).toEqual(
+        false,
+      );
+      expect(areObjectEquals({ foo: 'bar' }, { baz: '', foo: 'bar' })).toEqual(
+        false,
+      );
+    });
+  });
+
+  describe('filterObject', () => {
+    it('should filter the object', () => {
+      expect(
+        filterObject({ bar: 'bar', baz: 'baz', foo: 'foo' }, ([key]) =>
+          key.includes('ba'),
+        ),
+      ).toEqual({ bar: 'bar', baz: 'baz' });
+    });
+  });
+
   describe('getProperty', () => {
     it('should return the object property', () => {
       expect(getProperty({ a: { b: { c: 42 } } }, 'a')).toEqual({

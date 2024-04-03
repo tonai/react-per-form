@@ -4,6 +4,7 @@ import type {
   IFormElement,
   IFormMode,
   IFormRevalidateMode,
+  IFormValues,
   IMessages,
   IResetHandler,
   ISetValidatorsParams,
@@ -19,6 +20,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { initialError } from '../constants';
 import {
+  areObjectEquals,
+  filterObject,
   getData,
   getFormInput,
   getValidatorMap,
@@ -65,21 +68,47 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   } = props;
   const ref = useRef<HTMLFormElement>(null);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
+  const prevValues = useRef<Record<string, unknown>>(
+    defaultValues ? { ...defaultValues } : {},
+  );
   const values = useRef<Record<string, unknown>>(defaultValues ?? {});
   const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
-  const subscribers = useRef<ISubscriber[]>([]);
-  const subscribe = useCallback((subscriber: ISubscriber) => {
-    if (!subscribers.current.includes(subscriber)) {
-      subscribers.current.push(subscriber);
-    }
-    return () =>
-      subscribers.current.slice(subscribers.current.indexOf(subscriber), 1);
-  }, []);
+  const subscribers = useRef<Map<ISubscriber, string[] | undefined>>(new Map());
+  const subscribe = useCallback(
+    (subscriber: ISubscriber, names?: string[] | string) => {
+      const nameArray =
+        names === undefined ? names : names instanceof Array ? names : [names];
+      if (!subscribers.current.has(subscriber)) {
+        subscribers.current.set(subscriber, nameArray);
+      }
+      return () => subscribers.current.delete(subscriber);
+    },
+    [],
+  );
   const notify = useCallback(() => {
-    subscribers.current.forEach((subscriber) => subscriber(ref.current));
+    if (ref.current) {
+      const newValues = getData(ref.current, values.current);
+      for (const [subscriber, names] of subscribers.current.entries()) {
+        const newFilteredValues = filterObject(
+          newValues,
+          ([name]) => !names || names.includes(name),
+        );
+        const prevFilteredValues = filterObject(
+          prevValues.current,
+          ([name]) => !names || names.includes(name),
+        );
+        subscriber({
+          form: ref.current,
+          names,
+          prevValues: prevFilteredValues,
+          values: newFilteredValues,
+        });
+      }
+      prevValues.current = { ...newValues };
+    }
   }, []);
 
   const validate = useCallback(
@@ -161,9 +190,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         params.setErrors?.(initialError);
       }
     }
-    if (defaultValues) {
-      values.current = defaultValues;
-    }
+    values.current = defaultValues ?? {};
   }, [defaultValues, messages, validators]);
 
   const handleChange = useCallback(
@@ -204,8 +231,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
 
   useEffect(() => {
-    validate();
-  }, [validate]);
+    debouncedValidate();
+  }, [debouncedValidate]);
 
   // Manage blur event listeners
   useEffect(() => {
@@ -302,6 +329,20 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [focusOnError, validate],
   );
 
+  const watch = useCallback(
+    <V extends IFormValues>(
+      callback: (values: V) => void,
+      names?: string[] | string,
+    ) => {
+      return subscribe(({ prevValues, values }) => {
+        if (!areObjectEquals(values, prevValues)) {
+          callback(values as V);
+        }
+      }, names);
+    },
+    [subscribe],
+  );
+
   const formProps = useMemo(
     () => ({
       noValidate: !useNativeValidation,
@@ -330,6 +371,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       subscribe,
       useNativeValidation,
       validate,
+      watch,
     }),
     [
       errors,
@@ -346,6 +388,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       subscribe,
       useNativeValidation,
       validate,
+      watch,
     ],
   );
 }

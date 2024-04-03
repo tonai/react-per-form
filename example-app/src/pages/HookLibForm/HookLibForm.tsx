@@ -1,11 +1,11 @@
 import { Reset, Submit, formContext, useForm } from 'react-form-validation';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useEffect, useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import Filters from '../../components/Filters/Filters';
 import { muiValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
-import { useState } from 'react';
-import dayjs from 'dayjs';
 import { handleSubmit } from '../../helpers/form';
 
 const messages = {
@@ -28,7 +28,12 @@ export default function HookLibForm() {
     messages,
     validators,
   });
-  const { errors, onChange, onError, onReset, onSubmit } = context;
+  const { errors, onChange, onError, onReset, onSubmit, watch } = context;
+
+  const [mui, setMui] = useState<Dayjs | null>(null);
+  useEffect(() => {
+    return watch<{ mui: Dayjs | null }>(({ mui }) => setMui(mui), 'mui');
+  }, [watch]);
 
   function handleReset() {
     setNumberValue(0);
@@ -104,6 +109,9 @@ export default function HookLibForm() {
                 </div>
               )}
             </div>
+          </div>
+          <div>
+            Date is <span data-testid="watch">{mui?.format('DD/MM/YYYY')}</span>
           </div>
           {/* Alternative syntax */}
           {/* <div className="field">
