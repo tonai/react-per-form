@@ -1,4 +1,4 @@
-import { Error, Form, Reset, Submit } from 'react-form-validation';
+import { Error, Form, Reset, Submit } from 'react-swift-form';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
@@ -47,7 +47,7 @@ export default function ComponentLibForm() {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rfv-submit-disabled" disableOnError />
+          <Submit data-testid="rsf-submit-disabled" disableOnError />
         </div>
       </Form>
     </LocalizationProvider>

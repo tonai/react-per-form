@@ -6,5 +6,5 @@ export type IResetProps = IElementProps;
 
 export function Reset(props: IResetProps): ReactElement {
   const { ...inputProps } = props;
-  return <input data-testid="rfv-reset" type="reset" {...inputProps} />;
+  return <input data-testid="rsf-reset" type="reset" {...inputProps} />;
 }

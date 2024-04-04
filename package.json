@@ -1,15 +1,15 @@
 {
-  "name": "react-form-validation",
+  "name": "react-swift-form-monorepo",
   "private": true,
   "description": "React Form Validation Monorepo",
   "license": "MIT",
-  "homepage": "https://github.com/tonai/react-form-validation",
+  "homepage": "https://github.com/tonai/react-swift-form",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tonai/react-form-validation.git"
+    "url": "git@github.com:tonai/react-swift-form.git"
   },
   "bugs": {
-    "url": "https://github.com/tonai/react-form-validation/issues"
+    "url": "https://github.com/tonai/react-swift-form/issues"
   },
   "author": {
     "name": "Tony Cabaye",
@@ -19,7 +19,7 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev:packages & npm run dev:app",
-    "dev:packages": "npm run dev -w packages/react-form-validation",
+    "dev:packages": "npm run dev -w packages/react-swift-form",
     "dev:app": "npm run dev -w example-app",
     "prelint": "npm run build",
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
@@ -36,9 +36,11 @@
     "eslint-config-custom": "*",
     "husky": "^9.0.10",
     "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "typescript": "~5.2.2"
   },
   "workspaces": [
+    "doc",
     "example-app",
     "packages/*"
   ],

@@ -1,4 +1,4 @@
-import { Form, Reset, Submit } from 'react-form-validation';
+import { Form, Reset, Submit } from 'react-swift-form';
 import Dynamic from '../../components/Dynamic/Dynamic';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
@@ -25,7 +25,7 @@ export default function ComponentDynamicForm() {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rfv-submit-disabled" disableOnError />
+          <Submit data-testid="rsf-submit-disabled" disableOnError />
         </div>
       </Form>
     </>

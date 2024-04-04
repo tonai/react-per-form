@@ -15,7 +15,7 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
@@ -39,7 +39,7 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // submit
-    await page.getByTestId('rfv-submit').click();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
@@ -54,8 +54,8 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rfv-submit').click();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -70,8 +70,8 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rfv-submit').click();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -97,8 +97,8 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual('');
     await expect(page.getByTestId('watch')).toHaveText(formattedDate);
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rfv-submit').click();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -114,16 +114,16 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'mui')).toEqual('');
     await expect(page.getByTestId('watch')).toHaveText(formattedDate);
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
     // reset button
-    await page.getByTestId('rfv-reset').click();
+    await page.getByTestId('rsf-reset').click();
     await expect(page.getByTestId('number')).toHaveValue('');
     await expect(page.getByTestId('mui')).toHaveValue('');
     expect(await getErrorMessage(page, 'number')).toEqual(missError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
   });
 });

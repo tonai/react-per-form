@@ -1,4 +1,4 @@
-import { Error, Form, Reset, Submit } from 'react-form-validation';
+import { Error, Form, Reset, Submit } from 'react-swift-form';
 import Fields from '../../components/Fields/Fields';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
@@ -26,7 +26,7 @@ export default function ComponentFieldsForm() {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rfv-submit-disabled" disableOnError />
+          <Submit data-testid="rsf-submit-disabled" disableOnError />
         </div>
       </Form>
     </>

@@ -20,6 +20,7 @@ export function Form(props: IFormProps): ReactElement {
     mode,
     onReset,
     onSubmit,
+    onSubmitError,
     revalidateMode,
     useNativeValidation = true,
     validators,
@@ -31,6 +32,7 @@ export function Form(props: IFormProps): ReactElement {
     mode,
     onReset,
     onSubmit,
+    onSubmitError,
     revalidateMode,
     useNativeValidation,
     validators,
@@ -38,7 +40,7 @@ export function Form(props: IFormProps): ReactElement {
 
   return (
     <formContext.Provider value={context}>
-      <form data-testid="rfv-form" {...restProps} {...formProps}>
+      <form data-testid="rsf-form" {...restProps} {...formProps}>
         {children}
       </form>
     </formContext.Provider>

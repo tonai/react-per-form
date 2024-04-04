@@ -6,11 +6,11 @@ describe('Form component', () => {
   it('should render the children', () => {
     render(
       <Form>
-        <input data-testid="rfv-input" name="foo" />
+        <input data-testid="rsf-input" name="foo" />
       </Form>,
     );
-    expect(screen.getByTestId('rfv-form')).toBeVisible();
-    expect(screen.getByTestId('rfv-input')).toBeVisible();
+    expect(screen.getByTestId('rsf-form')).toBeVisible();
+    expect(screen.getByTestId('rsf-input')).toBeVisible();
   });
 
   it('should call the onSubmit function (form valid)', () => {
@@ -20,7 +20,7 @@ describe('Form component', () => {
         <input name="foo" />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).toHaveBeenCalled();
     expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: '' });
   });
@@ -33,7 +33,7 @@ describe('Form component', () => {
       </Form>,
     );
     fireEvent.change(screen.getByTestId('foo'), { target: { value: 'bar' } });
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).toHaveBeenCalled();
     expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: 'bar' });
   });
@@ -45,7 +45,7 @@ describe('Form component', () => {
         <input name="foo" required />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
@@ -56,7 +56,7 @@ describe('Form component', () => {
         <input name="foo" required />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).not.toHaveBeenCalled();
   });
 });

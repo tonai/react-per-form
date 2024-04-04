@@ -1,15 +1,15 @@
 {
-  "name": "react-form-validation",
+  "name": "react-swift-form",
   "version": "0.0.0",
   "description": "React library fro form validation",
   "license": "MIT",
-  "homepage": "https://github.com/tonai/react-form-validation",
+  "homepage": "https://github.com/tonai/react-swift-form",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tonai/react-form-validation.git"
+    "url": "git@github.com:tonai/react-swift-form.git"
   },
   "bugs": {
-    "url": "https://github.com/tonai/react-form-validation/issues"
+    "url": "https://github.com/tonai/react-swift-form/issues"
   },
   "keywords": [
     "react",
@@ -60,7 +60,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "tsconfig": "*",
-    "typescript": "~5.2.0",
+    "typescript": "~5.2.2",
     "vite": "^5.0.12",
     "vite-plugin-dts": "^3.7.2"
   },

@@ -1,5 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 import './Filters.css';
 
 interface IFiltersProps {

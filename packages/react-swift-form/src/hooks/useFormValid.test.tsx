@@ -37,14 +37,14 @@ describe('useFormValid hook', () => {
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
-          <input data-testid="rfv-input" required />
+          <input data-testid="rsf-input" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     expect(result.current).toEqual(false);
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());

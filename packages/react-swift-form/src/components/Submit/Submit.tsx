@@ -14,7 +14,7 @@ export function Submit(props: ISubmitProps): ReactElement {
 
   return (
     <input
-      data-testid="rfv-submit"
+      data-testid="rsf-submit"
       disabled={disableOnError ? !isValid : false}
       type="submit"
       {...inputProps}

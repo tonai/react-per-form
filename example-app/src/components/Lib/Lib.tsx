@@ -1,4 +1,4 @@
-import { useInputs, useWatch } from 'react-form-validation';
+import { useInputs, useWatch } from 'react-swift-form';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Dispatch, SetStateAction } from 'react';
 import dayjs, { Dayjs } from 'dayjs';

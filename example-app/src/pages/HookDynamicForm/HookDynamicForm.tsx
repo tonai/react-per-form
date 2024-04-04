@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { Reset, Submit, formContext, useForm } from 'react-form-validation';
+import { Reset, Submit, formContext, useForm } from 'react-swift-form';
 import Filters from '../../components/Filters/Filters';
 import { dynamicValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
@@ -88,7 +88,7 @@ export default function HookDynamicForm() {
           <div className="form__actions">
             <Reset />
             <Submit />
-            <Submit data-testid="rfv-submit-disabled" disableOnError />
+            <Submit data-testid="rsf-submit-disabled" disableOnError />
           </div>
         </form>
       </formContext.Provider>

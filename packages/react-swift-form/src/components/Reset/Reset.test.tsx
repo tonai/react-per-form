@@ -11,23 +11,23 @@ describe('Reset component', () => {
         <Reset />
       </Form>,
     );
-    expect(screen.getByTestId('rfv-reset')).toBeVisible();
+    expect(screen.getByTestId('rsf-reset')).toBeVisible();
   });
 
   it('should reset the form', () => {
     render(
       <Form>
-        <input data-testid="rfv-input" name="foo" />
+        <input data-testid="rsf-input" name="foo" />
         <Reset />
       </Form>,
     );
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     // @ts-expect-error element type
-    expect(screen.getByTestId('rfv-input').value).toEqual('foo');
-    fireEvent.click(screen.getByTestId('rfv-reset'));
+    expect(screen.getByTestId('rsf-input').value).toEqual('foo');
+    fireEvent.click(screen.getByTestId('rsf-reset'));
     // @ts-expect-error element type
-    expect(screen.getByTestId('rfv-input').value).toEqual('');
+    expect(screen.getByTestId('rsf-input').value).toEqual('');
   });
 });

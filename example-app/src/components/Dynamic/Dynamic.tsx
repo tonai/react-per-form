@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { useInputs } from 'react-form-validation';
+import { useInputs } from 'react-swift-form';
 import { dynamicValidator } from '../../helpers/validators';
 
 function Dynamic() {
