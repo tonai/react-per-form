@@ -100,7 +100,7 @@ describe('useSubscribe hook', () => {
     });
     act(() => jest.runAllTimers());
     spy.mockClear();
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     act(() => jest.runAllTimers());
     expect(spy).toHaveBeenCalledWith({
       form: expect.any(HTMLFormElement) as HTMLFormElement,

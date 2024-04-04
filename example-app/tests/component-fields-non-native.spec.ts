@@ -44,7 +44,7 @@ test.describe('Component Fields Non Native', () => {
     await expect(page.getByTestId('select-multiple-error')).not.toBeVisible();
     await expect(page.getByTestId('datalist-error')).not.toBeVisible();
     await expect(page.getByTestId('textarea-error')).not.toBeVisible();
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     // checkbox
     await page.getByTestId('checkbox').focus();
     await page.getByTestId('checkbox').blur();
@@ -348,7 +348,7 @@ test.describe('Component Fields Non Native', () => {
     await page.getByTestId('textarea').blur();
     await expect(page.getByTestId('textarea-error')).toHaveText(missError);
     // submit
-    await page.getByTestId('rfv-submit').click();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('checkbox')).toBeFocused();
     await expect(page.getByTestId('checkbox-error')).toHaveText(missError);
     await expect(page.getByTestId('color-error')).toHaveText(colorError);
@@ -474,8 +474,8 @@ test.describe('Component Fields Non Native', () => {
     await expect(page.getByTestId('textarea-error')).not.toBeVisible();
     await page.getByTestId('textarea').blur();
     await expect(page.getByTestId('textarea-error')).not.toBeVisible();
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rfv-submit').click();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('checkbox')).not.toBeFocused();
     await expect(page.getByTestId('checkbox-error')).not.toBeVisible();
     await expect(page.getByTestId('color-error')).not.toBeVisible();
@@ -607,7 +607,7 @@ test.describe('Component Fields Non Native', () => {
     await expect(page.getByTestId('textarea-error')).toHaveText(missError);
     await page.getByTestId('textarea').blur();
     await expect(page.getByTestId('textarea-error')).toHaveText(missError);
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('checkbox').check();
     await page.getByTestId('color').fill('#ffffff');
     await page.getByTestId('date').fill('2024-01-01');
@@ -632,7 +632,7 @@ test.describe('Component Fields Non Native', () => {
     await page.getByTestId('datalist').fill('option 1');
     await page.getByTestId('textarea').fill('textarea');
     // reset button
-    await page.getByTestId('rfv-reset').click();
+    await page.getByTestId('rsf-reset').click();
     await expect(page.getByTestId('checkbox')).not.toBeChecked();
     await expect(page.getByTestId('color')).toHaveValue('#000000');
     await expect(page.getByTestId('date')).toHaveValue('');
@@ -679,6 +679,6 @@ test.describe('Component Fields Non Native', () => {
     await expect(page.getByTestId('select-multiple-error')).not.toBeVisible();
     await expect(page.getByTestId('datalist-error')).not.toBeVisible();
     await expect(page.getByTestId('textarea-error')).not.toBeVisible();
-    await expect(page.getByTestId('rfv-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
   });
 });

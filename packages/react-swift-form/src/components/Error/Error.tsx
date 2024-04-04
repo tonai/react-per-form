@@ -67,7 +67,7 @@ export function Error(props: IErrorProps): ReactElement | null {
   }
 
   return (
-    <Component data-testid="rfv-error" {...otherProps}>
+    <Component data-testid="rsf-error" {...otherProps}>
       {errorString}
     </Component>
   );

@@ -143,7 +143,7 @@ export default function HookLibForm() {
           <div className="form__actions">
             <Reset />
             <Submit />
-            <Submit data-testid="rfv-submit-disabled" disableOnError />
+            <Submit data-testid="rsf-submit-disabled" disableOnError />
           </div>
         </form>
       </formContext.Provider>

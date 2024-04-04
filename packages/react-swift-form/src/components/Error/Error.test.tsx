@@ -12,7 +12,7 @@ describe('Reset component', () => {
         <Error />
       </Form>,
     );
-    expect(screen.queryByTestId('rfv-error')).toBeNull();
+    expect(screen.queryByTestId('rsf-error')).toBeNull();
   });
 
   it('should not render the component (no error)', () => {
@@ -22,7 +22,7 @@ describe('Reset component', () => {
         <Error />
       </Form>,
     );
-    expect(screen.queryByTestId('rfv-error')).toBeNull();
+    expect(screen.queryByTestId('rsf-error')).toBeNull();
   });
 
   it('should not render the component (not submitted)', () => {
@@ -32,7 +32,7 @@ describe('Reset component', () => {
         <Error />
       </Form>,
     );
-    expect(screen.queryByTestId('rfv-error')).toBeNull();
+    expect(screen.queryByTestId('rsf-error')).toBeNull();
   });
 
   it('should display the native error', () => {
@@ -42,9 +42,9 @@ describe('Reset component', () => {
         <Error />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent(
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent(
       'Constraints not satisfied',
     );
   });
@@ -56,9 +56,9 @@ describe('Reset component', () => {
         <Error errorPath="native" />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent(
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent(
       'Constraints not satisfied',
     );
   });
@@ -70,9 +70,9 @@ describe('Reset component', () => {
         <Error errorPath="native.foo" />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent(
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent(
       'Constraints not satisfied',
     );
   });
@@ -84,9 +84,9 @@ describe('Reset component', () => {
         <Error errorPath="validator" />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent('error');
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent('error');
   });
 
   it('should display the validator error (global)', () => {
@@ -96,9 +96,9 @@ describe('Reset component', () => {
         <Error global />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent('error');
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent('error');
   });
 
   it('should display the validator error (errorPath=validator and global)', () => {
@@ -108,8 +108,8 @@ describe('Reset component', () => {
         <Error errorPath="validator" global />
       </Form>,
     );
-    fireEvent.submit(screen.getByTestId('rfv-form'));
-    expect(screen.getByTestId('rfv-error')).toBeVisible();
-    expect(screen.getByTestId('rfv-error')).toHaveTextContent('error');
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(screen.getByTestId('rsf-error')).toBeVisible();
+    expect(screen.getByTestId('rsf-error')).toHaveTextContent('error');
   });
 });

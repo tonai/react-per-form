@@ -40,7 +40,7 @@ describe('useInputs hook', () => {
     });
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -87,7 +87,7 @@ describe('useInputs hook', () => {
     );
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Validator error',
       global: false,
@@ -140,7 +140,7 @@ describe('useInputs hook', () => {
     );
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Custom error',
       global: false,
@@ -173,14 +173,14 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form mode="blur" useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Blur
-    fireEvent.blur(screen.getByTestId('rfv-input'));
+    fireEvent.blur(screen.getByTestId('rsf-input'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -211,14 +211,14 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form mode="change" useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Change
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());
@@ -231,7 +231,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Change
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: '' },
     });
     act(() => jest.runAllTimers());
@@ -265,14 +265,14 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form mode="all" useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Blur
-    fireEvent.blur(screen.getByTestId('rfv-input'));
+    fireEvent.blur(screen.getByTestId('rsf-input'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -297,7 +297,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Change
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());
@@ -316,14 +316,14 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form revalidateMode="change" useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -350,7 +350,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Change
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());
@@ -369,14 +369,14 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form revalidateMode="blur" useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -403,7 +403,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Change
-    fireEvent.change(screen.getByTestId('rfv-input'), {
+    fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
     act(() => jest.runAllTimers());
@@ -433,7 +433,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Blur
-    fireEvent.blur(screen.getByTestId('rfv-input'));
+    fireEvent.blur(screen.getByTestId('rsf-input'));
     act(() => jest.runAllTimers());
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
@@ -450,17 +450,17 @@ describe('useInputs hook', () => {
       wrapper: ({ children }) => (
         <Form useNativeValidation={false}>
           <input name="foo" />
-          <input data-testid="rfv-input" name="bar" required />
+          <input data-testid="rsf-input" name="bar" required />
           {children}
         </Form>
       ),
     });
     act(() => jest.runAllTimers());
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toBeDefined();
     // Reset
-    fireEvent.reset(screen.getByTestId('rfv-form'));
+    fireEvent.reset(screen.getByTestId('rsf-form'));
     act(() => jest.runAllTimers());
     expect(result.current.error).toEqual(undefined);
   });

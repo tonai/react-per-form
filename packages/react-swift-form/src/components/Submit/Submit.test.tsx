@@ -14,7 +14,7 @@ describe('Submit component', () => {
       </Form>,
     );
     act(() => jest.runAllTimers());
-    expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
+    expect(screen.getByTestId('rsf-submit')).not.toBeDisabled();
   });
 
   it('should be enabled (empty form)', () => {
@@ -24,7 +24,7 @@ describe('Submit component', () => {
       </Form>,
     );
     act(() => jest.runAllTimers());
-    expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
+    expect(screen.getByTestId('rsf-submit')).not.toBeDisabled();
   });
 
   it('should be enabled (valid form)', () => {
@@ -35,7 +35,7 @@ describe('Submit component', () => {
       </Form>,
     );
     act(() => jest.runAllTimers());
-    expect(screen.getByTestId('rfv-submit')).not.toBeDisabled();
+    expect(screen.getByTestId('rsf-submit')).not.toBeDisabled();
   });
 
   it('should be disabled (invalid form)', () => {
@@ -46,6 +46,6 @@ describe('Submit component', () => {
       </Form>,
     );
     act(() => jest.runAllTimers());
-    expect(screen.getByTestId('rfv-submit')).toBeDisabled();
+    expect(screen.getByTestId('rsf-submit')).toBeDisabled();
   });
 });

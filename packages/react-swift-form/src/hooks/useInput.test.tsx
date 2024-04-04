@@ -45,7 +45,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Constraints not satisfied',
       global: false,
@@ -97,7 +97,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Validator error',
       global: false,
@@ -155,7 +155,7 @@ describe('useInputs hook', () => {
       validator: {},
     });
     // Submit
-    fireEvent.submit(screen.getByTestId('rfv-form'));
+    fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(result.current.error).toEqual({
       error: 'Custom error',
       global: false,
