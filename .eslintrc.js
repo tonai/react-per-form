@@ -14,6 +14,7 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'import/consistent-type-specifier-style': 'off',
         'react/jsx-no-leaked-render': 'off',
+        'react/no-multi-comp': 'off',
       },
     },
   ],

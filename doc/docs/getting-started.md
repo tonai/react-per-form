@@ -21,7 +21,7 @@ pnpm install react-hook-form
 
 react-swift-form can be used with two main flavors:
 
-### Using the `useForm` hook
+### With the `useForm` hook
 
 Use the `useForm` hook combined with a native HTML `<form>` component:
 
@@ -32,7 +32,17 @@ import SimpleHookSource from '!!raw-loader!@site/src/demo/SimpleHook';
 
 Easy isn't it ?
 
-### Using the `<Form>` component
+:::info
+
+You want the input to be at least 3 characters ?
+
+Then just add `minlength="3"` as you would do in classic HTML and it's done.
+
+All native HTML validations are supported out of the box !
+
+:::
+
+### With the `<Form>` component
 
 Use the `<Form>` component like the native HTML `<form>` component:
 
@@ -45,19 +55,17 @@ And that's it !
 
 :::info
 
-In both case there is no need to register the form fields, you only need to add a `name` attribute !
+For both cases there is no need to register the form fields, you only need to add a `name` attribute !
 
 :::
 
 ## Customize error display
 
-By default react-swift-form use native form validation to avoid using any state.
-
-But if you want to customize the display of form errors you can turn off the native validation with the `useNativeValidation` parameter.
+By default react-swift-form use native form validation, but you can also choose to customize the error as you want by setting `useNativeValidation: false` :
 
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
 <Demo Component={SimpleHookNonNative} content={SimpleHookNonNativeSource}/>
 
-In that case you will have access to an `errors` state that contains field errors you can use as you want.
+Check the [guide page about errors](/docs/guides/errors) for more information.
