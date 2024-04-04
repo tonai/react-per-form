@@ -1,0 +1,14 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 var(--ifm-spacing-horizontal);
+}
+
+.title {
+  font-size: clamp(2.5rem, -0.625rem + 10vw, 5rem);
+}
+
+.button {
+  margin: var(--ifm-footer-padding-vertical) 0;
+}
