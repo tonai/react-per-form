@@ -1,4 +1,9 @@
 {
   "extends": "tsconfig/react-lib.json",
+  "compilerOptions": {
+    "paths": {
+      "@site/*": ["./doc/*"]
+    }
+  },
   "include": ["doc", "example-app", "packages"]
 }

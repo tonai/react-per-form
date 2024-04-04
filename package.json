@@ -17,7 +17,7 @@
     "url": "https://github.com/tonai"
   },
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w packages/react-swift-form",
     "dev": "npm run dev:packages & npm run dev:app",
     "dev:packages": "npm run dev -w packages/react-swift-form",
     "dev:app": "npm run dev -w example-app",

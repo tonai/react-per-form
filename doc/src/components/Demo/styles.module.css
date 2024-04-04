@@ -1,0 +1,51 @@
+.demo {
+  background: var(--background);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: var(--ifm-global-shadow-lw);
+  overflow: hidden;
+  margin-bottom: var(--ifm-leading);
+}
+
+.demo :global(.prism-code) {
+  background-color: transparent !important;
+}
+
+.example {
+  padding: var(--ifm-pre-padding);
+}
+
+.example form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.example form > :not(:first-child) {
+  margin-top: var(--ifm-pre-padding);
+}
+
+.example form :global(.error) {
+  margin-top: calc(var(--ifm-pre-padding) / 2);
+}
+
+.example form input {
+  display: block;
+}
+
+.code {
+  border: 0;
+  border-top: 1px solid var(--border);
+  flex: 1;
+  overflow: auto;
+  box-shadow: none;
+  background-color: transparent;
+  border-radius: 0;
+  margin: 0;
+}
+
+.pre {
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  margin: 0;
+}
