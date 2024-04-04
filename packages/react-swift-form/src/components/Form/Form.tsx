@@ -1,4 +1,5 @@
 import type { IUseFormProps } from '../../hooks';
+import type { IFormContext } from '../../types';
 import type { ReactElement, ReactNode } from 'react';
 
 import { formContext } from '../../contexts';
@@ -8,8 +9,8 @@ type IElementProps = JSX.IntrinsicElements['form'];
 
 export interface IFormProps
   extends IUseFormProps,
-    Omit<IElementProps, 'onReset' | 'onSubmit'> {
-  children: ReactNode;
+    Omit<IElementProps, 'children' | 'onReset' | 'onSubmit'> {
+  children: ReactNode | ((data: IFormContext) => ReactNode);
 }
 
 export function Form(props: IFormProps): ReactElement {
@@ -41,7 +42,7 @@ export function Form(props: IFormProps): ReactElement {
   return (
     <formContext.Provider value={context}>
       <form data-testid="rsf-form" {...restProps} {...formProps}>
-        {children}
+        {typeof children === 'function' ? children(context) : children}
       </form>
     </formContext.Provider>
   );
