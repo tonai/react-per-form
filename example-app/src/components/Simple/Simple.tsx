@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { useInput } from 'react-form-validation';
+import { useInput } from 'react-swift-form';
 import { fooValidator } from '../../helpers/validators';
 
 function Simple(props: JSX.IntrinsicElements['input']) {

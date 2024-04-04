@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { IFormValues } from 'react-form-validation';
+import { IFormValues } from 'react-swift-form';
 
 export function handleSubmit(
   event: FormEvent<HTMLFormElement>,

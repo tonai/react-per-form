@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
 export function useFilters() {
   const [mode, setMode] = useState<IFormMode>('submit');

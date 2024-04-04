@@ -1,4 +1,4 @@
-import { Form, Reset, Submit } from 'react-form-validation';
+import { Form, Reset, Submit } from 'react-swift-form';
 import Double from '../../components/Double/Double';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';

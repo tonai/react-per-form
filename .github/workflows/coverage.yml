@@ -15,4 +15,4 @@ jobs:
       - name: Coverage
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: packages/react-form-validation
+          working-directory: packages/react-swift-form

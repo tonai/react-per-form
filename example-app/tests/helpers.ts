@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { IFormMode, IFormRevalidateMode } from 'react-form-validation';
+import { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 import path from 'node:path';
 import * as url from 'node:url';
 

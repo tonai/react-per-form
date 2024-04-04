@@ -1,4 +1,4 @@
-import { Error, Form, Reset, Submit } from 'react-form-validation';
+import { Error, Form, Reset, Submit } from 'react-swift-form';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';

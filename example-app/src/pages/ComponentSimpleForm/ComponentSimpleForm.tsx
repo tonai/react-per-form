@@ -1,4 +1,4 @@
-import { Error, Form, Reset, Submit } from 'react-form-validation';
+import { Error, Form, Reset, Submit } from 'react-swift-form';
 import Simple from '../../components/Simple/Simple';
 import Filters from '../../components/Filters/Filters';
 import { globalFooValidator } from '../../helpers/validators';

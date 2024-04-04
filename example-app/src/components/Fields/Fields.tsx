@@ -1,4 +1,4 @@
-import { useInputs } from 'react-form-validation';
+import { useInputs } from 'react-swift-form';
 import {
   colorValidator,
   multipleValidator,

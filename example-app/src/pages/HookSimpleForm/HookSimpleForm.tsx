@@ -1,4 +1,4 @@
-import { Reset, Submit, formContext, useForm } from 'react-form-validation';
+import { Reset, Submit, formContext, useForm } from 'react-swift-form';
 import Filters from '../../components/Filters/Filters';
 import { fooValidator, globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';

@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs';
-import { IFormValues } from 'react-form-validation';
+import { IFormValues } from 'react-swift-form';
 
 export function fooValidator(values: IFormValues) {
   return String(values.foo).includes('foo')

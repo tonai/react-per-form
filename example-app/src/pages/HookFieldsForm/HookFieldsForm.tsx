@@ -1,10 +1,4 @@
-import {
-  Error,
-  Reset,
-  Submit,
-  formContext,
-  useForm,
-} from 'react-form-validation';
+import { Error, Reset, Submit, formContext, useForm } from 'react-swift-form';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
 import {
