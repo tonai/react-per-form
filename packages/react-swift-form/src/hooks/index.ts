@@ -1,4 +1,5 @@
 export * from './useForm';
+export * from './useFormContext';
 export * from './useFormErrors';
 export * from './useFormValid';
 export * from './useInput';

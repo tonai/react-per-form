@@ -2,8 +2,8 @@ import type { IUseFormProps } from '../../hooks';
 import type { IFormContext } from '../../types';
 import type { ReactElement, ReactNode } from 'react';
 
-import { formContext } from '../../contexts';
 import { useForm } from '../../hooks';
+import { FormProvider } from '../FormProvider/FormProvider';
 
 type IElementProps = JSX.IntrinsicElements['form'];
 
@@ -40,10 +40,10 @@ export function Form(props: IFormProps): ReactElement {
   });
 
   return (
-    <formContext.Provider value={context}>
+    <FormProvider {...context}>
       <form data-testid="rsf-form" {...restProps} {...formProps}>
         {typeof children === 'function' ? children(context) : children}
       </form>
-    </formContext.Provider>
+    </FormProvider>
   );
 }

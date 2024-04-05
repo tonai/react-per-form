@@ -357,6 +357,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   return useMemo(
     () => ({
       errors,
+      form: ref,
       formProps,
       messages,
       mode,
@@ -364,7 +365,6 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       onError: onErrorHandler,
       onReset: onResetHandler,
       onSubmit: onSubmitHandler,
-      ref,
       removeValidators,
       revalidateMode,
       setValidators,

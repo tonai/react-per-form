@@ -6,7 +6,7 @@ import { useFormErrors } from './useFormErrors';
 
 jest.useFakeTimers();
 
-describe('useFormValid hook', () => {
+describe('useFormErrors hook', () => {
   it('should not return any error when the form submitted and valid', () => {
     const { result } = renderHook(() => useFormErrors(), {
       wrapper: ({ children }) => (
