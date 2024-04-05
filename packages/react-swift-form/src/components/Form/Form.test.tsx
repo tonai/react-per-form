@@ -13,6 +13,21 @@ describe('Form component', () => {
     expect(screen.getByTestId('rsf-input')).toBeVisible();
   });
 
+  it('should render the children using render props', () => {
+    render(<Form>{() => <input data-testid="rsf-input" name="foo" />}</Form>);
+    expect(screen.getByTestId('rsf-form')).toBeVisible();
+    expect(screen.getByTestId('rsf-input')).toBeVisible();
+  });
+
+  it('should be able to get the context using render props', () => {
+    render(
+      <Form mode="blur">
+        {({ mode }) => <div data-testid="mode">{mode}</div>}
+      </Form>,
+    );
+    expect(screen.getByTestId('mode')).toHaveTextContent('blur');
+  });
+
   it('should call the onSubmit function (form valid)', () => {
     const onSubmit = jest.fn();
     render(

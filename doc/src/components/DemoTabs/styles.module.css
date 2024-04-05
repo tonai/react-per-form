@@ -1,0 +1,9 @@
+.demoTabs {
+  background: var(--background);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: var(--ifm-global-shadow-lw);
+  overflow: hidden;
+  margin-bottom: var(--ifm-leading);
+  box-shadow: var(--ifm-global-shadow-lw);
+}

@@ -6,8 +6,7 @@ import { formContext } from '../contexts';
 
 export function useWatch<V extends IFormValues>(names?: string[] | string): V {
   const [values, setValues] = useState<V>({} as V);
-  const context = useContext(formContext);
-  const { watch } = context;
+  const { watch } = useContext(formContext);
 
   useEffect(() => {
     return watch<V>(setValues, names);

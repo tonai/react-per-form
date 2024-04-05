@@ -32,6 +32,7 @@ describe('useForm hook', () => {
       native: {},
       validator: {},
     });
+    expect(result.current.form).toEqual({ current: null });
     expect(result.current.formProps.noValidate).toEqual(false);
     expect(result.current.formProps.onChange).toBeDefined();
     expect(result.current.formProps.onReset).toBeDefined();
@@ -39,7 +40,6 @@ describe('useForm hook', () => {
     expect(result.current.formProps.ref).toEqual({ current: null });
     expect(result.current.messages).toEqual(undefined);
     expect(result.current.mode).toEqual('submit');
-    expect(result.current.ref).toEqual({ current: null });
     expect(result.current.removeValidators).toBeDefined();
     expect(result.current.revalidateMode).toEqual('submit');
     expect(result.current.setValidators).toBeDefined();
@@ -64,6 +64,7 @@ describe('useForm hook', () => {
       native: {},
       validator: {},
     });
+    expect(result.current.form).toEqual({ current: null });
     expect(result.current.formProps.noValidate).toEqual(true);
     expect(result.current.formProps.onChange).toBeDefined();
     expect(result.current.formProps.onReset).toBeDefined();
@@ -71,7 +72,6 @@ describe('useForm hook', () => {
     expect(result.current.formProps.ref).toEqual({ current: null });
     expect(result.current.messages).toEqual({ valueMissing: 'Custom message' });
     expect(result.current.mode).toEqual('all');
-    expect(result.current.ref).toEqual({ current: null });
     expect(result.current.removeValidators).toBeDefined();
     expect(result.current.revalidateMode).toEqual('change');
     expect(result.current.setValidators).toBeDefined();
@@ -92,7 +92,7 @@ describe('useForm hook', () => {
     );
     input1.setAttribute('required', '');
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
@@ -108,7 +108,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm());
     input1.setAttribute('required', '');
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const submitCallback = result.current.onSubmit(onSubmit, onSubmitError);
     submitCallback({
       preventDefault,
@@ -127,7 +127,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
@@ -140,7 +140,7 @@ describe('useForm hook', () => {
     const onSubmit = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const submitCallback = result.current.onSubmit(onSubmit);
     submitCallback({
       preventDefault,
@@ -159,7 +159,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
@@ -179,7 +179,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const submitCallback = result.current.onSubmit(onSubmit);
     submitCallback({
       preventDefault,
@@ -202,7 +202,7 @@ describe('useForm hook', () => {
     input1.value = '42';
     input2.value = 'baz';
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.formProps.onSubmit({
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
@@ -220,7 +220,7 @@ describe('useForm hook', () => {
     input1.value = '42';
     input2.value = 'baz';
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const submitCallback = result.current.onSubmit(onSubmit);
     submitCallback({
       preventDefault,
@@ -242,7 +242,7 @@ describe('useForm hook', () => {
     input1.value = '42';
     input2.value = 'baz';
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo')(42);
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -263,7 +263,7 @@ describe('useForm hook', () => {
     input1.value = '42';
     input2.value = 'baz';
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo', Number)({ target: { value: '42' } });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -278,7 +278,7 @@ describe('useForm hook', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo', null, onChange)(42);
     expect(onChange).toHaveBeenCalledWith(42);
   });
@@ -299,7 +299,7 @@ describe('useForm hook', () => {
       validator: {},
     });
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo', null, null, onError)(42);
     expect(onError).toHaveBeenCalledWith(42);
     act(() => jest.runAllTimers());
@@ -328,7 +328,7 @@ describe('useForm hook', () => {
       validator: {},
     });
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onError('foo')('error');
     act(() => jest.runAllTimers());
     expect(result.current.errors).toEqual({
@@ -356,7 +356,7 @@ describe('useForm hook', () => {
       validator: {},
     });
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onError('foo')('error');
     act(() => jest.runAllTimers());
     expect(result.current.errors).toEqual({
@@ -379,7 +379,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo')('12');
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -399,7 +399,7 @@ describe('useForm hook', () => {
     const onSubmit = jest.fn();
     const { result } = renderHook(() => useForm({ onSubmit }));
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo')('12');
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -425,7 +425,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo')(12);
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -450,7 +450,7 @@ describe('useForm hook', () => {
       }),
     );
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.onChange('foo')(12);
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
@@ -469,7 +469,7 @@ describe('useForm hook', () => {
     const spy = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     expect(spy).toHaveBeenCalledTimes(1);
@@ -480,7 +480,7 @@ describe('useForm hook', () => {
     const spy = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
@@ -494,7 +494,7 @@ describe('useForm hook', () => {
     const spy = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
@@ -511,7 +511,7 @@ describe('useForm hook', () => {
     const spy = jest.fn();
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
@@ -526,7 +526,7 @@ describe('useForm hook', () => {
   it('should validate the form', () => {
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const [isValid, errors] = result.current.validate();
     expect(isValid).toEqual(true);
     expect(errors).toEqual({
@@ -542,7 +542,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm());
     input1.setAttribute('required', '');
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const [isValid, errors] = result.current.validate();
     expect(isValid).toEqual(false);
     expect(errors).toEqual({
@@ -564,7 +564,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm());
     input1.setAttribute('required', '');
     // @ts-expect-error ignore
-    result.current.ref.current = form;
+    result.current.form.current = form;
     const [isValid, errors] = result.current.validate(false, false, false, [
       'bar',
     ]);

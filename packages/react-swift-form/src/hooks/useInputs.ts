@@ -30,7 +30,6 @@ export interface IUseInputsResult extends IFormHandlers {
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
   const { id, names, messages, validators } = props;
 
-  const context = useContext(formContext);
   const {
     onChange,
     onError,
@@ -39,7 +38,7 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     removeValidators,
     setValidators,
     watch,
-  } = context;
+  } = useContext(formContext);
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {

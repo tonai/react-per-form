@@ -142,9 +142,9 @@ export interface IFormHandlers {
 
 export interface IFormContext extends IFormHandlers {
   errors: IError;
+  form: RefObject<HTMLFormElement>;
   messages?: IMessages;
   mode: IFormMode;
-  ref: RefObject<HTMLFormElement>;
   removeValidators: IRemoveValidators;
   revalidateMode: IFormRevalidateMode;
   setValidators: ISetValidators;
