@@ -1,4 +1,4 @@
-import { Error, Reset, Submit, formContext, useForm } from 'react-swift-form';
+import { Error, FormProvider, Reset, Submit, useForm } from 'react-swift-form';
 import Filters from '../../components/Filters/Filters';
 import { useFilters } from '../../hooks/useFilters';
 import {
@@ -33,7 +33,7 @@ export default function HookFieldsForm() {
   return (
     <>
       <Filters {...filtersProps} />
-      <formContext.Provider value={context}>
+      <FormProvider {...context}>
         <form
           {...formProps}
           className="form"
@@ -496,7 +496,7 @@ export default function HookFieldsForm() {
             <Submit data-testid="rsf-submit-disabled" disableOnError />
           </div>
         </form>
-      </formContext.Provider>
+      </FormProvider>
     </>
   );
 }

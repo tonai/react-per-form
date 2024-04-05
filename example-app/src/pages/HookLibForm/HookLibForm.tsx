@@ -1,4 +1,4 @@
-import { Reset, Submit, formContext, useForm } from 'react-swift-form';
+import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useEffect, useState } from 'react';
@@ -44,7 +44,7 @@ export default function HookLibForm() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Filters {...filtersProps} />
-      <formContext.Provider value={context}>
+      <FormProvider {...context}>
         <form
           {...formProps}
           className="form"
@@ -146,7 +146,7 @@ export default function HookLibForm() {
             <Submit data-testid="rsf-submit-disabled" disableOnError />
           </div>
         </form>
-      </formContext.Provider>
+      </FormProvider>
     </LocalizationProvider>
   );
 }
