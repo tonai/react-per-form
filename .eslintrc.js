@@ -12,8 +12,16 @@ module.exports = {
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/no-unnecessary-condition': 'off',
         'import/consistent-type-specifier-style': 'off',
+        'import/order': 'off',
         'react/jsx-no-leaked-render': 'off',
+        'react/no-multi-comp': 'off',
+      },
+    },
+    {
+      files: ['doc/src/react-swift-form/**/*'],
+      rules: {
         'react/no-multi-comp': 'off',
       },
     },

@@ -1,30 +1,26 @@
-import { type FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { Form, type IFormValues, useFormErrors } from 'react-swift-form';
 
 function Input() {
   const errors = useFormErrors();
-  const error = errors.all.text;
   return (
     <>
-      <input className={error ? 'has-error' : ''} name="text" required />
-      {error && <div className="error">{error}</div>}
+      <input name="text" required />
+      {errors.all.text && <div className="error">{errors.all.text}</div>}
     </>
   );
 }
 
-export default function Simple({ log }: { log: (data: unknown) => void }) {
-  function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-    values: IFormValues,
-  ) {
-    event.preventDefault();
-    log(values);
+export default function Demo() {
+  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
+    e.preventDefault();
+    console.log(values);
   }
 
   return (
     <Form onSubmit={handleSubmit} useNativeValidation={false}>
       <Input />
-      <input type="submit" />
+      <button type="submit">Submit</button>
     </Form>
   );
 }

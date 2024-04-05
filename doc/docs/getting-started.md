@@ -28,11 +28,11 @@ Use the `useForm` hook combined with a native HTML `<form>` component:
 import SimpleHook from '@site/src/demo/SimpleHook';
 import SimpleHookSource from '!!raw-loader!@site/src/demo/SimpleHook';
 
-<Demo Component={SimpleHook} content={SimpleHookSource}/>
+<Demo Component={SimpleHook} code={SimpleHookSource}/>
 
 Easy isn't it ?
 
-:::info
+:::tip
 
 You want the input to be at least 3 characters ?
 
@@ -49,7 +49,7 @@ Use the `<Form>` component like the native HTML `<form>` component:
 import SimpleComponent from '@site/src/demo/SimpleComponent';
 import SimpleComponentSource from '!!raw-loader!@site/src/demo/SimpleComponent';
 
-<Demo Component={SimpleComponent} content={SimpleComponentSource}/>
+<Demo Component={SimpleComponent} code={SimpleComponentSource}/>
 
 And that's it !
 
@@ -61,11 +61,11 @@ For both cases there is no need to register the form fields, you only need to ad
 
 ## Customize error display
 
-By default react-swift-form use native form validation, but you can also choose to customize the error as you want by setting `useNativeValidation: false` :
+By default react-swift-form use native form validation, but you can also choose to customize the error as you want by setting `useNativeValidation: false` and display the error as you want :
 
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
-<Demo Component={SimpleHookNonNative} content={SimpleHookNonNativeSource}/>
+<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{12,18}" />
 
 Check the [guide page about errors](/docs/guides/errors) for more information.

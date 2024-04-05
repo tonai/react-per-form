@@ -1,4 +1,4 @@
-.demo {
+.demo:not(.noBorder) {
   background: var(--background);
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -11,8 +11,13 @@
   background-color: transparent !important;
 }
 
+.wrapper {
+  display: flex;
+}
+
 .example {
   padding: var(--ifm-pre-padding);
+  flex: 1;
 }
 
 .example form {
@@ -22,15 +27,38 @@
 }
 
 .example form > :not(:first-child) {
-  margin-top: var(--ifm-pre-padding);
+  margin-top: calc(var(--ifm-pre-padding) / 2);
 }
 
 .example form :global(.error) {
-  margin-top: calc(var(--ifm-pre-padding) / 2);
+  margin-top: calc(var(--ifm-pre-padding) / 4);
 }
 
 .example form input {
   display: block;
+}
+
+.settings {
+  display: flex;
+  align-items: center;
+  padding: var(--ifm-pre-padding);
+  border-left: 1px solid var(--border);
+}
+
+.collapse {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: var(--ifm-pre-padding);
+  right: var(--ifm-pre-padding);
+}
+
+.pre {
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  margin: 0;
 }
 
 .code {
@@ -40,12 +68,6 @@
   overflow: auto;
   box-shadow: none;
   background-color: transparent;
-  border-radius: 0;
-  margin: 0;
-}
-
-.pre {
-  border-top: 1px solid var(--border);
   border-radius: 0;
   margin: 0;
 }

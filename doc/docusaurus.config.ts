@@ -86,6 +86,10 @@ const config: Config = {
               label: 'Getting started',
               to: '/docs/getting-started',
             },
+            {
+              label: 'Guides',
+              to: '/docs/category/guides',
+            },
           ],
         },
         {

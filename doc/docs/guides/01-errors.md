@@ -11,7 +11,7 @@ You can directly access the error object from the `useForm` hook:
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
-<Demo Component={SimpleHookNonNative} content={SimpleHookNonNativeSource}/>
+<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{10,18}"/>
 
 ## With the `<Form>` component
 
@@ -22,7 +22,7 @@ You can access the error object using the children of the `<Form>` component as 
 import SimpleComponentNonNativeRender from '@site/src/demo/SimpleComponentNonNativeRender';
 import SimpleComponentNonNativeRenderSource from '!!raw-loader!@site/src/demo/SimpleComponentNonNativeRender';
 
-<Demo Component={SimpleComponentNonNativeRender} content={SimpleComponentNonNativeRenderSource}/>
+<Demo Component={SimpleComponentNonNativeRender} code={SimpleComponentNonNativeRenderSource} metastring="{12,15}"/>
 
 ### Context method
 
@@ -33,7 +33,7 @@ You can use the `useFormErrors` hook to directly get access to the errors:
 import SimpleComponentNonNativeContext from '@site/src/demo/SimpleComponentNonNativeContext';
 import SimpleComponentNonNativeContextSource from '!!raw-loader!@site/src/demo/SimpleComponentNonNativeContext';
 
-<Demo Component={SimpleComponentNonNativeContext} content={SimpleComponentNonNativeContextSource}/>
+<Demo Component={SimpleComponentNonNativeContext} code={SimpleComponentNonNativeContextSource} metastring="{5,9}"/>
 
 ## The error object
 
@@ -41,13 +41,13 @@ Inside the error object you can access all errors classified in different catego
 
 It has the following shape:
 
-| Property  | Type                                                               | Description                                                                                                                                                                            |
-| --------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| native    | `Record<string, string>`                                           | Contains errors only relative to native validation (`required`, `min`, `maxlength`, `pattern`...etc.). Keys are field names and values are error strings (empty string means no error) |
-| validator | `Record<string, {error: string, global: boolean, names: string[]>` | Contains error only relative to custom field validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are validator id                       |
-| manual    | `Record<string, string \| null>`                                   | Contains error only relative to manual validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are field names                              |
-| global    | `Record<string, {error: string, global: boolean, names: string[]>` | Contains error only relative to global form validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are validator id                        |
-| all       | `Record<string, string>`                                           | Contains all above errors, with one error per field (native errors first, then manual errors, then validator errors). Keys are field names                                             |
-| main      | `{error: string, global: boolean, id: string, names: string[] }`   | Contain the first error from top to bottom fields.                                                                                                                                     |
+| Property  | Type                                                               | Description                                                                                                                                                                                      |
+| --------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| native    | `Record<string, string>`                                           | Contains errors only relative to native validation (`required`, `min`, `maxlength`, `pattern`...etc.). Keys are field names and values are error strings (empty string means no error)           |
+| validator | `Record<string, {error: string, global: boolean, names: string[]>` | Contains errors only relative to custom field validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are validator id                                |
+| manual    | `Record<string, string \| null>`                                   | Contains errors only relative to manual validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are field names                                       |
+| global    | `Record<string, {error: string, global: boolean, names: string[]>` | Contains errors only relative to custom field validation that are set at the form level (See [guide page about validation](/docs/guides/validation) for more information). Keys are validator id |
+| all       | `Record<string, string>`                                           | Contains all above errors, with one error per field (native errors first, then manual errors, then validator errors). Keys are field names                                                       |
+| main      | `{error: string, global: boolean, id: string, names: string[] }`   | Contain the first field error (from top to bottom).                                                                                                                                              |
 
 <!-- TODO add example with all errors displayed -->

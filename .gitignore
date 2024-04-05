@@ -23,6 +23,8 @@ build
 dist
 dist-ssr
 tsconfig.tsbuildinfo
+.docusaurus
+.cache-loader
 
 # Editor directories and files
 !.vscode/extensions.json

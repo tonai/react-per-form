@@ -1,35 +1,19 @@
-import type { ElementType, ReactElement } from 'react';
+import type { IDemoProps } from './DemoContent';
+import type { ReactElement } from 'react';
 
-import { Collapse } from '@mantine/core';
-import CodeBlock from '@theme/CodeBlock';
 import { useState } from 'react';
 
-import styles from './styles.module.css';
-
-interface IDemoProps {
-  Component: ElementType;
-  content: string;
-}
+import DemoContent from './DemoContent';
 
 export default function Demo(props: IDemoProps): ReactElement {
-  const { Component, content } = props;
-  const [log, setLog] = useState('');
-
-  function handleLog(values: unknown): void {
-    setLog(JSON.stringify(values, null, 2));
-  }
+  const [useNativeValidation, setUseNativeValidation] = useState(false);
 
   return (
-    <div className={styles.demo}>
-      <div className={styles.example}>
-        <Component log={handleLog} />
-      </div>
-      <Collapse in={log.length > 0}>
-        <pre className={styles.pre}>{log}</pre>
-      </Collapse>
-      <CodeBlock className={styles.code} language="tsx" showLineNumbers>
-        {content}
-      </CodeBlock>
-    </div>
+    <DemoContent
+      key={String(useNativeValidation)}
+      {...props}
+      onUseNativeValidationChange={setUseNativeValidation}
+      useNativeValidation={useNativeValidation}
+    />
   );
 }
