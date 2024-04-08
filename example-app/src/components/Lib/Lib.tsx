@@ -35,6 +35,7 @@ function Lib(props: ILibProps) {
         <div className="input">
           <input
             data-testid="number"
+            min="3"
             name="number"
             onChange={onChange({ transformer: Number })}
             required

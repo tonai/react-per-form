@@ -37,6 +37,7 @@ import {
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
   focusOnError?: boolean;
+  form?: HTMLFormElement;
   messages?: IMessages;
   mode?: IFormMode;
   onReset?: IResetHandler;
@@ -61,6 +62,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     defaultValues,
     focusOnError = true,
+    form = null,
     onReset,
     onSubmit,
     onSubmitError,
@@ -70,12 +72,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     useNativeValidation = true,
     validators,
   } = props;
-  const ref = useRef<HTMLFormElement>(null);
+  const ref = useRef<HTMLFormElement>(form);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
   const prevValues = useRef<Record<string, unknown>>(
     defaultValues ? { ...defaultValues } : {},
   );
-  const values = useRef<Record<string, unknown>>(defaultValues ?? {});
+  const values = useRef<Record<string, unknown>>(
+    defaultValues ? { ...defaultValues } : {},
+  );
   const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
@@ -191,7 +195,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       for (const input of getFormInputs(ref.current)) {
         const formField = getFormInput(input);
         const name = formField.getAttribute('name');
-        if (name && name in values) {
+        if (name && values[name] !== undefined && values[name] !== null) {
           if (isCheckbox(formField)) {
             formField.checked = Boolean(values[name]);
           } else {
@@ -202,11 +206,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     }
   }, []);
 
-  const reset = useCallback(
-    (resetValues?: IFormValues | null | void, skip?: boolean) => {
-      if (ref.current && !skip) {
-        ref.current.reset();
-      }
+  const resetForm = useCallback(
+    (resetValues?: IFormValues | null | void) => {
       setErrors(initialError);
       const validatorMap = getValidatorMap(
         fields.current,
@@ -218,14 +219,16 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           params.setErrors?.(initialError);
         }
       }
-      values.current = defaultValues ?? {};
+      values.current = defaultValues ? { ...defaultValues } : {};
       if (resetValues) {
         values.current = { ...values.current, ...resetValues };
       }
-      setValues(values.current);
+      setTimeout(() => setValues(values.current));
     },
     [defaultValues, messages, setValues, validators],
   );
+
+  const reset = useCallback(() => ref.current?.reset(), []);
 
   const handleChange = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -242,10 +245,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const handleReset = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       const resetValues = onReset?.(event, values.current);
-      reset(resetValues, true);
+      resetForm(resetValues);
       debouncedValidate();
     },
-    [debouncedValidate, onReset, reset],
+    [debouncedValidate, onReset, resetForm],
   );
 
   const handleSubmit = useCallback(
@@ -263,7 +266,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   useEffect(() => {
     setValues(defaultValues);
-  }, [defaultValues, setValues]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setValues]);
 
   useEffect(() => {
     debouncedValidate();
@@ -343,11 +347,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (callback?: IResetHandler) => {
       return (event: FormEvent<HTMLFormElement>) => {
         const resetValues = callback?.(event, values.current);
-        reset(resetValues);
+        resetForm(resetValues);
         debouncedValidate();
       };
     },
-    [debouncedValidate, reset],
+    [debouncedValidate, resetForm],
   );
 
   const onSubmitHandler = useCallback(

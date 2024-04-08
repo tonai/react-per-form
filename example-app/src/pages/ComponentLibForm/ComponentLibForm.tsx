@@ -9,6 +9,7 @@ import { useFilters } from '../../hooks/useFilters';
 import { handleSubmit } from '../../helpers/form';
 
 const messages = {
+  rangeUnderflow: 'Value is too low',
   valueMissing: 'Did you miss something ?',
 };
 
@@ -20,7 +21,7 @@ export default function ComponentLibForm() {
   function handleReset() {
     setNumberValue(0);
     setMuiValue(null);
-    return { number: 0 }; // We only need to send the number (defaultValues already contains value for mui)
+    return { number: 12 };
   }
 
   return (
@@ -30,6 +31,7 @@ export default function ComponentLibForm() {
         {...formData}
         defaultValues={{
           mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
+          number: 0,
         }}
         className="form"
         data-testid="form"
