@@ -10,6 +10,7 @@ describe('useForm hook', () => {
   let form: HTMLFormElement;
   let input1: HTMLInputElement;
   let input2: HTMLInputElement;
+  let input3: HTMLInputElement;
 
   beforeEach(() => {
     form = document.createElement('form');
@@ -21,6 +22,10 @@ describe('useForm hook', () => {
     input2.setAttribute('name', 'bar');
     input2.setAttribute('value', '');
     form.appendChild(input2);
+    input3 = document.createElement('input');
+    input3.setAttribute('name', 'baz');
+    input3.setAttribute('type', 'checkbox');
+    form.appendChild(input3);
   });
 
   it('should initialize data', () => {
@@ -482,6 +487,20 @@ describe('useForm hook', () => {
     );
   });
 
+  it('should set the default values', () => {
+    const { result, rerender } = renderHook(() =>
+      useForm({
+        defaultValues: { bar: 'baz', baz: true },
+      }),
+    );
+    // @ts-expect-error ignore
+    result.current.form.current = form;
+    // We have to call rerender to rerun the useEffect after the form ref has been set.
+    rerender();
+    expect(input2.value).toEqual('baz');
+    expect(input3.checked).toEqual(true);
+  });
+
   it('should reset the values with defaultValues and the onReset handler return values', () => {
     const onReset = jest.fn(() => ({ foo: 42 }));
     const onSubmit = jest.fn();
@@ -510,6 +529,8 @@ describe('useForm hook', () => {
       },
       expect.any(Function),
     );
+    expect(input1.value).toEqual('42');
+    expect(input2.value).toEqual('baz');
   });
 
   it('should reset the values with defaultValues and the onReset callback return values', () => {
@@ -539,6 +560,8 @@ describe('useForm hook', () => {
       },
       expect.any(Function),
     );
+    expect(input1.value).toEqual('42');
+    expect(input2.value).toEqual('baz');
   });
 
   it('should call the watch on initialization', () => {
@@ -606,10 +629,10 @@ describe('useForm hook', () => {
     const [isValid, errors] = result.current.validate();
     expect(isValid).toEqual(true);
     expect(errors).toEqual({
-      all: { bar: '', foo: '' },
+      all: { bar: '', baz: '', foo: '' },
       global: {},
       manual: {},
-      native: { bar: '', foo: '' },
+      native: { bar: '', baz: '', foo: '' },
       validator: {},
     });
   });
@@ -622,7 +645,7 @@ describe('useForm hook', () => {
     const [isValid, errors] = result.current.validate();
     expect(isValid).toEqual(false);
     expect(errors).toEqual({
-      all: { bar: '', foo: 'Constraints not satisfied' },
+      all: { bar: '', baz: '', foo: 'Constraints not satisfied' },
       global: {},
       main: {
         error: 'Constraints not satisfied',
@@ -631,7 +654,7 @@ describe('useForm hook', () => {
         names: ['foo'],
       },
       manual: {},
-      native: { bar: '', foo: 'Constraints not satisfied' },
+      native: { bar: '', baz: '', foo: 'Constraints not satisfied' },
       validator: {},
     });
   });

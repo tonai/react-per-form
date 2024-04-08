@@ -25,9 +25,11 @@ import {
   filterObject,
   getData,
   getFormInput,
+  getFormInputs,
   getName,
   getValidatorMap,
   getValue,
+  isCheckbox,
   isFormElement,
   validateForm,
 } from '../helpers';
@@ -184,6 +186,22 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [debouncedValidate],
   );
 
+  const setValues = useCallback((values?: IFormValues) => {
+    if (ref.current && values) {
+      for (const input of getFormInputs(ref.current)) {
+        const formField = getFormInput(input);
+        const name = formField.getAttribute('name');
+        if (name && name in values) {
+          if (isCheckbox(formField)) {
+            formField.checked = Boolean(values[name]);
+          } else {
+            formField.value = String(values[name]);
+          }
+        }
+      }
+    }
+  }, []);
+
   const reset = useCallback(
     (resetValues?: IFormValues | null | void, skip?: boolean) => {
       if (ref.current && !skip) {
@@ -204,8 +222,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       if (resetValues) {
         values.current = { ...values.current, ...resetValues };
       }
+      setValues(values.current);
     },
-    [defaultValues, messages, validators],
+    [defaultValues, messages, setValues, validators],
   );
 
   const handleChange = useCallback(
@@ -241,6 +260,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     },
     [focusOnError, onSubmit, onSubmitError, reset, validate],
   );
+
+  useEffect(() => {
+    setValues(defaultValues);
+  }, [defaultValues, setValues]);
 
   useEffect(() => {
     debouncedValidate();
