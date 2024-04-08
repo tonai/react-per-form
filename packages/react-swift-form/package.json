@@ -43,7 +43,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
-    "test": "jest --runInBand",
+    "test": "jest",
     "prepublishOnly": "npm run build && node ../../scripts/prepublish.mjs"
   },
   "devDependencies": {

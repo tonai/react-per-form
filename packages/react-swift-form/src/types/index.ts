@@ -107,7 +107,7 @@ export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
   params?: IOnChangeHandlerParams<V, T>,
 ) => (value: unknown, ...args: T) => void;
 
-export type IFormReset = (resetValues: IFormValues | null | void) => void;
+export type IFormReset = (resetValues?: IFormValues | null) => void;
 
 export type IResetHandler = (
   event: FormEvent<HTMLFormElement>,

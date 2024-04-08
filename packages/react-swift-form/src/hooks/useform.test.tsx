@@ -421,6 +421,8 @@ describe('useForm hook', () => {
       },
       expect.any(Function),
     );
+    act(() => jest.runAllTimers());
+    expect(input1.value).toEqual('');
   });
 
   it('should reset the values with the onReset callback', () => {
@@ -443,14 +445,20 @@ describe('useForm hook', () => {
       },
       expect.any(Function),
     );
+    act(() => jest.runAllTimers());
+    expect(input1.value).toEqual('');
   });
 
-  it('should reset the values with the reset function', () => {
+  it('should reset the form using the reset function', () => {
     const onReset = jest.fn();
     const onSubmit = jest.fn();
     const { result } = renderHook(() => useForm({ form, onReset, onSubmit }));
     result.current.onChange({ name: 'foo' })('12');
     result.current.reset();
+    // jsdom do not fire the reset event so we trigger it manually
+    result.current.formProps.onReset(
+      {} as unknown as FormEvent<HTMLFormElement>,
+    );
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -458,10 +466,37 @@ describe('useForm hook', () => {
       expect.any(Object),
       {
         bar: '',
-        foo: '12', // FIXME: it should be '' but it seems there is an issue in jsdom because the reset event is not fired.
+        foo: '',
       },
       expect.any(Function),
     );
+    act(() => jest.runAllTimers());
+    expect(input1.value).toEqual('');
+  });
+
+  it('should reset the form with specific values using the reset function', () => {
+    const onReset = jest.fn();
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() => useForm({ form, onReset, onSubmit }));
+    result.current.onChange({ name: 'foo' })('12');
+    result.current.reset({ foo: 42 });
+    // jsdom do not fire the reset event so we trigger it manually
+    result.current.formProps.onReset(
+      {} as unknown as FormEvent<HTMLFormElement>,
+    );
+    result.current.formProps.onSubmit(
+      {} as unknown as FormEvent<HTMLFormElement>,
+    );
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
+    act(() => jest.runAllTimers());
+    expect(input1.value).toEqual('42');
   });
 
   it('should set the default values', () => {
@@ -652,6 +687,7 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
+    act(() => jest.runAllTimers());
     expect(input1.value).toEqual('');
   });
 
@@ -673,6 +709,7 @@ describe('useForm hook', () => {
       } as unknown as FormEvent<HTMLFormElement>),
     );
     expect(preventDefault).toHaveBeenCalled();
+    act(() => jest.runAllTimers());
     expect(input1.value).toEqual('');
   });
 
@@ -686,6 +723,7 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
+    act(() => jest.runAllTimers());
     expect(input1.value).toEqual('');
   });
 
@@ -704,6 +742,7 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).toHaveBeenCalled();
+    act(() => jest.runAllTimers());
     expect(input1.value).toEqual('');
   });
 });

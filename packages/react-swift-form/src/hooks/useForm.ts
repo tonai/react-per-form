@@ -80,6 +80,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const values = useRef<Record<string, unknown>>(
     defaultValues ? { ...defaultValues } : {},
   );
+  const resetValues = useRef<IFormValues | null | undefined>(null);
   const manualErrors = useRef<Record<string, string | null>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
@@ -207,7 +208,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   }, []);
 
   const resetForm = useCallback(
-    (resetValues?: IFormValues | null | void) => {
+    (paramValues?: IFormValues | null | void) => {
       setErrors(initialError);
       const validatorMap = getValidatorMap(
         fields.current,
@@ -220,15 +221,22 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         }
       }
       values.current = defaultValues ? { ...defaultValues } : {};
-      if (resetValues) {
-        values.current = { ...values.current, ...resetValues };
+      if (paramValues) {
+        values.current = { ...values.current, ...paramValues };
+      }
+      if (resetValues.current) {
+        values.current = { ...values.current, ...resetValues.current };
+        resetValues.current = null;
       }
       setTimeout(() => setValues(values.current));
     },
     [defaultValues, messages, setValues, validators],
   );
 
-  const reset = useCallback(() => ref.current?.reset(), []);
+  const reset = useCallback((values?: IFormValues | null) => {
+    resetValues.current = values;
+    ref.current?.reset();
+  }, []);
 
   const handleChange = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
