@@ -164,10 +164,14 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: '',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
   });
 
   it('should call the onSubmit valid callback with default Values (return)', () => {
@@ -185,10 +189,14 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: '',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
   });
 
   it('should call the onSubmit handler with the form values (props)', () => {
@@ -207,10 +215,14 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: '42',
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: '42',
+      },
+      expect.any(Function),
+    );
   });
 
   it('should call the onSubmit valid callback with the form values (return)', () => {
@@ -226,10 +238,14 @@ describe('useForm hook', () => {
       preventDefault,
     } as unknown as FormEvent<HTMLFormElement>);
     expect(preventDefault).not.toHaveBeenCalled();
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: '42',
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: '42',
+      },
+      expect.any(Function),
+    );
   });
 
   it('should update the values with the onChange callback', () => {
@@ -243,14 +259,32 @@ describe('useForm hook', () => {
     input2.value = 'baz';
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo')(42);
+    result.current.onChange({ name: 'foo' })(42);
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
+  });
+
+  it('should throw an error when there is no name with the onChange callback', () => {
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() =>
+      useForm({
+        onSubmit,
+      }),
+    );
+    input1.value = '42';
+    input2.value = 'baz';
+    // @ts-expect-error ignore
+    result.current.form.current = form;
+    expect(() => result.current.onChange()(42)).toThrow();
   });
 
   it('should update the values with the onChange callback using the transformer', () => {
@@ -264,14 +298,20 @@ describe('useForm hook', () => {
     input2.value = 'baz';
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo', Number)({ target: { value: '42' } });
+    result.current.onChange({ name: 'foo', transformer: Number })({
+      target: { value: '42' },
+    });
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
   });
 
   it('should set the value with the onChange handler', () => {
@@ -279,7 +319,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm());
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo', null, onChange)(42);
+    result.current.onChange({ callback: onChange, name: 'foo' })(42);
     expect(onChange).toHaveBeenCalledWith(42);
   });
 
@@ -300,7 +340,7 @@ describe('useForm hook', () => {
     });
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo', null, null, onError)(42);
+    result.current.onChange({ getError: onError, name: 'foo' })(42);
     expect(onError).toHaveBeenCalledWith(42);
     act(() => jest.runAllTimers());
     expect(result.current.errors).toEqual({
@@ -380,7 +420,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo')('12');
+    result.current.onChange({ name: 'foo' })('12');
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -388,10 +428,14 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: '',
-      foo: '',
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: '',
+      },
+      expect.any(Function),
+    );
   });
 
   it('should reset the values with the onReset callback', () => {
@@ -400,7 +444,7 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm({ onSubmit }));
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo')('12');
+    result.current.onChange({ name: 'foo' })('12');
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -408,10 +452,34 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: '',
-      foo: '',
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: '',
+      },
+      expect.any(Function),
+    );
+  });
+
+  it('should reset the values with the reset function', () => {
+    const onSubmit = jest.fn();
+    const { result } = renderHook(() => useForm({ onSubmit }));
+    // @ts-expect-error ignore
+    result.current.form.current = form;
+    result.current.onChange({ name: 'foo' })('12');
+    result.current.reset();
+    result.current.formProps.onSubmit(
+      {} as unknown as FormEvent<HTMLFormElement>,
+    );
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: '',
+      },
+      expect.any(Function),
+    );
   });
 
   it('should reset the values with defaultValues and the onReset handler return values', () => {
@@ -426,7 +494,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     result.current.formProps.onReset(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -434,10 +502,14 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
   });
 
   it('should reset the values with defaultValues and the onReset callback return values', () => {
@@ -451,7 +523,7 @@ describe('useForm hook', () => {
     );
     // @ts-expect-error ignore
     result.current.form.current = form;
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     result.current.onReset(onReset)(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
@@ -459,10 +531,14 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(onSubmit).toHaveBeenCalledWith(expect.any(Object), {
-      bar: 'baz',
-      foo: 42,
-    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: 'baz',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
   });
 
   it('should call the watch on initialization', () => {
@@ -484,7 +560,7 @@ describe('useForm hook', () => {
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     act(() => jest.runAllTimers());
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({ bar: '', foo: 12 });
@@ -498,7 +574,7 @@ describe('useForm hook', () => {
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     act(() => jest.runAllTimers());
     spy.mockClear();
     result.current.onReset()({} as unknown as FormEvent<HTMLFormElement>);
@@ -515,9 +591,9 @@ describe('useForm hook', () => {
     result.current.watch(spy);
     act(() => jest.runAllTimers());
     spy.mockClear();
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     act(() => jest.runAllTimers());
-    result.current.onChange('foo')(12);
+    result.current.onChange({ name: 'foo' })(12);
     act(() => jest.runAllTimers());
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({ bar: '', foo: 12 });

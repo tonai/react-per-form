@@ -136,6 +136,22 @@ export function isCheckbox(target: EventTarget): target is HTMLInputElement {
   return Boolean('type' in target && target.type === 'checkbox');
 }
 
+const tagNames = ['INPUT', 'SELECT', 'TEXTAREA'];
+export function isField(
+  target: EventTarget,
+): target is HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement {
+  return Boolean(
+    'tagName' in target && tagNames.includes(target.tagName as string),
+  );
+}
+
+export function getName(event: unknown): string | null {
+  if (isEvent(event) && event.target && isField(event.target)) {
+    return event.target.getAttribute('name');
+  }
+  return null;
+}
+
 export function getValue(event: unknown): unknown {
   if (isEvent(event) && event.target) {
     if (isCheckbox(event.target)) {

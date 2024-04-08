@@ -1,5 +1,6 @@
 import {
   getFormInputs,
+  getName,
   getValidatorMap,
   getValue,
   insertInMapSet,
@@ -24,6 +25,29 @@ describe('form helper', () => {
       input3.setAttribute('type', 'submit');
       form.appendChild(input2);
       expect(getFormInputs(form)).toEqual([input1]);
+    });
+  });
+
+  describe('getName', () => {
+    it('should return the input name', () => {
+      const input = document.createElement('input');
+      expect(getName({ target: input })).toEqual(null);
+      input.name = 'foo';
+      expect(getName({ target: input })).toEqual('foo');
+    });
+
+    it('should return the select name', () => {
+      const select = document.createElement('select');
+      expect(getName({ target: select })).toEqual(null);
+      select.name = 'foo';
+      expect(getName({ target: select })).toEqual('foo');
+    });
+
+    it('should return the textarea name', () => {
+      const textarea = document.createElement('textarea');
+      expect(getName({ target: textarea })).toEqual(null);
+      textarea.name = 'foo';
+      expect(getName({ target: textarea })).toEqual('foo');
     });
   });
 

@@ -96,17 +96,23 @@ export type IErrorHandler = (error: string | null) => void;
 
 export type IOnErrorHandler = (name: string) => IErrorHandler;
 
+export interface IOnChangeHandlerParams<V, T extends unknown[] = unknown[]> {
+  callback?: ((value: V, ...args: T) => void) | null;
+  getError?: ((value: V, ...args: T) => string | null) | null;
+  name?: string;
+  transformer?: ((value: unknown) => V) | null;
+}
+
 export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
-  name: string,
-  transformer?: ((value: unknown) => V) | null,
-  callback?: ((value: V, ...args: T) => void) | null,
-  getError?: ((value: V, ...args: T) => string | null) | null,
+  params?: IOnChangeHandlerParams<V, T>,
 ) => (value: unknown, ...args: T) => void;
+
+export type IFormReset = (resetValues: IFormValues | null | void) => void;
 
 export type IResetHandler = (
   event: FormEvent<HTMLFormElement>,
   values: IFormValues,
-) => Record<string, unknown> | null | void;
+) => IFormValues | null | void;
 
 export type IOnResetHandler = (
   callback?: IResetHandler,
@@ -115,11 +121,13 @@ export type IOnResetHandler = (
 export type ISubmitHandler = (
   event: FormEvent<HTMLFormElement>,
   values: IFormValues,
+  reset: IFormReset,
 ) => void;
 
 export type ISubmitErrorHandler = (
   event: FormEvent<HTMLFormElement>,
   error: IError,
+  reset: IFormReset,
 ) => void;
 
 export type IOnSubmitHandler = (
@@ -146,6 +154,7 @@ export interface IFormContext extends IFormHandlers {
   messages?: IMessages;
   mode: IFormMode;
   removeValidators: IRemoveValidators;
+  reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
   setValidators: ISetValidators;
   subscribe: (

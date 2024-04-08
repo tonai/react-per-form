@@ -58,7 +58,7 @@ export default function HookLibForm() {
               <input
                 data-testid="number"
                 name="number"
-                onChange={onChange('number', Number)}
+                onChange={onChange({ transformer: Number })}
                 required
                 type="number"
               />
@@ -75,7 +75,10 @@ export default function HookLibForm() {
               <input
                 data-testid="number-controlled"
                 name="number-controlled"
-                onChange={onChange('number-controlled', Number, setNumberValue)}
+                onChange={onChange({
+                  callback: setNumberValue,
+                  transformer: Number,
+                })}
                 required
                 type="number"
                 value={numberValue}
@@ -93,7 +96,7 @@ export default function HookLibForm() {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange('mui', null, setMuiValue)}
+                onChange={onChange({ callback: setMuiValue, name: 'mui' })}
                 onError={onError('mui')}
                 slotProps={{
                   textField: {
@@ -120,12 +123,10 @@ export default function HookLibForm() {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange(
-                  'mui',
-                  null,
-                  null,
-                  (_, { validationError }) => validationError,
-                )}
+                onChange={onChange({
+                  getError: (_, { validationError }) => validationError,
+                  name: 'mui'
+                })}
                 slotProps={{
                   textField: {
                     inputProps: { 'data-testid': 'mui' },
