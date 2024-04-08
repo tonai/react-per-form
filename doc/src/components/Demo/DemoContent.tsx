@@ -1,7 +1,7 @@
 import type { ChangeEvent, ElementType, ReactElement } from 'react';
-import type { IError } from 'react-swift-form';
+import type { IError, IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
-import { Badge, Checkbox, Collapse } from '@mantine/core';
+import { Badge, Checkbox, Collapse, Select } from '@mantine/core';
 import CodeBlock from '@theme/CodeBlock';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
@@ -14,13 +14,19 @@ export interface IDemoProps {
   Component: ElementType;
   code: string;
   metastring?: string;
+  mode?: IFormMode;
   noBorder?: boolean;
+  revalidateMode?: IFormRevalidateMode;
+  useNativeValidation?: boolean;
+  withModes?: boolean;
+  withRevalidateModes?: boolean;
   withUseNativeValidation?: boolean;
 }
 
 interface IDemoContentProps extends IDemoProps {
+  onModeChange: (mode: IFormMode) => void;
+  onRevalidateModeChange: (revalidateMode: IFormRevalidateMode) => void;
   onUseNativeValidationChange: (useNativeValidation: boolean) => void;
-  useNativeValidation?: boolean;
 }
 
 export default function DemoContent(props: IDemoContentProps): ReactElement {
@@ -28,17 +34,33 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
     Component,
     code,
     metastring,
+    mode = 'submit',
     noBorder,
+    onModeChange,
+    onRevalidateModeChange,
     onUseNativeValidationChange,
-    useNativeValidation,
+    revalidateMode = 'submit',
+    useNativeValidation = true,
+    withModes,
+    withRevalidateModes,
     withUseNativeValidation,
   } = props;
-  const [display, setDisplay] = useState<'error' | 'value'>('value');
+  const [display, setDisplay] = useState<'error' | 'none' | 'value'>('value');
   const [values, setValues] = useState('');
   const [errors, setErrors] = useState('');
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>): void {
+  function handleUseNativeValidationChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ): void {
     onUseNativeValidationChange(event.target.checked);
+  }
+
+  function handleModeChange(value: string | null): void {
+    onModeChange(value as IFormMode);
+  }
+
+  function handleRevalidateModeChange(value: string | null): void {
+    onRevalidateModeChange(value as IFormRevalidateMode);
   }
 
   const context = useMemo(
@@ -58,18 +80,44 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
         <div className={styles.wrapper}>
           <div className={styles.example}>
             <Component
-              useNativeValidation={
-                withUseNativeValidation ? useNativeValidation : undefined
-              }
+              mode={mode}
+              revalidateMode={revalidateMode}
+              useNativeValidation={useNativeValidation}
             />
           </div>
-          {Boolean(withUseNativeValidation) && (
+          {Boolean(
+            withModes || withRevalidateModes || withUseNativeValidation,
+          ) && (
             <div className={styles.settings}>
-              <Checkbox
-                checked={useNativeValidation}
-                label="useNativeValidation"
-                onChange={handleChange}
-              />
+              {Boolean(withUseNativeValidation) && (
+                <Checkbox
+                  checked={useNativeValidation}
+                  label="useNativeValidation"
+                  labelPosition="left"
+                  onChange={handleUseNativeValidationChange}
+                  size="xs"
+                />
+              )}
+              {Boolean(withModes) && (
+                <Select
+                  allowDeselect={false}
+                  data={['submit', 'blur', 'change', 'all']}
+                  label="mode"
+                  onChange={handleModeChange}
+                  size="xs"
+                  value={mode}
+                />
+              )}
+              {Boolean(withRevalidateModes) && (
+                <Select
+                  allowDeselect={false}
+                  data={['submit', 'blur', 'change']}
+                  label="revalidateMode"
+                  onChange={handleRevalidateModeChange}
+                  size="xs"
+                  value={revalidateMode}
+                />
+              )}
             </div>
           )}
         </div>

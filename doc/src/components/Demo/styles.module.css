@@ -34,15 +34,29 @@
   margin-top: calc(var(--ifm-pre-padding) / 4);
 }
 
+.example form :global(.actions) {
+  display: flex;
+  gap: calc(var(--ifm-pre-padding) / 2);
+}
+
 .example form input {
   display: block;
 }
 
 .settings {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
   padding: var(--ifm-pre-padding);
   border-left: 1px solid var(--border);
+  gap: var(--mantine-spacing-sm);
+}
+
+.settings :global(.mantine-Select-root) {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
 }
 
 .collapse {

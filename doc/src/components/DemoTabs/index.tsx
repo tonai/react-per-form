@@ -13,6 +13,9 @@ interface IDemoProps {
   componentMetastring?: string;
   hookCode: string;
   hookMetastring?: string;
+  withModes?: boolean;
+  withRevalidateModes?: boolean;
+  withUseNativeValidation?: boolean;
 }
 
 export default function DemoTabs(props: IDemoProps): ReactElement {
@@ -23,6 +26,9 @@ export default function DemoTabs(props: IDemoProps): ReactElement {
     componentMetastring,
     hookCode,
     hookMetastring,
+    withModes = false,
+    withRevalidateModes = false,
+    withUseNativeValidation = true,
   } = props;
 
   return (
@@ -38,7 +44,9 @@ export default function DemoTabs(props: IDemoProps): ReactElement {
             code={hookCode}
             metastring={hookMetastring}
             noBorder
-            withUseNativeValidation
+            withModes={withModes}
+            withRevalidateModes={withRevalidateModes}
+            withUseNativeValidation={withUseNativeValidation}
           />
         </Tabs.Panel>
         <Tabs.Panel value="component">
@@ -47,7 +55,9 @@ export default function DemoTabs(props: IDemoProps): ReactElement {
             code={componentCode}
             metastring={componentMetastring}
             noBorder
-            withUseNativeValidation
+            withModes={withModes}
+            withRevalidateModes={withRevalidateModes}
+            withUseNativeValidation={withUseNativeValidation}
           />
         </Tabs.Panel>
       </Tabs>

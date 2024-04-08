@@ -11,7 +11,7 @@ You can directly access the error object from the `useForm` hook:
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
-<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{10,18}"/>
+<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{10,18}" />
 
 ## With the `<Form>` component
 

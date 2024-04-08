@@ -1,6 +1,7 @@
 import type { FormEvent, ReactElement } from 'react';
 import type {
   IFormProps,
+  IFormReset,
   IFormValues,
   IUseFormProps,
   IUseFormResult,
@@ -11,9 +12,17 @@ import { Form as RsfForm, useFormContext, useForm as useRsfForm } from 'rsf';
 
 import { demoContext } from '../contexts/demo';
 
-export type { IError, IFormContext, IFormValues } from 'rsf';
+export type {
+  IError,
+  IFormContext,
+  IFormMode,
+  IFormReset,
+  IFormRevalidateMode,
+  IFormValues,
+} from 'rsf';
 export {
   FormProvider,
+  useFormContext,
   useFormErrors,
   useFormValid,
   useInput,
@@ -30,8 +39,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   function handleSubmit(
     event: FormEvent<HTMLFormElement>,
     values: IFormValues,
+    reset: IFormReset,
   ): void {
-    onSubmit?.(event, values);
+    onSubmit?.(event, values, reset);
     setValues(values);
     setDisplay('value');
   }
@@ -43,9 +53,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const { errors } = result;
 
   useEffect(() => {
-    if (!useNativeValidation && errors.main) {
+    if (!useNativeValidation) {
       setErrors(errors);
-      setDisplay('error');
+      setDisplay((display) =>
+        errors.main ? 'error' : display === 'value' ? 'value' : 'none',
+      );
     }
   }, [errors, setDisplay, setErrors, useNativeValidation]);
 
@@ -61,9 +73,11 @@ export function DemoForm(
   const { errors, useNativeValidation = true } = context;
 
   useEffect(() => {
-    if (!useNativeValidation && errors.main) {
+    if (!useNativeValidation) {
       setErrors(errors);
-      setDisplay('error');
+      setDisplay((display) =>
+        errors.main ? 'error' : display === 'value' ? 'value' : 'none',
+      );
     }
   }, [errors, setDisplay, setErrors, useNativeValidation]);
 
@@ -77,8 +91,9 @@ export function Form(props: IFormProps): ReactElement {
   function handleSubmit(
     event: FormEvent<HTMLFormElement>,
     values: IFormValues,
+    reset: IFormReset,
   ): void {
-    onSubmit?.(event, values);
+    onSubmit?.(event, values, reset);
     setValues(values);
     setDisplay('value');
   }

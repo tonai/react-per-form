@@ -2,7 +2,7 @@
 
 ## Custom validation
 
-To add some validation on a field just use the `validators` props and set a function for the field (the key must match the name) that either return an error string or empty string if there is no error:
+To add some validation on a field just use the `validators` parameter and set a function for the field (the key must match the name) that either return an error string or empty string if there is no error:
 
 import ValidationHook from '@site/src/demo/ValidationHook';
 import ValidationHookSource from '!!raw-loader!@site/src/demo/ValidationHook';
