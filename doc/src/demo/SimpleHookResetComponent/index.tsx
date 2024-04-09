@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { type IError, type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, Reset, useForm } from 'react-swift-form';
 
 export default function Demo(props: IProps) {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -8,17 +8,19 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  function handleSubmitError(_e: FormEvent<HTMLFormElement>, errors: IError) {
-    console.log(errors);
-  }
-
-  const { errors, formProps, onSubmit } = useForm(props);
+  const { errors, formProps } = useForm({
+    ...props,
+    onSubmit: handleSubmit,
+  });
 
   return (
-    <form {...formProps} onSubmit={onSubmit(handleSubmit, handleSubmitError)}>
+    <form {...formProps}>
       <input name="text" required />
       {errors.all.text && <div className="error">{errors.all.text}</div>}
-      <button type="submit">Submit</button>
+      <div className="actions">
+        <button type="submit">Submit</button>
+        <Reset />
+      </div>
     </form>
   );
 }

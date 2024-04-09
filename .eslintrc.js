@@ -15,7 +15,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-unnecessary-condition': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
         'import/consistent-type-specifier-style': 'off',
         'import/order': 'off',
         'react/jsx-no-leaked-render': 'off',

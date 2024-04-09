@@ -24,7 +24,10 @@ export type {
   IFormValues,
 } from 'rsf';
 export {
+  Error,
   FormProvider,
+  Reset,
+  Submit,
   useFormContext,
   useFormErrors,
   useFormValid,

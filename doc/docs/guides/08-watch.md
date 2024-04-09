@@ -52,3 +52,9 @@ import SimpleComponentWatchSource from '!!raw-loader!@site/src/demo/SimpleCompon
 In that case you have to define the state yourself (if you want to).
 
 :::
+
+:::info
+
+The `watch` function return a function for unsubscribing the watch. You can directly return that function in your `useEffect`.
+
+:::

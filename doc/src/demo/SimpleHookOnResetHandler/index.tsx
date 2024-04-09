@@ -3,7 +3,7 @@ import type { IProps } from '../types';
 import { type IFormValues, useForm } from 'react-swift-form';
 
 export default function Demo(props: IProps) {
-  function handleReset(e: FormEvent<HTMLFormElement>, values: IFormValues) {
+  function handleReset(_e: FormEvent<HTMLFormElement>, _values: IFormValues) {
     return { text: 'reset value' };
   }
 

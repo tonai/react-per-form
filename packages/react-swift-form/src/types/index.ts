@@ -148,6 +148,11 @@ export interface IFormHandlers {
   watch: IWatch;
 }
 
+export type ISubscribe = (
+  subscriber: ISubscriber,
+  names?: string[] | string,
+) => IUnSubscribe;
+
 export interface IFormContext extends IFormHandlers {
   errors: IError;
   form: RefObject<HTMLFormElement>;
@@ -157,10 +162,7 @@ export interface IFormContext extends IFormHandlers {
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
   setValidators: ISetValidators;
-  subscribe: (
-    subscriber: ISubscriber,
-    names?: string[] | string,
-  ) => IUnSubscribe;
+  subscribe: ISubscribe;
   useNativeValidation: boolean;
   validate: IFormValidate;
 }

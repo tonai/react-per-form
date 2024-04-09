@@ -8,7 +8,7 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  function handleSubmitError(e: FormEvent<HTMLFormElement>, errors: IError) {
+  function handleSubmitError(_e: FormEvent<HTMLFormElement>, errors: IError) {
     console.log(errors);
   }
 

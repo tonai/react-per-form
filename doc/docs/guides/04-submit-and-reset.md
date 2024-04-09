@@ -89,7 +89,7 @@ import SimpleComponentResetFunctionSource from '!!raw-loader!@site/src/demo/Simp
 
 :::tip
 
-You can also pass an `IFormValues` object parameter to the reset function to programmatically reset the form to specific values.
+You can also pass an object parameter to the reset function to programmatically reset the form to specific values.
 
 :::
 
@@ -109,7 +109,7 @@ For example if you want to update the state of a controlled component (see [cont
 
 ### With the `onReset` parameter
 
-Return an `IFormValues` object from the `onReset` function parameter:
+Return an object from the `onReset` function parameter:
 
 import SimpleHookOnReset from '@site/src/demo/SimpleHookOnReset';
 import SimpleHookOnResetSource from '!!raw-loader!@site/src/demo/SimpleHookOnReset';

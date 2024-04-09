@@ -18,11 +18,11 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  function getError(value: Dayjs, error: { validationError: string | null }) {
+  function getError(_value: Dayjs, error: { validationError: string | null }) {
     return error.validationError;
   }
 
-  const { errors, formProps, onChange, onError } = useForm({
+  const { errors, formProps, onChange } = useForm({
     ...props,
     defaultValues,
     onReset: handleReset,

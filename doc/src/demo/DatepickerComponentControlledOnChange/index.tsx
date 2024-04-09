@@ -18,7 +18,7 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  function getError(value: Dayjs, error: { validationError: string | null }) {
+  function getError(_value: Dayjs, error: { validationError: string | null }) {
     return error.validationError;
   }
 
@@ -29,7 +29,7 @@ export default function Demo(props: IProps) {
       onReset={handleReset}
       onSubmit={handleSubmit}
     >
-      {({ errors, onChange, onError }) => (
+      {({ errors, onChange }) => (
         <>
           <DatePicker
             minDate={dayjs()}

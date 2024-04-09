@@ -1,11 +1,15 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import {
-  Form,
-  type IError,
-  type IFormContext,
-  type IFormValues,
-} from 'react-swift-form';
+import { Form, type IFormValues, useFormValid } from 'react-swift-form';
+
+function Submit() {
+  const valid = useFormValid();
+  return (
+    <button disabled={!valid} type="submit">
+      Submit
+    </button>
+  );
+}
 
 export default function Demo(props: IProps) {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -13,17 +17,13 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  function handleSubmitError(_e: FormEvent<HTMLFormElement>, errors: IError) {
-    console.log(errors);
-  }
-
   return (
-    <Form {...props} onSubmit={handleSubmit} onSubmitError={handleSubmitError}>
-      {({ errors }: IFormContext) => (
+    <Form {...props} onSubmit={handleSubmit} useNativeValidation={false}>
+      {({ errors }) => (
         <>
           <input name="text" required />
           {errors.all.text && <div className="error">{errors.all.text}</div>}
-          <button type="submit">Submit</button>
+          <Submit />
         </>
       )}
     </Form>

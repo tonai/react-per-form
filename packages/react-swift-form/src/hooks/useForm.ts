@@ -48,14 +48,16 @@ export interface IUseFormProps {
   validators?: Record<string, IValidator | IValidatorObject>;
 }
 
+export interface INativeFormProps {
+  noValidate: boolean;
+  onChange: (event: FormEvent<HTMLFormElement>) => void;
+  onReset: (event: FormEvent<HTMLFormElement>) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  ref: RefObject<HTMLFormElement>;
+}
+
 export interface IUseFormResult extends IFormContext {
-  formProps: {
-    noValidate: boolean;
-    onChange: (event: FormEvent<HTMLFormElement>) => void;
-    onReset: (event: FormEvent<HTMLFormElement>) => void;
-    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-    ref: RefObject<HTMLFormElement>;
-  };
+  formProps: INativeFormProps;
 }
 
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
