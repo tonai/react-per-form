@@ -33,12 +33,12 @@ export default function Demo(props: IProps) {
         value={value}
       />
       {errors.all.count && <div className="error">{errors.all.count}</div>}
+      <div>
+        value = {value} ({typeof value})
+      </div>
       <div className="actions">
         <button type="submit">Submit</button>
         <button type="reset">Reset</button>
-      </div>
-      <div>
-        value = {value} ({typeof value})
       </div>
     </form>
   );

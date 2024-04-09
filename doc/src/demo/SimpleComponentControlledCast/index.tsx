@@ -32,13 +32,13 @@ export default function Demo(props: IProps) {
             type="number"
             value={value}
           />
+          <div>
+            value = {value} ({typeof value})
+          </div>
           {errors.all.count && <div className="error">{errors.all.count}</div>}
           <div className="actions">
             <button type="submit">Submit</button>
             <button type="reset">Reset</button>
-          </div>
-          <div>
-            value = {value} ({typeof value})
           </div>
         </>
       )}

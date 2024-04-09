@@ -7,6 +7,12 @@ react-swift-form use uncontrolled components for performance reason but having c
 - you want to use an UI library that was design with controlled components (like Material UI...etc.)
 - ...etc.
 
+:::tip
+
+You can sometimes have the same result using the `watch` function instead of using controlled components. See the [watch guide](/docs/guides/watch) for more information.
+
+:::
+
 ## Simple controlled component
 
 Let's imagine wa want to synchronize our text input to be able to do some filtering on a list.
@@ -22,7 +28,7 @@ import SimpleHookControlledSource from '!!raw-loader!@site/src/demo/SimpleHookCo
 import SimpleComponentControlled from '@site/src/demo/SimpleComponentControlled';
 import SimpleComponentControlledSource from '!!raw-loader!@site/src/demo/SimpleComponentControlled';
 
-<DemoTabs Component={SimpleComponentControlled} Hook={SimpleHookControlled} componentCode={SimpleComponentControlledSource} componentMetastring="{6,8-10,12-14,22,25}" hookCode={SimpleHookControlledSource} hookMetastring="{6,8-10,12-14,23,29}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentControlled} Hook={SimpleHookControlled} componentCode={SimpleComponentControlledSource} componentMetastring="{6,8-10,12-14,22,25,27}" hookCode={SimpleHookControlledSource} hookMetastring="{6,8-10,12-14,23,29,31}" withModes withRevalidateModes />
 
 :::note
 
@@ -41,7 +47,7 @@ import SimpleHookControlledCastSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentControlledCast from '@site/src/demo/SimpleComponentControlledCast';
 import SimpleComponentControlledCastSource from '!!raw-loader!@site/src/demo/SimpleComponentControlledCast';
 
-<DemoTabs Component={SimpleComponentControlledCast} Hook={SimpleHookControlledCast} componentCode={SimpleComponentControlledCastSource} componentMetastring="{5,8,11,22,26,30}" hookCode={SimpleHookControlledCastSource} hookMetastring="{5,8,11,19,21,30}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentControlledCast} Hook={SimpleHookControlledCast} componentCode={SimpleComponentControlledCastSource} componentMetastring="{5,8,11,22,26,30,36}" hookCode={SimpleHookControlledCastSource} hookMetastring="{5,8,11,19,21,30,37}" withModes withRevalidateModes />
 
 :::info
 

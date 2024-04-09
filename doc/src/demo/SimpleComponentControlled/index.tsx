@@ -24,11 +24,11 @@ export default function Demo(props: IProps) {
         <>
           <input name="text" onChange={handleChange} required value={value} />
           {errors.all.text && <div className="error">{errors.all.text}</div>}
+          <div>value = {value}</div>
           <div className="actions">
             <button type="submit">Submit</button>
             <button type="reset">Reset</button>
           </div>
-          <div>value = {value}</div>
         </>
       )}
     </Form>
