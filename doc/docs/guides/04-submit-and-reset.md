@@ -1,6 +1,8 @@
 # Submit and reset
 
-## Submit
+## Submit ans submit error
+
+### With the `onSubmit` parameter
 
 You can listen to the form being submitted with the `onSubmit` parameter you can provide on both the `useForm` hook or the `<Form>` component:
 
@@ -17,7 +19,7 @@ When using client side form submission, do not forget to prevent the default beh
 
 :::
 
-## Submit error
+### Submit error with the `onSubmitError` parameter
 
 :::warning
 
@@ -40,7 +42,7 @@ Open the console to see the logs.
 
 :::
 
-## Using the `onSubmit` handler
+### Using the `onSubmit` handler
 
 For the hook version you can also use the `onSubmit` handler if you prefer.
 
@@ -72,7 +74,7 @@ For controlled component [see the dedicated chapter](/docs/guides/controlled-com
 
 :::
 
-## Programmatically
+### Programmatically
 
 If you want to reset the form programmatically (for example when the form is submitted), then use the `reset` function.
 
@@ -84,3 +86,43 @@ import SimpleComponentResetFunction from '@site/src/demo/SimpleComponentResetFun
 import SimpleComponentResetFunctionSource from '!!raw-loader!@site/src/demo/SimpleComponentResetFunction';
 
 <DemoTabs Component={SimpleComponentResetFunction} Hook={SimpleHookResetFunction} componentCode={SimpleComponentResetFunctionSource} componentMetastring="{14,17}" hookCode={SimpleHookResetFunctionSource} hookMetastring="{8,12}" withModes withRevalidateModes />
+
+:::tip
+
+You can also pass an `IFormValues` object parameter to the reset function to programmatically reset the form to specific values.
+
+:::
+
+## Resetting to specific values
+
+If you want to reset your form to specific values you can use the `defaultValues` parameter to set some value initially on the form and then reset the form using those values again (see [default values](/docs/guides/type-casting-and-default-values#default-values) for more information).
+
+But if you don't want those value initially, you can reset the form to some specific values with one of the following techniques.
+
+:::tip
+
+Even if you don't return anything from your `onReset` callbacks, it can still be useful to react to the reset event.
+
+For example if you want to update the state of a controlled component (see [controlled components](/docs/guides/controlled-components) for more information).
+
+:::
+
+### With the `onReset` parameter
+
+Return an `IFormValues` object from the `onReset` function parameter:
+
+import SimpleHookOnReset from '@site/src/demo/SimpleHookOnReset';
+import SimpleHookOnResetSource from '!!raw-loader!@site/src/demo/SimpleHookOnReset';
+import SimpleComponentOnReset from '@site/src/demo/SimpleComponentOnReset';
+import SimpleComponentOnResetSource from '!!raw-loader!@site/src/demo/SimpleComponentOnReset';
+
+<DemoTabs Component={SimpleComponentOnReset} Hook={SimpleHookOnReset} componentCode={SimpleComponentOnResetSource} componentMetastring="{6-8,16}" hookCode={SimpleHookOnResetSource} hookMetastring="{6-8,17}" withModes withRevalidateModes />
+
+### With the `onReset` handler
+
+For the hook version you can also use the `onReset` handler if you prefer:
+
+import SimpleHookOnResetHandler from '@site/src/demo/SimpleHookOnResetHandler';
+import SimpleHookOnResetHandlerSource from '!!raw-loader!@site/src/demo/SimpleHookOnResetHandler';
+
+<Demo Component={SimpleHookOnResetHandler} code={SimpleHookOnResetHandlerSource} metastring="{6-8,15,20}" withModes withRevalidateModes withUseNativeValidation />

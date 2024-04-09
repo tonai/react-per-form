@@ -37,6 +37,8 @@ import SimpleComponentNonNativeContextSource from '!!raw-loader!@site/src/demo/S
 
 ## The error object
 
+### Description
+
 Inside the error object you can access all errors classified in different categories.
 
 It has the following shape:
@@ -50,4 +52,25 @@ It has the following shape:
 | all       | `Record<string, string>`                                           | Contains all above errors, with one error per field (native errors first, then manual errors, then validator errors). Keys are field names                                                       |
 | main      | `{error: string, global: boolean, id: string, names: string[] }`   | Contain the first field error (from top to bottom).                                                                                                                                              |
 
-<!-- TODO add example with all errors displayed -->
+### Example
+
+This example showcase all type of errors:
+
+import HookErrors from '@site/src/demo/HookErrors';
+import HookErrorsSource from '!!raw-loader!@site/src/demo/HookErrors';
+import ComponentErrors from '@site/src/demo/ComponentErrors';
+import ComponentErrorsSource from '!!raw-loader!@site/src/demo/ComponentErrors';
+
+<DemoTabs Component={ComponentErrors} Hook={HookErrors} componentCode={ComponentErrorsSource} componentMetastring="{21-23,35,37,39}" hookCode={HookErrorsSource} hookMetastring="{21-23,35,37,39}" withModes withRevalidateModes />
+
+1. Submit without choosing any date and you will trigger the native validation (with the `required` attribute)
+2. Choose a date that is before the 15th of each month to trigger the validation error (with the validator).
+3. Enter a date like 01/01/2024 to see the error send back by the Material UI component (what we call "manual error", see the [controlled components guide](/docs/guides/controlled-components#ui-library) for more information).
+
+:::info
+
+`global` contains the same as `validator` because validators are set at the form level.
+
+Check [local validation](/docs/guides/validation#local-validation) for non global validators.
+
+:::

@@ -3,11 +3,14 @@ import type {
   IFormProps,
   IFormReset,
   IFormValues,
+  IResetHandler,
+  ISubmitErrorHandler,
+  ISubmitHandler,
   IUseFormProps,
   IUseFormResult,
 } from 'rsf';
 
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Form as RsfForm, useFormContext, useForm as useRsfForm } from 'rsf';
 
 import { demoContext } from '../contexts/demo';
@@ -32,9 +35,17 @@ export {
 } from 'rsf';
 
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
-  const { onSubmit, ...rest } = props;
+  const { onReset, onSubmit, ...rest } = props;
   const { setDisplay, setErrors, setValues } = useContext(demoContext);
   const { useNativeValidation = true } = rest;
+
+  function handleReset(
+    event: FormEvent<HTMLFormElement>,
+    values: IFormValues,
+  ): void {
+    onReset?.(event, values);
+    setDisplay('none');
+  }
 
   function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -48,9 +59,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const result = useRsfForm({
     ...rest,
+    onReset: handleReset,
     onSubmit: handleSubmit,
   });
-  const { errors } = result;
+  const { errors, onReset: onRsfReset, onSubmit: onRsfSubmit } = result;
 
   useEffect(() => {
     if (!useNativeValidation) {
@@ -61,7 +73,41 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     }
   }, [errors, setDisplay, setErrors, useNativeValidation]);
 
-  return result;
+  const onResetHandler = useCallback(
+    (callback?: IResetHandler) => {
+      return onRsfReset(
+        (event: FormEvent<HTMLFormElement>, values: IFormValues) => {
+          callback?.(event, values);
+          setDisplay('none');
+        },
+      );
+    },
+    [onRsfReset, setDisplay],
+  );
+
+  const onSubmitHandler = useCallback(
+    (validCallback?: ISubmitHandler, invalidCallback?: ISubmitErrorHandler) => {
+      return onRsfSubmit(
+        (
+          event: FormEvent<HTMLFormElement>,
+          values: IFormValues,
+          reset: IFormReset,
+        ) => {
+          validCallback?.(event, values, reset);
+          setValues(values);
+          setDisplay('value');
+        },
+        invalidCallback,
+      );
+    },
+    [onRsfSubmit, setDisplay, setValues],
+  );
+
+  return {
+    ...result,
+    onReset: onResetHandler,
+    onSubmit: onSubmitHandler,
+  };
 }
 
 export function DemoForm(
@@ -85,8 +131,16 @@ export function DemoForm(
 }
 
 export function Form(props: IFormProps): ReactElement {
-  const { children, onSubmit, ...rest } = props;
+  const { children, onReset, onSubmit, ...rest } = props;
   const { setDisplay, setValues } = useContext(demoContext);
+
+  function handleReset(
+    event: FormEvent<HTMLFormElement>,
+    values: IFormValues,
+  ): void {
+    onReset?.(event, values);
+    setDisplay('none');
+  }
 
   function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -99,7 +153,7 @@ export function Form(props: IFormProps): ReactElement {
   }
 
   return (
-    <RsfForm {...rest} onSubmit={handleSubmit}>
+    <RsfForm {...rest} onReset={handleReset} onSubmit={handleSubmit}>
       <DemoForm>{children}</DemoForm>
     </RsfForm>
   );
