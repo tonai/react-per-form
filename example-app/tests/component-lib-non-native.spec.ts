@@ -7,6 +7,7 @@ import {
 } from './helpers';
 
 const url = '/component-lib';
+const minError = 'Value is too low';
 const missError = 'Did you miss something ?';
 const muiValidatorError = 'Choose a date';
 const muiMinError = 'Select a date in the future';
@@ -15,6 +16,7 @@ test.describe('Component Lib Non Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -45,16 +47,16 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
     await page.getByTestId('number').fill('42');
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('number').blur();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
@@ -122,7 +124,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -133,6 +135,7 @@ test.describe('Component Lib Non Native', () => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'change');
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -163,7 +166,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
@@ -240,7 +243,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -251,6 +254,7 @@ test.describe('Component Lib Non Native', () => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'blur');
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -283,12 +287,12 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
     await page.getByTestId('number').fill('42');
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('number').blur();
@@ -360,7 +364,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -371,6 +375,7 @@ test.describe('Component Lib Non Native', () => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectMode(page, 'all');
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -403,7 +408,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
@@ -480,7 +485,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -491,6 +496,7 @@ test.describe('Component Lib Non Native', () => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectRevalidateMode(page, 'change');
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -521,7 +527,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
@@ -598,7 +604,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
@@ -609,6 +615,7 @@ test.describe('Component Lib Non Native', () => {
     const { consoleMsg } = await goto(page, url);
     await disableNativeValidation(page);
     await selectRevalidateMode(page, 'blur');
+    await expect(page.getByTestId('number')).toHaveValue('0');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
     await expect(page.getByTestId('watch')).toHaveText('');
@@ -639,12 +646,12 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
     await page.getByTestId('number').fill('42');
-    await expect(page.getByTestId('number-error')).toHaveText(missError);
+    await expect(page.getByTestId('number-error')).toHaveText(minError);
     await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('number').blur();
@@ -716,7 +723,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('number').blur();
     // // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();

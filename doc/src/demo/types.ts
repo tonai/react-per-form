@@ -1,4 +1,7 @@
+import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+
 export interface IProps {
-  log: (data: unknown) => void;
+  mode?: IFormMode;
+  revalidateMode?: IFormRevalidateMode;
   useNativeValidation?: boolean;
 }

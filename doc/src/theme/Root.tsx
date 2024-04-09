@@ -10,7 +10,7 @@ const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
-const colorSchemeManager = localStorageColorSchemeManager({
+const manager = localStorageColorSchemeManager({
   key: 'theme',
 });
 
@@ -20,7 +20,7 @@ export default function Root({
   children: ReactNode;
 }): ReactElement {
   return (
-    <MantineProvider colorSchemeManager={colorSchemeManager} theme={theme}>
+    <MantineProvider colorSchemeManager={manager} theme={theme}>
       {children}
     </MantineProvider>
   );

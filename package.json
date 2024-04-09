@@ -18,6 +18,8 @@
   },
   "scripts": {
     "build": "npm run build -w packages/react-swift-form",
+    "prebuild:doc": "npm run build",
+    "build:doc": "npm run build -w doc",
     "dev": "npm run dev:packages & npm run dev:app",
     "dev:packages": "npm run dev -w packages/react-swift-form",
     "dev:app": "npm run dev -w example-app",

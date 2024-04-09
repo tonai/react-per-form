@@ -9,8 +9,9 @@ import { useFilters } from '../../hooks/useFilters';
 import { handleSubmit } from '../../helpers/form';
 
 const messages = {
-  valueMissing: 'Did you miss something ?',
   minDate: 'Select a date in the future',
+  rangeUnderflow: 'Value is too low',
+  valueMissing: 'Did you miss something ?',
 };
 const validators = {
   mui: muiValidator,
@@ -24,6 +25,7 @@ export default function HookLibForm() {
     ...formData,
     defaultValues: {
       mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
+      number: 0,
     },
     messages,
     validators,
@@ -38,7 +40,7 @@ export default function HookLibForm() {
   function handleReset() {
     setNumberValue(0);
     setMuiValue(null);
-    return { number: 0 }; // We only need to send the number (defaultValues already contains value for mui)
+    return { number: 12 };
   }
 
   return (
@@ -57,8 +59,9 @@ export default function HookLibForm() {
             <div className="input">
               <input
                 data-testid="number"
+                min="3"
                 name="number"
-                onChange={onChange('number', Number)}
+                onChange={onChange({ transformer: Number })}
                 required
                 type="number"
               />
@@ -75,7 +78,10 @@ export default function HookLibForm() {
               <input
                 data-testid="number-controlled"
                 name="number-controlled"
-                onChange={onChange('number-controlled', Number, setNumberValue)}
+                onChange={onChange({
+                  callback: setNumberValue,
+                  transformer: Number,
+                })}
                 required
                 type="number"
                 value={numberValue}
@@ -93,7 +99,7 @@ export default function HookLibForm() {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange('mui', null, setMuiValue)}
+                onChange={onChange({ callback: setMuiValue, name: 'mui' })}
                 onError={onError('mui')}
                 slotProps={{
                   textField: {
@@ -120,12 +126,10 @@ export default function HookLibForm() {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange(
-                  'mui',
-                  null,
-                  null,
-                  (_, { validationError }) => validationError,
-                )}
+                onChange={onChange({
+                  getError: (_, { validationError }) => validationError,
+                  name: 'mui'
+                })}
                 slotProps={{
                   textField: {
                     inputProps: { 'data-testid': 'mui' },

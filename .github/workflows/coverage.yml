@@ -1,4 +1,4 @@
-name: 'coverage'
+name: Coverage
 on:
   pull_request:
     branches:
@@ -8,6 +8,7 @@ permissions:
   pull-requests: write
 jobs:
   coverage:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,7 +1,7 @@
 import type { IMainError, IValidatorError } from '../../types';
 import type {
   ComponentPropsWithoutRef,
-  JSXElementConstructor,
+  ElementType,
   ReactElement,
 } from 'react';
 
@@ -10,22 +10,15 @@ import { useContext } from 'react';
 import { formContext } from '../../contexts';
 import { getProperty, isMainError, isValidatorError } from '../../helpers';
 
-type IElementType =
-  | JSXElementConstructor<unknown>
-  | keyof JSX.IntrinsicElements;
-
-type IPropsOf<C extends IElementType> = JSX.LibraryManagedAttributes<
-  C,
-  ComponentPropsWithoutRef<C>
->;
-
-type IErrorProps<C extends IElementType = 'div'> = IPropsOf<C> & {
+type IErrorProps<C extends ElementType> = ComponentPropsWithoutRef<C> & {
   Component?: C;
   errorPath?: string;
   global?: boolean;
 };
 
-export function Error(props: IErrorProps): ReactElement | null {
+export function Error<C extends ElementType = 'div'>(
+  props: IErrorProps<C>,
+): ReactElement | null {
   const {
     Component = 'div',
     errorPath = 'main',

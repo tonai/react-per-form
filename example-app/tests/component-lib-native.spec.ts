@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-lib';
+const minError = 'Value is too low';
 const missError = 'Did you miss something ?';
 const muiValidatorError = 'Choose a date';
 const muiMinError = 'Select a date in the future';
@@ -12,37 +13,38 @@ test.describe('Component Lib Native', () => {
   // So we can't really test the different modes, which is why we only test the submit mode here.
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    await expect(page.getByTestId('number')).toHaveValue('0');
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').fill('01/01/2024');
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     await page.getByTestId('mui').blur();
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     await page.getByTestId('mui').fill('');
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').blur();
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // submit
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // fix native error
@@ -119,9 +121,9 @@ test.describe('Component Lib Native', () => {
     await page.getByTestId('number').blur();
     // reset button
     await page.getByTestId('rsf-reset').click();
-    await expect(page.getByTestId('number')).toHaveValue('');
+    await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
-    expect(await getErrorMessage(page, 'number')).toEqual(missError);
+    expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();

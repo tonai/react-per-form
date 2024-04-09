@@ -4,6 +4,7 @@ module.exports = {
     {
       files: ['doc/src/**/*'],
       rules: {
+        '@typescript-eslint/prefer-nullish-coalescing': 'off',
         'import/no-unresolved': 'off',
       },
     },
@@ -13,6 +14,7 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-unnecessary-condition': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
         'import/consistent-type-specifier-style': 'off',
         'import/order': 'off',
         'react/jsx-no-leaked-render': 'off',
