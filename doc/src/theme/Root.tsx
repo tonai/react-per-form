@@ -7,7 +7,8 @@ import {
 } from '@mantine/core';
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+  primaryColor: 'cyan',
+  primaryShade: { dark: 6, light: 8 },
 });
 
 const manager = localStorageColorSchemeManager({
