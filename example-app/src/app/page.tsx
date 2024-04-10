@@ -2,12 +2,19 @@
 
 import type { ReactElement } from 'react';
 
+import { useFormState } from 'react-dom';
 import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
 
+import { serverAction } from '../actions';
 import Filters from '../components/Filters/Filters';
-import { handleSubmit } from '../helpers/form';
+import Loader from '../components/Loader/Loader';
+import { handleSubmitServerAction } from '../helpers/form';
 import { fooValidator, globalFooValidator } from '../helpers/validators';
 import { useFilters } from '../hooks/useFilters';
+
+const initialState = {
+  message: '',
+};
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -19,6 +26,7 @@ const validators = {
 };
 
 export default function HookSimpleForm(): ReactElement {
+  const [state, formAction] = useFormState(serverAction, initialState);
   const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
     ...formData,
@@ -33,9 +41,10 @@ export default function HookSimpleForm(): ReactElement {
       <FormProvider {...context}>
         <form
           {...formProps}
+          action={formAction}
           className="form"
           data-testid="form"
-          onSubmit={onSubmit(handleSubmit)}
+          onSubmit={onSubmit(handleSubmitServerAction)}
         >
           <div className="field">
             <label htmlFor="file">simple</label>
@@ -57,7 +66,16 @@ export default function HookSimpleForm(): ReactElement {
             <Reset />
             <Submit />
             <Submit data-testid="rsf-submit-disabled" disableOnError />
+            <Loader />
           </div>
+          <p
+            aria-live="polite"
+            className="sr-only"
+            data-testid="message"
+            role="status"
+          >
+            {state.message}
+          </p>
         </form>
       </FormProvider>
     </>

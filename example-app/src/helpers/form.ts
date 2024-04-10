@@ -8,3 +8,10 @@ export function handleSubmit(
   event.preventDefault();
   console.log('Submit!', values);
 }
+
+export function handleSubmitServerAction(
+  _event: FormEvent<HTMLFormElement>,
+  values: IFormValues,
+): void {
+  console.log('Submit!', values);
+}

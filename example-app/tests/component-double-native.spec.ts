@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-double';

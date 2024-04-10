@@ -8,7 +8,7 @@ import type {
 } from 'react';
 import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
-import './Filters.css';
+import styles from './Filters.module.css';
 
 interface IFiltersProps {
   mode: IFormMode;
@@ -44,7 +44,7 @@ export default function Filters(props: IFiltersProps): ReactElement {
   }
 
   return (
-    <div className="filters">
+    <div className={styles.filters}>
       <label>
         Mode:&nbsp;
         <select data-testid="mode" onChange={handleMode} value={mode}>

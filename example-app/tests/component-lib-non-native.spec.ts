@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import {
   disableNativeValidation,
   goto,
@@ -85,13 +86,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);
@@ -204,13 +205,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);
@@ -325,13 +326,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);
@@ -446,13 +447,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);
@@ -565,13 +566,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);
@@ -684,13 +685,13 @@ test.describe('Component Lib Non Native', () => {
     // fix manual error
     const today = new Date();
     const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-      month: '2-digit',
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric',
     }).format(today);
     await page.getByTestId('mui').fill(date);

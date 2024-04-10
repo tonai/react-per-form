@@ -1,10 +1,13 @@
 import { expect, test } from '@playwright/test';
+
 import { getErrorMessage, goto } from './helpers';
 
 const url = '/component-simple';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
+const submitText =
+  'This form has been submitted 1 time(s) in total and the last value submitted is "foobar"';
 
 test.describe('Component Simple Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
@@ -13,6 +16,7 @@ test.describe('Component Simple Native', () => {
   test('mode=submit', async ({ page }) => {
     const { consoleMsg } = await goto(page, url);
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
+    await expect(page.getByTestId('message')).toHaveText('');
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
@@ -30,6 +34,7 @@ test.describe('Component Simple Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
+    await expect(page.getByTestId('message')).toHaveText('');
     // fix native error
     await page.getByTestId('simple').fill('f');
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
@@ -39,6 +44,7 @@ test.describe('Component Simple Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
+    await expect(page.getByTestId('message')).toHaveText('');
     // fix custom error
     await page.getByTestId('simple').fill('foo');
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
@@ -48,6 +54,7 @@ test.describe('Component Simple Native', () => {
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
+    await expect(page.getByTestId('message')).toHaveText('');
     // fix global error
     await page.getByTestId('simple').fill('foobar');
     expect(await getErrorMessage(page, 'simple')).toEqual('');
@@ -58,6 +65,7 @@ test.describe('Component Simple Native', () => {
     expect(page.getByTestId('simple')).not.toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual('');
     expect(await consoleMsg).toBe(true);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
