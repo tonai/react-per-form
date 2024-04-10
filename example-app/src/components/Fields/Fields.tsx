@@ -1,4 +1,9 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { useInputs } from 'react-swift-form';
+
 import {
   colorValidator,
   multipleValidator,
@@ -40,7 +45,7 @@ const validators = {
   'select-multiple': multipleValidator('select-multiple'),
 };
 
-function Fields() {
+function Fields(): ReactElement {
   const { errors } = useInputs({
     names,
     validators,
@@ -52,14 +57,14 @@ function Fields() {
         <label htmlFor="checkbox">checkbox</label>
         <div className="input">
           <input
-            type="checkbox"
             autoComplete="off"
             data-testid="checkbox"
-            name="checkbox"
             id="checkbox"
+            name="checkbox"
             required
+            type="checkbox"
           />
-          {errors.all.checkbox && (
+          {Boolean(errors.all.checkbox) && (
             <div className="error" data-testid="checkbox-error">
               {errors.all.checkbox}
             </div>
@@ -70,14 +75,14 @@ function Fields() {
         <label htmlFor="color">color</label>
         <div className="input">
           <input
-            type="color"
             autoComplete="off"
             data-testid="color"
-            name="color"
             id="color"
+            name="color"
             required
+            type="color"
           />
-          {errors.all.color && (
+          {Boolean(errors.all.color) && (
             <div className="error" data-testid="color-error">
               {errors.all.color}
             </div>
@@ -88,14 +93,14 @@ function Fields() {
         <label htmlFor="date">date</label>
         <div className="input">
           <input
-            type="date"
             autoComplete="off"
             data-testid="date"
-            name="date"
             id="date"
+            name="date"
             required
+            type="date"
           />
-          {errors.all.date && (
+          {Boolean(errors.all.date) && (
             <div className="error" data-testid="date-error">
               {errors.all.date}
             </div>
@@ -106,14 +111,14 @@ function Fields() {
         <label htmlFor="datetime-local">datetime-local</label>
         <div className="input">
           <input
-            type="datetime-local"
             autoComplete="off"
             data-testid="datetime-local"
-            name="datetime-local"
             id="datetime-local"
+            name="datetime-local"
             required
+            type="datetime-local"
           />
-          {errors.all['datetime-local'] && (
+          {Boolean(errors.all['datetime-local']) && (
             <div className="error" data-testid="datetime-local-error">
               {errors.all['datetime-local']}
             </div>
@@ -124,14 +129,14 @@ function Fields() {
         <label htmlFor="email">email</label>
         <div className="input">
           <input
-            type="email"
             autoComplete="off"
             data-testid="email"
-            name="email"
             id="email"
+            name="email"
             required
+            type="email"
           />
-          {errors.all.email && (
+          {Boolean(errors.all.email) && (
             <div className="error" data-testid="email-error">
               {errors.all.email}
             </div>
@@ -142,15 +147,15 @@ function Fields() {
         <label htmlFor="email-multiple">email-multiple</label>
         <div className="input">
           <input
-            type="email"
             autoComplete="off"
             data-testid="email-multiple"
+            id="email-multiple"
             multiple
             name="email-multiple"
-            id="email-multiple"
             required
+            type="email"
           />
-          {errors.all['email-multiple'] && (
+          {Boolean(errors.all['email-multiple']) && (
             <div className="error" data-testid="email-multiple-error">
               {errors.all['email-multiple']}
             </div>
@@ -161,14 +166,14 @@ function Fields() {
         <label htmlFor="file">file</label>
         <div className="input">
           <input
-            type="file"
             autoComplete="off"
             data-testid="file"
-            name="file"
             id="file"
+            name="file"
             required
+            type="file"
           />
-          {errors.all.file && (
+          {Boolean(errors.all.file) && (
             <div className="error" data-testid="file-error">
               {errors.all.file}
             </div>
@@ -179,15 +184,15 @@ function Fields() {
         <label htmlFor="file-multiple">file-multiple</label>
         <div className="input">
           <input
-            type="file"
             autoComplete="off"
             data-testid="file-multiple"
+            id="file-multiple"
             multiple
             name="file-multiple"
-            id="file-multiple"
             required
+            type="file"
           />
-          {errors.all['file-multiple'] && (
+          {Boolean(errors.all['file-multiple']) && (
             <div className="error" data-testid="file-multiple-error">
               {errors.all['file-multiple']}
             </div>
@@ -198,14 +203,14 @@ function Fields() {
         <label htmlFor="month">month</label>
         <div className="input">
           <input
-            type="month"
             autoComplete="off"
             data-testid="month"
-            name="month"
             id="month"
+            name="month"
             required
+            type="month"
           />
-          {errors.all.month && (
+          {Boolean(errors.all.month) && (
             <div className="error" data-testid="month-error">
               {errors.all.month}
             </div>
@@ -216,14 +221,14 @@ function Fields() {
         <label htmlFor="number">number</label>
         <div className="input">
           <input
-            type="number"
             autoComplete="off"
             data-testid="number"
-            name="number"
             id="number"
+            name="number"
             required
+            type="number"
           />
-          {errors.all.number && (
+          {Boolean(errors.all.number) && (
             <div className="error" data-testid="number-error">
               {errors.all.number}
             </div>
@@ -234,14 +239,14 @@ function Fields() {
         <label htmlFor="password">password</label>
         <div className="input">
           <input
-            type="password"
             autoComplete="off"
             data-testid="password"
-            name="password"
             id="password"
+            name="password"
             required
+            type="password"
           />
-          {errors.all.password && (
+          {Boolean(errors.all.password) && (
             <div className="error" data-testid="password-error">
               {errors.all.password}
             </div>
@@ -253,32 +258,32 @@ function Fields() {
         <div className="input">
           <div className="radio">
             <input
-              type="radio"
               autoComplete="off"
               data-testid="radio-1"
-              name="radio"
               id="radio"
-              value="1"
+              name="radio"
               required
+              type="radio"
+              value="1"
             />
             <input
-              type="radio"
               autoComplete="off"
               data-testid="radio-2"
               name="radio"
-              value="2"
               required
+              type="radio"
+              value="2"
             />
             <input
-              type="radio"
               autoComplete="off"
               data-testid="radio-3"
               name="radio"
-              value="3"
               required
+              type="radio"
+              value="3"
             />
           </div>
-          {errors.all.radio && (
+          {Boolean(errors.all.radio) && (
             <div className="error" data-testid="radio-error">
               {errors.all.radio}
             </div>
@@ -289,13 +294,13 @@ function Fields() {
         <label htmlFor="range">range</label>
         <div className="input">
           <input
-            type="range"
             autoComplete="off"
             data-testid="range"
-            name="range"
             id="range"
+            name="range"
+            type="range"
           />
-          {errors.all.range && (
+          {Boolean(errors.all.range) && (
             <div className="error" data-testid="range-error">
               {errors.all.range}
             </div>
@@ -306,14 +311,14 @@ function Fields() {
         <label htmlFor="search">search</label>
         <div className="input">
           <input
-            type="search"
             autoComplete="off"
             data-testid="search"
-            name="search"
             id="search"
+            name="search"
             required
+            type="search"
           />
-          {errors.all.search && (
+          {Boolean(errors.all.search) && (
             <div className="error" data-testid="search-error">
               {errors.all.search}
             </div>
@@ -324,14 +329,14 @@ function Fields() {
         <label htmlFor="tel">tel</label>
         <div className="input">
           <input
-            type="tel"
             autoComplete="off"
             data-testid="tel"
-            name="tel"
             id="tel"
+            name="tel"
             required
+            type="tel"
           />
-          {errors.all.tel && (
+          {Boolean(errors.all.tel) && (
             <div className="error" data-testid="tel-error">
               {errors.all.tel}
             </div>
@@ -342,14 +347,14 @@ function Fields() {
         <label htmlFor="text">text</label>
         <div className="input">
           <input
-            type="text"
             autoComplete="off"
             data-testid="text"
-            name="text"
             id="text"
+            name="text"
             required
+            type="text"
           />
-          {errors.all.text && (
+          {Boolean(errors.all.text) && (
             <div className="error" data-testid="text-error">
               {errors.all.text}
             </div>
@@ -360,14 +365,14 @@ function Fields() {
         <label htmlFor="time">time</label>
         <div className="input">
           <input
-            type="time"
             autoComplete="off"
             data-testid="time"
-            name="time"
             id="time"
+            name="time"
             required
+            type="time"
           />
-          {errors.all.time && (
+          {Boolean(errors.all.time) && (
             <div className="error" data-testid="time-error">
               {errors.all.time}
             </div>
@@ -378,14 +383,14 @@ function Fields() {
         <label htmlFor="url">url</label>
         <div className="input">
           <input
-            type="url"
             autoComplete="off"
             data-testid="url"
-            name="url"
             id="url"
+            name="url"
             required
+            type="url"
           />
-          {errors.all.url && (
+          {Boolean(errors.all.url) && (
             <div className="error" data-testid="url-error">
               {errors.all.url}
             </div>
@@ -396,14 +401,14 @@ function Fields() {
         <label htmlFor="week">week</label>
         <div className="input">
           <input
-            type="week"
             autoComplete="off"
             data-testid="week"
-            name="week"
             id="week"
+            name="week"
             required
+            type="week"
           />
-          {errors.all.week && (
+          {Boolean(errors.all.week) && (
             <div className="error" data-testid="week-error">
               {errors.all.week}
             </div>
@@ -416,16 +421,16 @@ function Fields() {
           <select
             autoComplete="off"
             data-testid="select"
-            name="select"
             id="select"
+            name="select"
             required
           >
-            <option value=""></option>
+            <option value="" />
             <option value="option 1">option 1</option>
             <option value="option 2">option 2</option>
             <option value="option 3">option 3</option>
           </select>
-          {errors.all.select && (
+          {Boolean(errors.all.select) && (
             <div className="error" data-testid="select-error">
               {errors.all.select}
             </div>
@@ -438,17 +443,17 @@ function Fields() {
           <select
             autoComplete="off"
             data-testid="select-multiple"
+            id="select-multiple"
             multiple
             name="select-multiple"
-            id="select-multiple"
             required
           >
-            <option value=""></option>
+            <option value="" />
             <option value="option 1">option 1</option>
             <option value="option 2">option 2</option>
             <option value="option 3">option 3</option>
           </select>
-          {errors.all['select-multiple'] && (
+          {Boolean(errors.all['select-multiple']) && (
             <div className="error" data-testid="select-multiple-error">
               {errors.all['select-multiple']}
             </div>
@@ -459,21 +464,21 @@ function Fields() {
         <label htmlFor="datalist">datalist</label>
         <div className="input">
           <input
-            type="text"
             autoComplete="off"
             data-testid="datalist"
-            name="datalist"
             id="datalist"
             list="datalist-list"
+            name="datalist"
             required
+            type="text"
           />
           <datalist id="datalist-list">
-            <option value=""></option>
+            <option value="" />
             <option value="option 1">option 1</option>
             <option value="option 2">option 2</option>
             <option value="option 3">option 3</option>
           </datalist>
-          {errors.all.datalist && (
+          {Boolean(errors.all.datalist) && (
             <div className="error" data-testid="datalist-error">
               {errors.all.datalist}
             </div>
@@ -486,11 +491,11 @@ function Fields() {
           <textarea
             autoComplete="off"
             data-testid="textarea"
-            name="textarea"
             id="textarea"
+            name="textarea"
             required
           />
-          {errors.all.textarea && (
+          {Boolean(errors.all.textarea) && (
             <div className="error" data-testid="textarea-error">
               {errors.all.textarea}
             </div>

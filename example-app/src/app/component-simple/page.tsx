@@ -1,15 +1,20 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { Error, Form, Reset, Submit } from 'react-swift-form';
-import Simple from '../../components/Simple/Simple';
+
 import Filters from '../../components/Filters/Filters';
+import Simple from '../../components/Simple/Simple';
+import { handleSubmit } from '../../helpers/form';
 import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
-import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
-export default function ComponentSimpleForm() {
+export default function ComponentSimpleForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
 
   return (
@@ -22,7 +27,7 @@ export default function ComponentSimpleForm() {
         messages={messages}
         onSubmit={handleSubmit}
         validators={{
-          foobar: { validator: globalFooValidator, names: ['foo'] },
+          foobar: { names: ['foo'], validator: globalFooValidator },
         }}
       >
         <Simple name="foo" required />

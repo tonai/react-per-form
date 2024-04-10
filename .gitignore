@@ -12,6 +12,7 @@ node_modules
 .pnp
 .pnp.js
 .npm
+.yarn/install-state.gz
 
 # Compiled output
 tmp
@@ -23,6 +24,7 @@ build
 dist
 dist-ssr
 tsconfig.tsbuildinfo
+next-env.d.ts
 .docusaurus
 .cache-loader
 

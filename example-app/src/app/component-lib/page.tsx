@@ -1,24 +1,30 @@
-import { Error, Form, Reset, Submit } from 'react-swift-form';
+'use client';
+
+import type { Dayjs } from 'dayjs';
+import type { ReactElement } from 'react';
+import type { IFormValues } from 'react-swift-form';
+
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
-import { Dayjs } from 'dayjs';
-import Lib from '../../components/Lib/Lib';
+import { Error, Form, Reset, Submit } from 'react-swift-form';
+
 import Filters from '../../components/Filters/Filters';
-import { useFilters } from '../../hooks/useFilters';
+import Lib from '../../components/Lib/Lib';
 import { handleSubmit } from '../../helpers/form';
+import { useFilters } from '../../hooks/useFilters';
 
 const messages = {
   rangeUnderflow: 'Value is too low',
   valueMissing: 'Did you miss something ?',
 };
 
-export default function ComponentLibForm() {
+export default function ComponentLibForm(): ReactElement {
   const [numberValue, setNumberValue] = useState(0);
   const [muiValue, setMuiValue] = useState<Dayjs | null>(null);
   const { filtersProps, formData } = useFilters();
 
-  function handleReset() {
+  function handleReset(): IFormValues {
     setNumberValue(0);
     setMuiValue(null);
     return { number: 12 };
@@ -29,12 +35,12 @@ export default function ComponentLibForm() {
       <Filters {...filtersProps} />
       <Form
         {...formData}
+        className="form"
+        data-testid="form"
         defaultValues={{
           mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
           number: 0,
         }}
-        className="form"
-        data-testid="form"
         messages={messages}
         onReset={handleReset}
         onSubmit={handleSubmit}

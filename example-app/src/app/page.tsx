@@ -1,8 +1,13 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
-import Filters from '../../components/Filters/Filters';
-import { fooValidator, globalFooValidator } from '../../helpers/validators';
-import { useFilters } from '../../hooks/useFilters';
-import { handleSubmit } from '../../helpers/form';
+
+import Filters from '../components/Filters/Filters';
+import { handleSubmit } from '../helpers/form';
+import { fooValidator, globalFooValidator } from '../helpers/validators';
+import { useFilters } from '../hooks/useFilters';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
@@ -10,10 +15,10 @@ const messages = {
 
 const validators = {
   foo: fooValidator,
-  foobar: { validator: globalFooValidator, names: ['foo'] },
+  foobar: { names: ['foo'], validator: globalFooValidator },
 };
 
-export default function HookSimpleForm() {
+export default function HookSimpleForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
     ...formData,
@@ -41,7 +46,7 @@ export default function HookSimpleForm() {
                 name="foo"
                 required
               />
-              {errors.all?.foo && (
+              {Boolean(errors.all.foo) && (
                 <div className="error" data-testid="simple-error">
                   {errors.all.foo}
                 </div>

@@ -1,7 +1,12 @@
-import { useInputs, useWatch } from 'react-swift-form';
+'use client';
+
+import type { Dayjs } from 'dayjs';
+import type { Dispatch, ReactElement, SetStateAction } from 'react';
+
 import { DatePicker } from '@mui/x-date-pickers';
-import { Dispatch, SetStateAction } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { useInputs, useWatch } from 'react-swift-form';
+
 import { muiValidator } from '../../helpers/validators';
 
 const names = ['number', 'number-controlled', 'mui'];
@@ -19,7 +24,7 @@ interface ILibProps {
   setNumberValue: Dispatch<SetStateAction<number>>;
 }
 
-function Lib(props: ILibProps) {
+function Lib(props: ILibProps): ReactElement {
   const { muiValue, numberValue, setMuiValue, setNumberValue } = props;
   const { errors, onChange, onError } = useInputs({
     messages,
@@ -41,7 +46,7 @@ function Lib(props: ILibProps) {
             required
             type="number"
           />
-          {errors.all?.number && (
+          {Boolean(errors.all.number) && (
             <div className="error" data-testid="number-error">
               {errors.all.number}
             </div>
@@ -62,7 +67,7 @@ function Lib(props: ILibProps) {
             type="number"
             value={numberValue}
           />
-          {errors.all['number-controlled'] && (
+          {Boolean(errors.all['number-controlled']) && (
             <div className="error" data-testid="number-controlled-error">
               {errors.all['number-controlled']}
             </div>
@@ -73,8 +78,8 @@ function Lib(props: ILibProps) {
         <label htmlFor="file">datepicker</label>
         <div className="input">
           <DatePicker
-            name="mui"
             minDate={dayjs()}
+            name="mui"
             onChange={onChange({ callback: setMuiValue, name: 'mui' })}
             onError={onError('mui')}
             slotProps={{
@@ -85,7 +90,7 @@ function Lib(props: ILibProps) {
             }}
             value={muiValue}
           />
-          {errors.all?.mui && (
+          {Boolean(errors.all.mui) && (
             <div className="error" data-testid="mui-error">
               {errors.all.mui}
             </div>

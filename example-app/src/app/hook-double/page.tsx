@@ -1,17 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+
 import Filters from '../../components/Filters/Filters';
+import { handleSubmit } from '../../helpers/form';
 import { doubleValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
-import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 const validators = {
-  double: { validator: doubleValidator, names: ['double1', 'double2'] },
+  double: { names: ['double1', 'double2'], validator: doubleValidator },
 };
 
-export default function HookDoubleForm() {
+export default function HookDoubleForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
     ...formData,
@@ -40,7 +47,7 @@ export default function HookDoubleForm() {
                 required
                 type="number"
               />
-              {errors.native?.double1 && (
+              {Boolean(errors.native.double1) && (
                 <div className="error" data-testid="double-1-error">
                   {errors.native.double1}
                 </div>
@@ -57,16 +64,16 @@ export default function HookDoubleForm() {
                 required
                 type="number"
               />
-              {errors.native?.double2 && (
+              {Boolean(errors.native.double2) && (
                 <div className="error" data-testid="double-2-error">
                   {errors.native.double2}
                 </div>
               )}
             </div>
           </div>
-          {errors.validator?.double?.error && (
+          {Boolean(errors.validator.double?.error) && (
             <div className="error" data-testid="double-validator-error">
-              {errors.validator.double.error}
+              {errors.validator.double?.error}
             </div>
           )}
           <div className="form__actions">

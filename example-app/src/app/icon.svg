@@ -1,0 +1,10 @@
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M900,180 Q900,100 820,100 L180,100 Q100,100 100,180 L100,820 Q100,900 180,900 L700,900 L900,700 Z" fill="#eef0fc" stroke="#15aabf" stroke-width="40" />
+  <path d="M700,220 L240,220 Q220,220 220,240 L220,280 Q220,300 240,300 L700,300 Z" fill="#ffffff" stroke="#767676" stroke-width="5" />
+  <path d="M700,220 L760,220 Q780,220 780,240 L780,280 Q780,300 760,300 L700,300 Z" fill="#40c057" stroke="#767676" stroke-width="5" />
+  <path d="M700,380 L240,380 Q220,380 220,400 L220,440 Q220,460 240,460 L700,460 Z" fill="#ffffff" stroke="#767676" stroke-width="5" />
+  <path d="M700,380 L760,380 Q780,380 780,400 L780,440 Q780,460 760,460 L700,460 Z" fill="#40c057" stroke="#767676" stroke-width="5" />
+  <path d="M700,540 L240,540 Q220,540 220,560 L220,600 Q220,620 240,620 L700,620 Z" fill="#ffffff" stroke="#767676" stroke-width="5" />
+  <path d="M700,540 L760,540 Q780,540 780,560 L780,600 Q780,620 760,620 L700,620 Z" fill="#fa5252" stroke="#767676" stroke-width="5" />
+  <rect x="220" y="700" width="440" height="80" fill="#15aabf" rx="20" ry="20" stroke="#15aabf" stroke-width="5"></rect>
+</svg>

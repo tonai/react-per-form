@@ -1,12 +1,19 @@
-import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+'use client';
+
+import type { Dayjs } from 'dayjs';
+import type { ReactElement } from 'react';
+import type { IFormValues } from 'react-swift-form';
+
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+
 import Filters from '../../components/Filters/Filters';
+import { handleSubmit } from '../../helpers/form';
 import { muiValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
-import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   minDate: 'Select a date in the future',
@@ -17,7 +24,7 @@ const validators = {
   mui: muiValidator,
 };
 
-export default function HookLibForm() {
+export default function HookLibForm(): ReactElement {
   const [numberValue, setNumberValue] = useState(0);
   const [muiValue, setMuiValue] = useState(null);
   const { filtersProps, formData } = useFilters();
@@ -37,7 +44,7 @@ export default function HookLibForm() {
     return watch<{ mui: Dayjs | null }>(({ mui }) => setMui(mui), 'mui');
   }, [watch]);
 
-  function handleReset() {
+  function handleReset(): IFormValues {
     setNumberValue(0);
     setMuiValue(null);
     return { number: 12 };
@@ -65,7 +72,7 @@ export default function HookLibForm() {
                 required
                 type="number"
               />
-              {errors.all?.number && (
+              {Boolean(errors.all.number) && (
                 <div className="error" data-testid="number-error">
                   {errors.all.number}
                 </div>
@@ -86,7 +93,7 @@ export default function HookLibForm() {
                 type="number"
                 value={numberValue}
               />
-              {errors.all?.['number-controlled'] && (
+              {Boolean(errors.all['number-controlled']) && (
                 <div className="error" data-testid="number-error">
                   {errors.all['number-controlled']}
                 </div>
@@ -97,8 +104,8 @@ export default function HookLibForm() {
             <label htmlFor="file">datepicker</label>
             <div className="input">
               <DatePicker
-                name="mui"
                 minDate={dayjs()}
+                name="mui"
                 onChange={onChange({ callback: setMuiValue, name: 'mui' })}
                 onError={onError('mui')}
                 slotProps={{
@@ -109,7 +116,7 @@ export default function HookLibForm() {
                 }}
                 value={muiValue}
               />
-              {errors.all?.mui && (
+              {Boolean(errors.all.mui) && (
                 <div className="error" data-testid="mui-error">
                   {errors.all.mui}
                 </div>

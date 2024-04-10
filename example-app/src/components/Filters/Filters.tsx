@@ -1,5 +1,13 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+'use client';
+
+import type {
+  ChangeEvent,
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+} from 'react';
+import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+
 import './Filters.css';
 
 interface IFiltersProps {
@@ -11,7 +19,7 @@ interface IFiltersProps {
   useNativeValidation: boolean;
 }
 
-export default function Filters(props: IFiltersProps) {
+export default function Filters(props: IFiltersProps): ReactElement {
   const {
     mode,
     revalidateMode,
@@ -21,15 +29,17 @@ export default function Filters(props: IFiltersProps) {
     useNativeValidation,
   } = props;
 
-  function handleMode(event: ChangeEvent<HTMLSelectElement>) {
+  function handleMode(event: ChangeEvent<HTMLSelectElement>): void {
     setMode(event.target.value as IFormMode);
   }
 
-  function handleRevalidateMode(event: ChangeEvent<HTMLSelectElement>) {
+  function handleRevalidateMode(event: ChangeEvent<HTMLSelectElement>): void {
     setRevalidateMode(event.target.value as IFormRevalidateMode);
   }
 
-  function handleUseNativeValidation(event: ChangeEvent<HTMLInputElement>) {
+  function handleUseNativeValidation(
+    event: ChangeEvent<HTMLInputElement>,
+  ): void {
     setUseNativeValidation(event.target.checked);
   }
 

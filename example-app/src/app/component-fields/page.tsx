@@ -1,14 +1,19 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { Error, Form, Reset, Submit } from 'react-swift-form';
+
 import Fields from '../../components/Fields/Fields';
 import Filters from '../../components/Filters/Filters';
-import { useFilters } from '../../hooks/useFilters';
 import { handleSubmit } from '../../helpers/form';
+import { useFilters } from '../../hooks/useFilters';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
-export default function ComponentFieldsForm() {
+export default function ComponentFieldsForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
 
   return (

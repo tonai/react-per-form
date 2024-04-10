@@ -1,23 +1,28 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { useMemo, useRef, useState } from 'react';
 import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+
 import Filters from '../../components/Filters/Filters';
+import { handleSubmit } from '../../helpers/form';
 import { dynamicValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
-import { handleSubmit } from '../../helpers/form';
 
 const messages = {
   valueMissing: 'Did you miss something ?',
 };
 
-export default function HookDynamicForm() {
+export default function HookDynamicForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
   const validators = useMemo(
     () => ({
       dynamic: {
-        validator: dynamicValidator,
         names: ids.map((id) => `dynamic-${id}`),
+        validator: dynamicValidator,
       },
     }),
     [ids],
@@ -29,12 +34,12 @@ export default function HookDynamicForm() {
   });
   const { errors, onSubmit } = context;
 
-  function handleAdd() {
+  function handleAdd(): void {
     setIds(ids.concat(ref.current));
     ref.current++;
   }
 
-  function handleRemove(id: number) {
+  function handleRemove(id: number): void {
     setIds(ids.filter((i) => i !== id));
   }
 
@@ -64,23 +69,23 @@ export default function HookDynamicForm() {
                     type="number"
                   />
                   <button
-                    data-testid={`dynamic-${id}-remove`}
                     className="inline"
+                    data-testid={`dynamic-${id}-remove`}
                     onClick={() => handleRemove(id)}
                     type="button"
                   >
                     Remove
                   </button>
                 </div>
-                {errors.native?.[`dynamic-${id}`] && (
+                {Boolean(errors.native[`dynamic-${id}`]) && (
                   <div className="error" data-testid={`dynamic-${id}-error`}>
-                    {errors.native?.[`dynamic-${id}`]}
+                    {errors.native[`dynamic-${id}`]}
                   </div>
                 )}
               </div>
             </div>
           ))}
-          {errors.validator?.dynamic && (
+          {Boolean(errors.validator.dynamic) && (
             <div className="error" data-testid="dynamic-validator-error">
               {errors.validator.dynamic.error}
             </div>
