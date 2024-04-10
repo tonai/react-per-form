@@ -5,8 +5,28 @@
   padding: 0 var(--ifm-spacing-horizontal);
 }
 
+/**
+ * https://clamp.font-size.app/
+ * min vw: 500
+ * max vw: 900
+ * min fs: 40
+ * max fs: 80
+ */
 .title {
   font-size: clamp(2.5rem, -0.625rem + 10vw, 5rem);
+}
+
+.logo {
+  margin-bottom: var(--ifm-spacing-vertical);
+}
+
+.logo > img {
+  display: block;
+}
+
+.tagline {
+  font-size: clamp(1rem, 0.6875rem + 1vw, 1.25rem);
+  font-weight: bold;
 }
 
 .button {

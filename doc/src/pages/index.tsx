@@ -16,7 +16,21 @@ export default function Home(): ReactElement {
     >
       <main className={styles.main}>
         <h1 className={styles.title}>{siteConfig.title}</h1>
-        <p>{siteConfig.tagline}</p>
+        <div className={styles.logo}>
+          <img
+            alt="react-swift-form Logo"
+            className="mantine-dark-hidden"
+            src="img/logo.svg"
+            width="200"
+          />
+          <img
+            alt="react-swift-form Logo"
+            className="mantine-light-hidden"
+            src="img/logo-dark.svg"
+            width="200"
+          />
+        </div>
+        <p className={styles.tagline}>{siteConfig.tagline}</p>
         <ul>
           <li>☯ Very easy to use</li>
           <li>🚀 Really fast</li>

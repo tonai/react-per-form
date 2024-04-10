@@ -8,7 +8,7 @@ const config: Config = {
   title: 'react-swift-form',
   tagline:
     'Fast and easy form validation for React based on native HTML capabilities',
-  favicon: 'img/favicon.ico', // TODO
+  favicon: 'img/logo.svg',
 
   // Set the production url of your site here
   url: 'https://tonai.github.io/',
@@ -53,13 +53,14 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg', // TODO
+    respectPrefersColorScheme: true,
+    image: 'img/social-card.png',
     navbar: {
       title: 'react-swift-form',
       logo: {
         alt: 'react-swift-form Logo',
-        src: 'img/logo.svg', // TODO
+        src: 'img/logo.svg',
+        srcDark: 'img/logo-dark.svg',
       },
       items: [
         {
@@ -89,6 +90,10 @@ const config: Config = {
             {
               label: 'Guides',
               to: '/docs/category/guides',
+            },
+            {
+              label: 'API',
+              to: '/docs/category/api',
             },
           ],
         },
