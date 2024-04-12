@@ -37,7 +37,11 @@ describe('Form component', () => {
     );
     fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).toHaveBeenCalled();
-    expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: '' });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      { foo: '' },
+      expect.any(Function),
+    );
   });
 
   it('should get the form values in the onSubmit function', () => {
@@ -50,7 +54,11 @@ describe('Form component', () => {
     fireEvent.change(screen.getByTestId('foo'), { target: { value: 'bar' } });
     fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).toHaveBeenCalled();
-    expect((onSubmit.mock.calls[0] as unknown[])[1]).toEqual({ foo: 'bar' });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      { foo: 'bar' },
+      expect.any(Function),
+    );
   });
 
   it('should not call the onSubmit function (form invalid)', () => {
@@ -73,5 +81,23 @@ describe('Form component', () => {
     );
     fireEvent.submit(screen.getByTestId('rsf-form'));
     expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('should initialize the default value when using the onChange handler', () => {
+    const onSubmit = jest.fn();
+    const onChangeSpy = jest.fn();
+    render(
+      <Form defaultValues={{ foo: 42 }} onSubmit={onSubmit}>
+        {({ onChange }) => (
+          <input name="foo" onChange={onChange(onChangeSpy, { name: 'foo' })} />
+        )}
+      </Form>,
+    );
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      { foo: 42 },
+      expect.any(Function),
+    );
   });
 });

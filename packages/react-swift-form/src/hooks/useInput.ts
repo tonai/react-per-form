@@ -12,13 +12,13 @@ import { useMemo } from 'react';
 import { useInputs } from './useInputs';
 
 export interface IUseInputProps {
+  defaultValue?: unknown;
   id?: string;
   messages?: IMessages;
   name: string;
-  validators?:
-    | IValidator
-    | IValidatorObject
-    | Record<string, IValidator | IValidatorObject>;
+  onChangeOptOut?: boolean;
+  transformer?: (value: unknown) => unknown;
+  validator?: IValidator | IValidatorObject;
 }
 
 export interface IUseInputResult extends IUseInputsResult {
@@ -27,14 +27,33 @@ export interface IUseInputResult extends IUseInputsResult {
 }
 
 export function useInput(props: IUseInputProps): IUseInputResult {
-  const { id, name, messages, validators } = props;
+  const {
+    defaultValue,
+    id,
+    messages,
+    name,
+    onChangeOptOut,
+    transformer,
+    validator,
+  } = props;
 
   const names = useMemo(() => [name], [name]);
+  const defaultValues = useMemo(
+    () => (defaultValue !== undefined ? { [name]: defaultValue } : undefined),
+    [defaultValue, name],
+  );
+  const transformers = useMemo(
+    () => (transformer !== undefined ? { [name]: transformer } : undefined),
+    [name, transformer],
+  );
   const { errors, ...rest } = useInputs({
+    defaultValues,
     id: id ?? name,
     messages,
     names,
-    validators,
+    onChangeOptOut: onChangeOptOut ? name : undefined,
+    transformers,
+    validators: validator,
   });
 
   return { ...rest, error: errors.main, errors };

@@ -12,7 +12,7 @@ function Input() {
   const { errors } = useInput({
     messages: localMessages,
     name: 'text',
-    validators: validator,
+    validator,
   });
   return (
     <>

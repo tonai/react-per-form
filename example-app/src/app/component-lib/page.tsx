@@ -18,14 +18,6 @@ const messages = {
   rangeUnderflow: 'Value is too low',
   valueMissing: 'Did you miss something ?',
 };
-const defaultValues = {
-  mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
-  number: 0,
-};
-const transformers = {
-  number: Number,
-  'number-controlled': Number,
-};
 
 export default function ComponentLibForm(): ReactElement {
   const [numberValue, setNumberValue] = useState(0);
@@ -45,12 +37,9 @@ export default function ComponentLibForm(): ReactElement {
         {...formData}
         className="form"
         data-testid="form"
-        defaultValues={defaultValues}
         messages={messages}
-        onChangeOptOut="mui"
         onReset={handleReset}
         onSubmit={handleSubmit}
-        transformers={transformers}
       >
         <Lib
           muiValue={muiValue}

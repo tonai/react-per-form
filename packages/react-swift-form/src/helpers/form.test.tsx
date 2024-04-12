@@ -1,18 +1,62 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
+  getDefaultValues,
   getFormInputs,
   getInputValue,
   getName,
+  getTransformers,
   getValidatorMap,
   getValue,
   insertInMapSet,
   isCheckbox,
   isEvent,
   isFormElement,
+  shouldChange,
 } from './form';
 
 describe('form helper', () => {
+  describe('getDefaultValues', () => {
+    it('should return the merged default values', () => {
+      expect(getDefaultValues(new Set(), {})).toEqual({});
+      expect(
+        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {}),
+      ).toEqual({});
+      expect(getDefaultValues(new Set(), { foo: 42 })).toEqual({
+        foo: 42,
+      });
+      expect(
+        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {
+          foo: 42,
+        }),
+      ).toEqual({ foo: 42 });
+      expect(
+        getDefaultValues(
+          new Set([
+            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
+            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+          ]),
+          {
+            foo: 42,
+          },
+        ),
+      ).toEqual({ bar: 12, foo: '42' });
+      expect(
+        getDefaultValues(
+          new Set([
+            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
+            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+          ]),
+          {
+            foo: 42,
+          },
+          { foo: 'foo' },
+          { bar: 'bar' },
+        ),
+      ).toEqual({ bar: 'bar', foo: 'foo' });
+    });
+  });
+
   describe('getFormInputs', () => {
     it('should get the form inputs', () => {
       const form = document.createElement('form');
@@ -117,6 +161,33 @@ describe('form helper', () => {
       expect(getName({ target: textarea })).toEqual('');
       textarea.name = 'foo';
       expect(getName({ target: textarea })).toEqual('foo');
+    });
+  });
+
+  describe('getTransformers', () => {
+    it('should return the merged transformers', () => {
+      expect(getTransformers(new Set())).toEqual(undefined);
+      expect(getTransformers(new Set([{ id: 'foo', names: ['foo'] }]))).toEqual(
+        {},
+      );
+      expect(getTransformers(new Set(), { foo: Number })).toEqual({
+        foo: Number,
+      });
+      expect(
+        getTransformers(new Set([{ id: 'foo', names: ['foo'] }]), {
+          foo: Number,
+        }),
+      ).toEqual({ foo: Number });
+      expect(
+        getTransformers(
+          new Set([
+            { id: 'foo', names: ['foo'], transformers: { foo: String } },
+          ]),
+          {
+            foo: Number,
+          },
+        ),
+      ).toEqual({ foo: String });
     });
   });
 
@@ -401,6 +472,60 @@ describe('form helper', () => {
     it('should test if param is event or not', () => {
       expect(isEvent({})).toEqual(false);
       expect(isEvent(new Event('click'))).toEqual(true);
+    });
+  });
+
+  describe('shouldChange', () => {
+    it('should return true', () => {
+      expect(shouldChange(new Set(), 'foo', 'bar')).toEqual(true);
+      expect(shouldChange(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
+      expect(
+        shouldChange(
+          new Set([{ id: 'bar', names: ['bar'], onChangeOptOut: 'bar' }]),
+          'foo',
+        ),
+      ).toEqual(true);
+      expect(
+        shouldChange(
+          new Set([
+            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'bar;baz',
+              names: ['bar', 'baz'],
+              onChangeOptOut: ['bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(true);
+    });
+
+    it('should return false', () => {
+      expect(shouldChange(new Set(), 'foo', 'foo')).toEqual(false);
+      expect(shouldChange(new Set(), 'foo', ['foo', 'bar', 'baz'])).toEqual(
+        false,
+      );
+      expect(
+        shouldChange(
+          new Set([{ id: 'foo', names: ['foo'], onChangeOptOut: 'foo' }]),
+          'foo',
+        ),
+      ).toEqual(false);
+      expect(
+        shouldChange(
+          new Set([
+            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'foo;bar;baz',
+              names: ['foo', 'bar', 'baz'],
+              onChangeOptOut: ['foo', 'bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(false);
     });
   });
 });

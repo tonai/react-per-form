@@ -3,6 +3,7 @@ import type {
   IFormHandlers,
   IMainError,
   IMessages,
+  ITransformers,
   IValidator,
   IValidatorObject,
 } from '../types';
@@ -13,9 +14,12 @@ import { initialError } from '../constants';
 import { formContext } from '../contexts';
 
 export interface IUseInputsProps {
+  defaultValues?: Record<string, unknown>;
   id?: string;
   messages?: IMessages;
   names: string[];
+  onChangeOptOut?: string[] | string;
+  transformers?: ITransformers;
   validators?:
     | IValidator
     | IValidatorObject
@@ -28,30 +32,44 @@ export interface IUseInputsResult extends IFormHandlers {
 }
 
 export function useInputs(props: IUseInputsProps): IUseInputsResult {
-  const { id, names, messages, validators } = props;
-
   const {
-    onChange,
-    onError,
-    onReset,
-    onSubmit,
-    removeValidators,
-    setValidators,
-    watch,
-  } = useContext(formContext);
+    defaultValues,
+    id,
+    messages,
+    names,
+    onChangeOptOut,
+    transformers,
+    validators,
+  } = props;
+
+  const { onChange, onError, onReset, onSubmit, register, unregister, watch } =
+    useContext(formContext);
   const [errors, setErrors] = useState<IError>(initialError);
 
   useEffect(() => {
     const params = {
+      defaultValues,
       id: id ?? String(names),
       messages,
       names,
+      onChangeOptOut,
       setErrors,
+      transformers,
       validators,
     };
-    setValidators(params);
-    return () => removeValidators(params);
-  }, [id, messages, names, removeValidators, setValidators, validators]);
+    register(params);
+    return () => unregister(params);
+  }, [
+    defaultValues,
+    id,
+    messages,
+    names,
+    onChangeOptOut,
+    register,
+    transformers,
+    unregister,
+    validators,
+  ]);
 
   return {
     error: errors.main,

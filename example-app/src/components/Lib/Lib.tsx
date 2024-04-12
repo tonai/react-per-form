@@ -9,9 +9,17 @@ import { useInputs, useWatch } from 'react-swift-form';
 
 import { muiValidator } from '../../helpers/validators';
 
+const defaultValues = {
+  mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
+  number: 0,
+};
 const names = ['number', 'number-controlled', 'mui'];
 const messages = {
   minDate: 'Select a date in the future',
+};
+const transformers = {
+  number: Number,
+  'number-controlled': Number,
 };
 const validators = {
   mui: muiValidator,
@@ -27,8 +35,11 @@ interface ILibProps {
 function Lib(props: ILibProps): ReactElement {
   const { muiValue, numberValue, setMuiValue, setNumberValue } = props;
   const { errors, onChange, onError } = useInputs({
+    defaultValues,
     messages,
     names,
+    onChangeOptOut: 'mui',
+    transformers,
     validators,
   });
   const { mui } = useWatch<{ mui: Dayjs | null }>('mui');

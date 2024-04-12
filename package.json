@@ -23,6 +23,7 @@
     "dev": "npm run dev:packages & npm run dev:app",
     "dev:packages": "npm run dev -w packages/react-swift-form",
     "dev:app": "npm run dev -w example-app",
+    "dev:doc": "npm run start -w doc",
     "prelint": "npm run build",
     "lint": "eslint --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && tsc --noEmit",

@@ -6,12 +6,15 @@
 
 `useInput` take only one parameter that is an object with the following shape:
 
-| Property         | Type                                                                               | Default | Description                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- |
-| id               | `string`                                                                           |         | Id associated to the validator (if there is only one validator)                             |
-| messages         | `Record<string, string>`                                                           |         | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information) |
-| name <Required/> | `string`                                                                           |         | Name of the local field (also used as id if `id` is not provided)                           |
-| validators       | `IValidator \| IValidatorObject \| Record<string, IValidator \| IValidatorObject>` |         | Local validators (see [validation guide](/docs/guides/validation) for more information)     |
+| Property         | Type                                                                               | Default | Description                                                                                                                                                                           |
+| ---------------- | ---------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| defaultValue     | `unknown`                                                                          |         | Default value for the associated field (see [local fields guide](/docs/guides/local-fields) for more information)                                                                     |
+| id               | `string`                                                                           |         | Id associated to the validator (if there is only one validator)                                                                                                                       |
+| messages         | `Record<string, string>`                                                           |         | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information)                                                                                           |
+| name <Required/> | `string`                                                                           |         | Name of the local field (also used as id if `id` is not provided)                                                                                                                     |
+| onChangeOptOut   | `boolean`                                                                          |         | Opt-out for native `onChange` event for this field (see [controlled components guide](/docs/guides/controlled-components#validators-and-onchange-event-opt-out) for more information) |
+| transformer      | `(value: unknown) => unknown`                                                      |         | Transformer for type casting (see [local fields guide](/docs/guides/local-fields) for more information)                                                                               |
+| validator        | `IValidator \| IValidatorObject \| Record<string, IValidator \| IValidatorObject>` |         | Local validators (see [validation guide](/docs/guides/validation) for more information)                                                                                               |
 
 See [here](/docs/api/types) for the types.
 

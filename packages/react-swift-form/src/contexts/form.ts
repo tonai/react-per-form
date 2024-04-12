@@ -13,13 +13,13 @@ export const formContext = createContext<IFormContext>({
   onError: () => () => null,
   onReset: () => () => null,
   onSubmit: () => () => null,
-  removeValidators() {},
+  register() {},
   reset: () => null,
   revalidateMode: 'submit',
-  setValidators() {},
   subscribe() {
     return () => {};
   },
+  unregister() {},
   useNativeValidation: true,
   validate() {
     return [true, initialError];

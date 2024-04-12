@@ -25,11 +25,11 @@
   onError: IOnErrorHandler;
   onReset: IOnResetHandler;
   onSubmit: IOnSubmitHandler;
-  removeValidators: IRemoveValidators;
+  register: IRegister;
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
-  setValidators: ISetValidators;
   subscribe: ISubscribe;
+  unregister: IUnregister;
   useNativeValidation: boolean;
   validate: IFormValidate;
   watch: IWatch;
