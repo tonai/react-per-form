@@ -53,6 +53,14 @@ const config: Config = {
   ],
 
   themeConfig: {
+    algolia: {
+      appId: '0BZTV9W7EU',
+      apiKey: '14144602656936f591b60a3e5220f6be',
+      indexName: 'tonaiio',
+      contextualSearch: false,
+      searchParameters: {},
+      searchPagePath: 'search',
+    },
     respectPrefersColorScheme: true,
     image: 'img/social-card.png',
     navbar: {
