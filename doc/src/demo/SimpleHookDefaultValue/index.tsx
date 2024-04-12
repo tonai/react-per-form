@@ -8,21 +8,19 @@ export default function Demo(props: IProps) {
     console.log(values);
   }
 
-  const { errors, formProps, onChange } = useForm({
+  const { errors, formProps } = useForm({
     ...props,
     onSubmit: handleSubmit,
   });
 
   return (
     <form {...formProps}>
-      <input
-        name="count"
-        onChange={onChange({ transformer: Number })}
-        required
-        type="number"
-      />
+      <input defaultValue="0" name="count" required type="number" />
       {errors.all.count && <div className="error">{errors.all.count}</div>}
-      <button type="submit">Submit</button>
+      <div className="actions">
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+      </div>
     </form>
   );
 }

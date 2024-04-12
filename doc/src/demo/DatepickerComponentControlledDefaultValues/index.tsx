@@ -1,15 +1,16 @@
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs, { type Dayjs } from 'dayjs';
 import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
+import { Form, type IFormValues } from 'react-swift-form';
 
-const defaultValues = { count: 0 };
-const transformers = { count: Number };
+const defaultValues = { mui: dayjs() };
 
 export default function Demo(props: IProps) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<Dayjs>(defaultValues.mui);
 
   function handleReset() {
-    setValue(0);
+    setValue(defaultValues.mui);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -23,21 +24,16 @@ export default function Demo(props: IProps) {
       defaultValues={defaultValues}
       onReset={handleReset}
       onSubmit={handleSubmit}
-      transformers={transformers}
     >
-      {({ errors, onChange }: IFormContext) => (
+      {({ errors, onChange }) => (
         <>
-          <input
-            name="count"
-            onChange={onChange(setValue)}
-            required
-            type="number"
+          <DatePicker
+            name="mui"
+            onChange={onChange(setValue, { name: 'mui' })}
+            slotProps={{ textField: { required: true } }}
             value={value}
           />
-          <div>
-            value = {value} ({typeof value})
-          </div>
-          {errors.all.count && <div className="error">{errors.all.count}</div>}
+          {errors.all.mui && <div className="error">{errors.all.mui}</div>}
           <div className="actions">
             <button type="submit">Submit</button>
             <button type="reset">Reset</button>

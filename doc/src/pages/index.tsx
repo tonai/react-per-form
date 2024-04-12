@@ -49,6 +49,7 @@ export default function Home(): ReactElement {
           <li>💬 Custom messages / translations</li>
           <li>💯 Fully tested</li>
           <li>📚 Support controlled components and UI libraries</li>
+          <li>⚡️ Compatible with Next.js server actions</li>
           <li>👀 Watch values</li>
           <li>💪 And much more...</li>
         </ul>

@@ -4,8 +4,6 @@ import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
 import { Form, type IFormValues } from 'react-swift-form';
 
-const defaultValues = { mui: null };
-
 export default function Demo(props: IProps) {
   const [value, setValue] = useState<Dayjs | null>(null);
 
@@ -19,17 +17,12 @@ export default function Demo(props: IProps) {
   }
 
   return (
-    <Form
-      {...props}
-      defaultValues={defaultValues}
-      onReset={handleReset}
-      onSubmit={handleSubmit}
-    >
+    <Form {...props} onReset={handleReset} onSubmit={handleSubmit}>
       {({ errors, onChange }) => (
         <>
           <DatePicker
             name="mui"
-            onChange={onChange({ callback: setValue, name: 'mui' })}
+            onChange={onChange(setValue, { name: 'mui' })}
             slotProps={{ textField: { required: true } }}
             value={value}
           />

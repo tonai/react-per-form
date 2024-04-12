@@ -45,9 +45,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   function handleReset(
     event: FormEvent<HTMLFormElement>,
     values: IFormValues,
-  ): void {
-    onReset?.(event, values);
+  ): IFormValues | null | undefined | void {
     setDisplay('none');
+    return onReset?.(event, values);
   }
 
   function handleSubmit(
@@ -80,8 +80,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (callback?: IResetHandler) => {
       return onRsfReset(
         (event: FormEvent<HTMLFormElement>, values: IFormValues) => {
-          callback?.(event, values);
           setDisplay('none');
+          return callback?.(event, values);
         },
       );
     },
@@ -140,9 +140,9 @@ export function Form(props: IFormProps): ReactElement {
   function handleReset(
     event: FormEvent<HTMLFormElement>,
     values: IFormValues,
-  ): void {
-    onReset?.(event, values);
+  ): IFormValues | null | undefined | void {
     setDisplay('none');
+    return onReset?.(event, values);
   }
 
   function handleSubmit(

@@ -4,7 +4,7 @@ import type { IProps } from '../types';
 import { FormProvider, useForm, useInput } from 'react-swift-form';
 
 const validator = (values: IFormValues) =>
-  String(values.text).includes('foo') ? '' : 'Value does not include "foo"';
+  String(values.text).includes('foo') ? '' : 'fooError';
 
 const globalMessages = { valueMissing: 'did you miss something ?' };
 const localMessages = { fooError: 'Value does not include "foo"' };

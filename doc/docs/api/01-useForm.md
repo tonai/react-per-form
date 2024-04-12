@@ -6,19 +6,21 @@
 
 `useForm` take only one parameter that is an object with the following shape:
 
-| Property            | Type                                             | Default    | Description                                                                                                                        |
-| ------------------- | ------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| defaultValues       | `Record<string, unknown>`                        |            | Form default values (see [default values guide](/docs/guides/type-casting-and-default-values#default-values) for more information) |
-| focusOnError        | `boolean`                                        | `true`     | Focus the first field error or not                                                                                                 |
-| form                | `HTMLFormElement`                                | `null`     | Form ref                                                                                                                           |
-| messages            | `Record<string, string>`                         |            | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information)                                        |
-| mode                | `'all' \| 'blur' \| 'change' \| 'submit'`        | `'submit'` | Validation strategy (see [mode guide](/docs/guides/modes) for more information)                                                    |
-| onReset             | `IResetHandler`                                  |            | Reset callback                                                                                                                     |
-| onSubmit            | `ISubmitHandler`                                 |            | Submit callback                                                                                                                    |
-| onSubmitError       | `ISubmitErrorHandler`                            |            | Submit error callback (only when `useNativeValidation=false`)                                                                      |
-| revalidateMode      | `'blur' \| 'change' \| 'submit'`                 | `'submit'` | Re-validation strategy (see [mode guide](/docs/guides/modes) for more information)                                                 |
-| useNativeValidation | `boolean`                                        |            | Use native browser validation or use error state                                                                                   |
-| validators          | `Record<string, IValidator \| IValidatorObject>` |            | Custom field validators (see [validation guide](/docs/guides/validation) for more information)                                     |
+| Property            | Type                                             | Default    | Description                                                                                                                                                            |
+| ------------------- | ------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| defaultValues       | `Record<string, unknown>`                        |            | Form default values (see [default values guide](/docs/guides/type-casting-and-default-values#default-values) for more information)                                     |
+| focusOnError        | `boolean`                                        | `true`     | Focus the first field error or not                                                                                                                                     |
+| form                | `HTMLFormElement`                                | `null`     | Form ref                                                                                                                                                               |
+| messages            | `Record<string, string>`                         |            | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information)                                                                            |
+| mode                | `'all' \| 'blur' \| 'change' \| 'submit'`        | `'submit'` | Validation strategy (see [mode guide](/docs/guides/modes) for more information)                                                                                        |
+| onChangeOptOut      | `string[] \| string`                             |            | Opt-out for native `onChange` event (see [controlled components guide](/docs/guides/controlled-components#validators-and-onchange-event-opt-out) for more information) |
+| onReset             | `IResetHandler`                                  |            | Reset callback                                                                                                                                                         |
+| onSubmit            | `ISubmitHandler`                                 |            | Submit callback                                                                                                                                                        |
+| onSubmitError       | `ISubmitErrorHandler`                            |            | Submit error callback (only when `useNativeValidation=false`)                                                                                                          |
+| revalidateMode      | `'blur' \| 'change' \| 'submit'`                 | `'submit'` | Re-validation strategy (see [mode guide](/docs/guides/modes) for more information)                                                                                     |
+| transformers        | `Record<string, (value: unknown) => unknown`     |            | Transformers for type casting see [type casting guide](/docs/guides/type-casting-and-default-values) for more information)                                             |
+| useNativeValidation | `boolean`                                        |            | Use native browser validation or use error state                                                                                                                       |
+| validators          | `Record<string, IValidator \| IValidatorObject>` |            | Custom field validators (see [validation guide](/docs/guides/validation) for more information)                                                                         |
 
 See [here](/docs/api/types) for the types.
 

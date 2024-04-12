@@ -3,6 +3,7 @@ import type { IProps } from '../types';
 import { type IFormValues, useForm } from 'react-swift-form';
 
 const defaultValues = { count: 0 };
+const transformers = { count: Number };
 
 export default function Demo(props: IProps) {
   const [value, setValue] = useState(0);
@@ -21,13 +22,14 @@ export default function Demo(props: IProps) {
     defaultValues,
     onReset: handleReset,
     onSubmit: handleSubmit,
+    transformers,
   });
 
   return (
     <form {...formProps}>
       <input
         name="count"
-        onChange={onChange({ callback: setValue, transformer: Number })}
+        onChange={onChange(setValue)}
         required
         type="number"
         value={value}

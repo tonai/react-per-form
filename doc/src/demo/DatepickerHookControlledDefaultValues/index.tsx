@@ -1,14 +1,16 @@
 import { DatePicker } from '@mui/x-date-pickers';
-import type { Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
 import { type IFormValues, useForm } from 'react-swift-form';
 
+const defaultValues = { mui: dayjs() };
+
 export default function Demo(props: IProps) {
-  const [value, setValue] = useState<Dayjs | null>(null);
+  const [value, setValue] = useState<Dayjs>(defaultValues.mui);
 
   function handleReset() {
-    setValue(null);
+    setValue(defaultValues.mui);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -18,6 +20,7 @@ export default function Demo(props: IProps) {
 
   const { errors, formProps, onChange } = useForm({
     ...props,
+    defaultValues,
     onReset: handleReset,
     onSubmit: handleSubmit,
   });

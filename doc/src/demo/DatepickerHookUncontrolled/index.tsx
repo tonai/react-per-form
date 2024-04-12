@@ -1,34 +1,33 @@
 import { DatePicker } from '@mui/x-date-pickers';
-import type { Dayjs } from 'dayjs';
-import { type FormEvent, useState } from 'react';
+import dayjs from 'dayjs';
+import { type FormEvent } from 'react';
 import type { IProps } from '../types';
 import { type IFormValues, useForm } from 'react-swift-form';
 
+const today = dayjs();
+const transformers = { mui: (date: unknown) => dayjs(String(date)) };
+
 export default function Demo(props: IProps) {
-  const [value, setValue] = useState<Dayjs | null>(null);
-
-  function handleReset() {
-    setValue(null);
-  }
-
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
     e.preventDefault();
     console.log(values);
   }
 
-  const { errors, formProps, onChange } = useForm({
+  const { errors, formProps } = useForm({
     ...props,
-    onReset: handleReset,
     onSubmit: handleSubmit,
+    transformers,
   });
 
   return (
     <form {...formProps}>
       <DatePicker
+        defaultValue={today}
         name="mui"
-        onChange={onChange(setValue, { name: 'mui' })}
-        slotProps={{ textField: { required: true } }}
-        value={value}
+        slotProps={{
+          field: { clearable: true },
+          textField: { required: true },
+        }}
       />
       {errors.all.mui && <div className="error">{errors.all.mui}</div>}
       <div className="actions">

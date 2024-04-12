@@ -28,7 +28,7 @@ Use the `useForm` hook combined with a native HTML `<form>` component:
 import SimpleHook from '@site/src/demo/SimpleHook';
 import SimpleHookSource from '!!raw-loader!@site/src/demo/SimpleHook';
 
-<Demo Component={SimpleHook} code={SimpleHookSource}/>
+<Demo Component={SimpleHook} code={SimpleHookSource} metastring="{10-12,15}"/>
 
 Easy isn't it ?
 
@@ -49,7 +49,7 @@ Use the `<Form>` component like the native HTML `<form>` component:
 import SimpleComponent from '@site/src/demo/SimpleComponent';
 import SimpleComponentSource from '!!raw-loader!@site/src/demo/SimpleComponent';
 
-<Demo Component={SimpleComponent} code={SimpleComponentSource}/>
+<Demo Component={SimpleComponent} code={SimpleComponentSource} metastring="{11,14}"/>
 
 And that's it !
 
