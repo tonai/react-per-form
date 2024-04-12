@@ -6,6 +6,7 @@ import type {
   IFormValues,
   IMainError,
   IMessages,
+  ITransformers,
   IValidator,
   IValidatorError,
   IValidatorObject,
@@ -70,7 +71,7 @@ export function getFormInput(
 interface IGetDataParams {
   form: HTMLFormElement;
   names?: string[];
-  transformers?: Record<string, (value: unknown) => unknown>;
+  transformers?: ITransformers;
   values?: IFormValues;
 }
 
@@ -352,7 +353,7 @@ interface IGetValidatorErrorParams {
   fieldMessages?: Record<string, IMessages>;
   form: HTMLFormElement;
   messages?: IMessages;
-  transformers?: Record<string, (value: unknown) => unknown>;
+  transformers?: ITransformers;
   validatorEntries?: [string, Set<IFormValidator>][];
   values?: IFormValues;
 }
@@ -514,7 +515,7 @@ interface IValidateFormParams {
   names?: string[];
   revalidate: boolean;
   setErrors: Dispatch<SetStateAction<IError>>;
-  transformers?: Record<string, (value: unknown) => unknown>;
+  transformers?: ITransformers;
   useNativeValidation: boolean;
   validatorMap: Map<string, Set<IFormValidator>>;
   values?: IFormValues;

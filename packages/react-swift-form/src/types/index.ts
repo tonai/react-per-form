@@ -36,11 +36,16 @@ export interface IValidatorObject {
   validator: IValidator;
 }
 
-export interface ISetValidatorsParams {
+export type ITransformers = Record<string, (value: unknown) => unknown>;
+
+export interface IRegisterParams {
+  defaultValues?: Record<string, unknown>;
   id: string;
   messages?: IMessages;
   names: string[];
+  onChangeOptOut?: string[] | string;
   setErrors?: Dispatch<SetStateAction<IError>>;
+  transformers?: ITransformers;
   validators?:
     | IValidator
     | IValidatorObject
@@ -55,9 +60,9 @@ export interface IFormValidator {
   validator?: IValidator;
 }
 
-export type ISetValidators = (params: ISetValidatorsParams) => void;
+export type IRegister = (params: IRegisterParams) => void;
 
-export type IRemoveValidators = (params: ISetValidatorsParams) => void;
+export type IUnregister = (params: IRegisterParams) => void;
 
 export interface IMainError {
   error: string;
@@ -157,11 +162,11 @@ export interface IFormContext extends IFormHandlers {
   form: RefObject<HTMLFormElement>;
   messages?: IMessages;
   mode: IFormMode;
-  removeValidators: IRemoveValidators;
+  register: IRegister;
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
-  setValidators: ISetValidators;
   subscribe: ISubscribe;
+  unregister: IUnregister;
   useNativeValidation: boolean;
   validate: IFormValidate;
 }

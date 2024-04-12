@@ -12,7 +12,7 @@ function Simple(props: JSX.IntrinsicElements['input']): ReactElement {
   const id = useId();
   const { error } = useInput({
     name: name ?? id,
-    validators: fooValidator,
+    validator: fooValidator,
   });
 
   return (

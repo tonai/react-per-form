@@ -2,7 +2,8 @@ import type {
   IFormElement,
   IFormValidator,
   IMessages,
-  ISetValidatorsParams,
+  IRegisterParams,
+  ITransformers,
   IValidator,
   IValidatorObject,
 } from '../types';
@@ -44,7 +45,7 @@ export function getFormInputs(form: HTMLFormElement): IFormElement[] {
 }
 
 export function getValidatorMap(
-  fieldValidators: Set<ISetValidatorsParams>,
+  fieldValidators: Set<IRegisterParams>,
   formValidators?: Record<string, IValidator | IValidatorObject>,
   messages?: IMessages,
 ): Map<string, Set<IFormValidator>> {
@@ -202,4 +203,40 @@ export function getValue<V>(
     return transformer(val) as V;
   }
   return val as V;
+}
+
+export function shouldChange(
+  fields: Set<IRegisterParams>,
+  name: string | null,
+  onChangeOptOut?: string[] | string,
+): boolean {
+  if (!name || onChangeOptOut === 'all' || onChangeOptOut === name) {
+    return false;
+  }
+  if (onChangeOptOut instanceof Array && onChangeOptOut.includes(name)) {
+    return false;
+  }
+  return ![...fields].some(
+    ({ onChangeOptOut }) =>
+      onChangeOptOut === name ||
+      (onChangeOptOut instanceof Array && onChangeOptOut.includes(name)),
+  );
+}
+
+export function getTransformers(
+  fields: Set<IRegisterParams>,
+  transformers?: ITransformers,
+): ITransformers | undefined {
+  return [...fields].reduce((acc, { transformers }) => {
+    return { ...acc, ...transformers };
+  }, transformers);
+}
+
+export function getDefaultValues(
+  fields: Set<IRegisterParams>,
+  defaultValues: Record<string, unknown>,
+): Record<string, unknown> {
+  return [...fields].reduce((acc, { defaultValues }) => {
+    return { ...acc, ...defaultValues };
+  }, defaultValues);
 }

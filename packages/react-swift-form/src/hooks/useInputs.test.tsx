@@ -121,7 +121,7 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return custom errors (mode=submit)', () => {
+  it('should return custom error messages (mode=submit)', () => {
     const { result } = renderHook(
       () =>
         useInputs({
@@ -166,6 +166,126 @@ describe('useInputs hook', () => {
       },
       validator: {},
     });
+  });
+
+  it('should initialize default values', () => {
+    renderHook(
+      () =>
+        useInputs({
+          defaultValues: { foo: 42 },
+          names: ['foo', 'bar'],
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" required />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    expect(screen.getByTestId('foo')).toHaveValue('42');
+  });
+
+  it('should transform the value', () => {
+    const onSubmit = jest.fn();
+    renderHook(
+      () =>
+        useInputs({
+          names: ['foo', 'bar'],
+          transformers: { foo: Number },
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form onSubmit={onSubmit} useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    // Submit
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: 0,
+      },
+      expect.any(Function),
+    );
+    // Change
+    fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
+    act(() => jest.runAllTimers());
+    // Submit
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.any(Object),
+      {
+        bar: '',
+        foo: 42,
+      },
+      expect.any(Function),
+    );
+  });
+
+  it('should trigger the change (and the validator)', () => {
+    const validator = jest.fn();
+    renderHook(
+      () =>
+        useInputs({
+          names: ['foo', 'bar'],
+          validators: { foo: validator },
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Change
+    fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+  });
+
+  it('should not trigger the change when using onChangeOptOut', () => {
+    const validator = jest.fn();
+    renderHook(
+      () =>
+        useInputs({
+          names: ['foo', 'bar'],
+          onChangeOptOut: ['foo'],
+          validators: { foo: validator },
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Change
+    fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
+    act(() => jest.runAllTimers());
+    expect(validator).not.toHaveBeenCalled();
   });
 
   it('should validate the form (mode=blur)', () => {

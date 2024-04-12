@@ -1,4 +1,4 @@
-import type { IError, IFormElement, ISetValidatorsParams } from '../types';
+import type { IError, IFormElement, IRegisterParams } from '../types';
 
 import { initialError } from '../constants';
 
@@ -291,7 +291,7 @@ describe('validator helper', () => {
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -431,7 +431,7 @@ describe('validator helper', () => {
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -1117,7 +1117,7 @@ describe('validator helper', () => {
 
     it('should return the validator error', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -1140,7 +1140,7 @@ describe('validator helper', () => {
 
     it('should not run the validator twice', () => {
       const validator = jest.fn(() => 'validator');
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -1167,7 +1167,7 @@ describe('validator helper', () => {
 
     it('should return the validator error with custom message', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -1197,7 +1197,7 @@ describe('validator helper', () => {
 
     it('should return the validator error with custom message fallback', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([
@@ -1227,7 +1227,7 @@ describe('validator helper', () => {
 
   describe('getValidatorIds', () => {
     it('should return the id list of validators', () => {
-      const validators: [string, Set<ISetValidatorsParams>][] = [
+      const validators: [string, Set<IRegisterParams>][] = [
         [
           'foo',
           new Set([

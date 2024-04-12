@@ -45,10 +45,10 @@ describe('useForm hook', () => {
     expect(result.current.formProps.ref).toEqual({ current: null });
     expect(result.current.messages).toEqual(undefined);
     expect(result.current.mode).toEqual('submit');
-    expect(result.current.removeValidators).toBeDefined();
+    expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('submit');
-    expect(result.current.setValidators).toBeDefined();
     expect(result.current.subscribe).toBeDefined();
+    expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(true);
     expect(result.current.validate).toBeDefined();
   });
@@ -77,10 +77,10 @@ describe('useForm hook', () => {
     expect(result.current.formProps.ref).toEqual({ current: null });
     expect(result.current.messages).toEqual({ valueMissing: 'Custom message' });
     expect(result.current.mode).toEqual('all');
-    expect(result.current.removeValidators).toBeDefined();
+    expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('change');
-    expect(result.current.setValidators).toBeDefined();
     expect(result.current.subscribe).toBeDefined();
+    expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(false);
     expect(result.current.validate).toBeDefined();
   });
