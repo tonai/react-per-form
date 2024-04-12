@@ -1,5 +1,8 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import {
   getFormInputs,
+  getInputValue,
   getName,
   getValidatorMap,
   getValue,
@@ -28,24 +31,90 @@ describe('form helper', () => {
     });
   });
 
+  describe('getInputValue', () => {
+    it('should return the input value', () => {
+      const text = document.createElement('input');
+      text.setAttribute('name', 'text');
+      text.setAttribute('value', 'some value');
+      expect(getInputValue(text.value, text)).toEqual('some value');
+    });
+
+    it('should return the input file value', () => {
+      render(<input data-testid="file" type="file" />);
+      const file = new File(['foo'], 'foo.txt', { type: 'text/plain' });
+      fireEvent.change(screen.getByTestId('file'), {
+        target: { files: [file] },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const input = screen.getByTestId('file') as HTMLInputElement;
+      expect(getInputValue(input.value, input)).toEqual(expect.any(File));
+    });
+
+    it('should return multiple file values', () => {
+      render(<input data-testid="file" multiple type="file" />);
+      const file1 = new File(['foo'], 'foo.txt', { type: 'text/plain' });
+      const file2 = new File(['bar'], 'bar.txt', { type: 'text/plain' });
+      fireEvent.change(screen.getByTestId('file'), {
+        target: { files: [file1, file2] },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const input = screen.getByTestId('file') as HTMLInputElement;
+      expect(getInputValue(input.value, input)).toEqual([
+        expect.any(File),
+        expect.any(File),
+      ]);
+    });
+
+    it('should return multiple email values', () => {
+      const email = document.createElement('input');
+      email.setAttribute('name', 'email');
+      email.setAttribute('type', 'email');
+      email.setAttribute('multiple', 'email');
+      email.setAttribute('value', 'foo@bar, bar@baz');
+      expect(getInputValue(email.value, email)).toEqual(['foo@bar', 'bar@baz']);
+    });
+
+    it('should return multiple selected values', () => {
+      const select = document.createElement('select');
+      select.setAttribute('name', 'select');
+      select.setAttribute('multiple', '');
+      const option1 = document.createElement('option');
+      option1.setAttribute('value', 'opt 1');
+      option1.setAttribute('selected', '');
+      select.appendChild(option1);
+      const option2 = document.createElement('option');
+      const option2Text = document.createTextNode('Option 2');
+      option2.appendChild(option2Text);
+      option2.setAttribute('selected', '');
+      select.appendChild(option2);
+      const option3 = document.createElement('option');
+      option3.setAttribute('value', 'opt 3');
+      select.appendChild(option3);
+      expect(getInputValue(select.value, select)).toEqual([
+        'opt 1',
+        'Option 2',
+      ]);
+    });
+  });
+
   describe('getName', () => {
     it('should return the input name', () => {
       const input = document.createElement('input');
-      expect(getName({ target: input })).toEqual(null);
+      expect(getName({ target: input })).toEqual('');
       input.name = 'foo';
       expect(getName({ target: input })).toEqual('foo');
     });
 
     it('should return the select name', () => {
       const select = document.createElement('select');
-      expect(getName({ target: select })).toEqual(null);
+      expect(getName({ target: select })).toEqual('');
       select.name = 'foo';
       expect(getName({ target: select })).toEqual('foo');
     });
 
     it('should return the textarea name', () => {
       const textarea = document.createElement('textarea');
-      expect(getName({ target: textarea })).toEqual(null);
+      expect(getName({ target: textarea })).toEqual('');
       textarea.name = 'foo';
       expect(getName({ target: textarea })).toEqual('foo');
     });
@@ -258,10 +327,40 @@ describe('form helper', () => {
       expect(getValue({ target: checkbox })).toEqual(true);
     });
 
+    it('should return the value for multiple email', () => {
+      const email = document.createElement('input');
+      email.setAttribute('name', 'email');
+      email.setAttribute('type', 'email');
+      email.setAttribute('multiple', '');
+      expect(getValue({ target: email })).toEqual(['']);
+      email.setAttribute('value', 'foo@bar, bar@baz');
+      expect(getValue({ target: email })).toEqual(['foo@bar', 'bar@baz']);
+    });
+
+    it('should return the value for multiple select', () => {
+      const select = document.createElement('select');
+      select.setAttribute('name', 'select');
+      select.setAttribute('multiple', '');
+      const option1 = document.createElement('option');
+      option1.setAttribute('value', 'opt1');
+      select.appendChild(option1);
+      const option2 = document.createElement('option');
+      option2.setAttribute('value', 'opt2');
+      select.appendChild(option2);
+      expect(getValue({ target: select })).toEqual([]);
+      option1.setAttribute('selected', '');
+      option2.setAttribute('selected', '');
+      expect(getValue({ target: select })).toEqual(['opt1', 'opt2']);
+    });
+
     it('should return the value without modifications', () => {
       const date = new Date();
       expect(getValue(date)).toEqual(date);
       expect(getValue({ target: {} })).toEqual({ target: {} });
+    });
+
+    it('should return the transformed value', () => {
+      expect(getValue('42', Number)).toEqual(42);
     });
   });
 

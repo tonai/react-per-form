@@ -37,7 +37,7 @@ describe('useFormValid hook', () => {
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
-          <input data-testid="rsf-input" required />
+          <input data-testid="rsf-input" name="foo" required />
           {children}
         </Form>
       ),
