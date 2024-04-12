@@ -23,6 +23,14 @@ const messages = {
 const validators = {
   mui: muiValidator,
 };
+const defaultValues = {
+  mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
+  number: 0,
+};
+const transformers = {
+  number: Number,
+  'number-controlled': Number,
+};
 
 export default function HookLibForm(): ReactElement {
   const [numberValue, setNumberValue] = useState(0);
@@ -30,11 +38,10 @@ export default function HookLibForm(): ReactElement {
   const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
     ...formData,
-    defaultValues: {
-      mui: null, // This is needed to avoid getting the string 'MM/DD/YYYY' in the muiValidator function
-      number: 0,
-    },
+    defaultValues,
     messages,
+    onChangeOptOut: 'mui',
+    transformers,
     validators,
   });
   const { errors, onChange, onError, onReset, onSubmit, watch } = context;
@@ -68,7 +75,6 @@ export default function HookLibForm(): ReactElement {
                 data-testid="number"
                 min="3"
                 name="number"
-                onChange={onChange({ transformer: Number })}
                 required
                 type="number"
               />
@@ -85,10 +91,7 @@ export default function HookLibForm(): ReactElement {
               <input
                 data-testid="number-controlled"
                 name="number-controlled"
-                onChange={onChange({
-                  callback: setNumberValue,
-                  transformer: Number,
-                })}
+                onChange={onChange(setNumberValue)}
                 required
                 type="number"
                 value={numberValue}
@@ -106,7 +109,7 @@ export default function HookLibForm(): ReactElement {
               <DatePicker
                 minDate={dayjs()}
                 name="mui"
-                onChange={onChange({ callback: setMuiValue, name: 'mui' })}
+                onChange={onChange(setMuiValue, { name: 'mui' })}
                 onError={onError('mui')}
                 slotProps={{
                   textField: {
@@ -133,7 +136,7 @@ export default function HookLibForm(): ReactElement {
               <DatePicker
                 name="mui"
                 minDate={dayjs()}
-                onChange={onChange({
+                onChange={onChange(setMuiValue, {
                   getError: (_, { validationError }) => validationError,
                   name: 'mui'
                 })}

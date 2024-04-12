@@ -42,7 +42,6 @@ function Lib(props: ILibProps): ReactElement {
             data-testid="number"
             min="3"
             name="number"
-            onChange={onChange({ transformer: Number })}
             required
             type="number"
           />
@@ -59,10 +58,7 @@ function Lib(props: ILibProps): ReactElement {
           <input
             data-testid="number-controlled"
             name="number-controlled"
-            onChange={onChange({
-              callback: setNumberValue,
-              transformer: Number,
-            })}
+            onChange={onChange(setNumberValue)}
             required
             type="number"
             value={numberValue}
@@ -80,7 +76,7 @@ function Lib(props: ILibProps): ReactElement {
           <DatePicker
             minDate={dayjs()}
             name="mui"
-            onChange={onChange({ callback: setMuiValue, name: 'mui' })}
+            onChange={onChange(setMuiValue, { name: 'mui' })}
             onError={onError('mui')}
             slotProps={{
               textField: {
@@ -107,7 +103,7 @@ function Lib(props: ILibProps): ReactElement {
           <DatePicker
             name="mui"
             minDate={dayjs()}
-            onChange={onChange({
+            onChange={onChange(setMuiValue, {
               getError: (_, { validationError }) => validationError,
               name: 'mui'
             })}

@@ -51,5 +51,6 @@ export function multipleValidator(name: string) {
 }
 
 export function muiValidator(values: IFormValues): string {
-  return !values.mui || !(values.mui as Dayjs).isValid() ? 'Choose a date' : '';
+  const date = values.mui as Dayjs | null;
+  return (date?.date() ?? 0) > 15 ? '' : 'Choose a date after the 15th.';
 }
