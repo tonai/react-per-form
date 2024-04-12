@@ -6,12 +6,15 @@
 
 `useInputs` take only one parameter that is an object with the following shape:
 
-| Property         | Type                                                                               | Default | Description                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- |
-| id               | `string`                                                                           |         | Id associated to the validator (if there is only one validator)                             |
-| messages         | `Record<string, string>`                                                           |         | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information) |
-| name <Required/> | `string`                                                                           |         | Name of the local field (also used as id if `id` is not provided)                           |
-| validators       | `IValidator \| IValidatorObject \| Record<string, IValidator \| IValidatorObject>` |         | Local validators (see [validation guide](/docs/guides/validation) for more information)     |
+| Property         | Type                                                                               | Default | Description                                                                                                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| defaultValues    | `Record<string, unknown>`                                                          |         | Default values for local fields (see [local fields guide](/docs/guides/local-fields) for more information)                                                             |
+| id               | `string`                                                                           |         | Id associated to the validator (if there is only one validator)                                                                                                        |
+| messages         | `Record<string, string>`                                                           |         | Custom messages (see [messages guide](/docs/guides/messages-and-i18n) for more information)                                                                            |
+| name <Required/> | `string`                                                                           |         | Name of the local field (also used as id if `id` is not provided)                                                                                                      |
+| onChangeOptOut   | `string[] \| string`                                                               |         | Opt-out for native `onChange` event (see [controlled components guide](/docs/guides/controlled-components#validators-and-onchange-event-opt-out) for more information) |
+| transformers     | `<string, (value: unknown) => unknown>`                                            |         | Transformers for type casting (see [local fields guide](/docs/guides/local-fields) for more information)                                                               |
+| validators       | `IValidator \| IValidatorObject \| Record<string, IValidator \| IValidatorObject>` |         | Local validators (see [validation guide](/docs/guides/validation) for more information)                                                                                |
 
 See [here](/docs/api/types) for the types.
 
