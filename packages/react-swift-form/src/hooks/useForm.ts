@@ -1,7 +1,6 @@
 import type {
   IError,
   IFormContext,
-  IFormElement,
   IFormMode,
   IFormRevalidateMode,
   IFormValues,
@@ -40,10 +39,12 @@ export interface IUseFormProps {
   form?: HTMLFormElement;
   messages?: IMessages;
   mode?: IFormMode;
+  onChangeOptOut?: string[] | string;
   onReset?: IResetHandler;
   onSubmit?: ISubmitHandler;
   onSubmitError?: ISubmitErrorHandler;
   revalidateMode?: IFormRevalidateMode;
+  transformers?: Record<string, (value: unknown) => unknown>;
   useNativeValidation?: boolean;
   validators?: Record<string, IValidator | IValidatorObject>;
 }
@@ -65,25 +66,25 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     defaultValues,
     focusOnError = true,
     form = null,
+    messages,
+    mode = 'submit',
+    onChangeOptOut,
     onReset,
     onSubmit,
     onSubmitError,
-    messages,
-    mode = 'submit',
     revalidateMode = 'submit',
+    transformers,
     useNativeValidation = true,
     validators,
   } = props;
   const ref = useRef<HTMLFormElement>(form);
   const fields = useRef<Set<ISetValidatorsParams>>(new Set());
-  const prevValues = useRef<Record<string, unknown>>(
-    defaultValues ? { ...defaultValues } : {},
-  );
-  const values = useRef<Record<string, unknown>>(
-    defaultValues ? { ...defaultValues } : {},
-  );
-  const resetValues = useRef<IFormValues | null | undefined>(null);
+  const defaultVals = useRef<IFormValues>(defaultValues ?? {});
+  const prevVals = useRef<IFormValues>({});
+  const vals = useRef<IFormValues>({});
+  const resetVals = useRef<IFormValues | null | undefined>(null);
   const manualErrors = useRef<Record<string, string | null>>({});
+  const changeNames = useRef<Record<string, boolean>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -101,14 +102,18 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
   const notify = useCallback(() => {
     if (ref.current) {
-      const newValues = getData(ref.current, values.current);
+      const newValues = getData({
+        form: ref.current,
+        transformers,
+        values: vals.current,
+      });
       for (const [subscriber, names] of subscribers.current.entries()) {
         const newFilteredValues = filterObject(
           newValues,
           ([name]) => !names || names.includes(name),
         );
         const prevFilteredValues = filterObject(
-          prevValues.current,
+          prevVals.current,
           ([name]) => !names || names.includes(name),
         );
         subscriber({
@@ -118,9 +123,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           values: newFilteredValues,
         });
       }
-      prevValues.current = { ...newValues };
+      prevVals.current = { ...newValues };
     }
-  }, []);
+  }, [transformers]);
 
   const validate = useCallback(
     (
@@ -140,24 +145,25 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       );
 
       // Validate
-      const errors = validateForm(
-        ref.current,
-        validatorMap,
-        setErrors,
+      const errors = validateForm({
         display,
-        revalidate,
-        useNativeValidation,
-        values.current,
-        manualErrors.current,
-        messages,
+        errors: manualErrors.current,
         focusOnError,
-        names instanceof Array ? names : names ? [names] : undefined,
-      );
+        form: ref.current,
+        messages,
+        names: names instanceof Array ? names : names ? [names] : undefined,
+        revalidate,
+        setErrors,
+        transformers,
+        useNativeValidation,
+        validatorMap,
+        values: vals.current,
+      });
 
       notify();
       return [Boolean(ref.current.checkValidity()), errors];
     },
-    [messages, notify, useNativeValidation, validators],
+    [messages, notify, useNativeValidation, transformers, validators],
   );
 
   const timer = useRef<NodeJS.Timeout>();
@@ -193,16 +199,20 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [debouncedValidate],
   );
 
-  const setValues = useCallback((values?: IFormValues) => {
-    if (ref.current && values) {
+  const setValues = useCallback(() => {
+    if (ref.current) {
       for (const input of getFormInputs(ref.current)) {
         const formField = getFormInput(input);
-        const name = formField.getAttribute('name');
-        if (name && values[name] !== undefined && values[name] !== null) {
+        const { name } = formField;
+        if (
+          name &&
+          defaultVals.current[name] !== undefined &&
+          defaultVals.current[name] !== null
+        ) {
           if (isCheckbox(formField)) {
-            formField.checked = Boolean(values[name]);
+            formField.checked = Boolean(defaultVals.current[name]);
           } else {
-            formField.value = String(values[name]);
+            formField.value = String(defaultVals.current[name]);
           }
         }
       }
@@ -222,39 +232,71 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           params.setErrors?.(initialError);
         }
       }
-      values.current = defaultValues ? { ...defaultValues } : {};
-      if (paramValues) {
-        values.current = { ...values.current, ...paramValues };
-      }
-      if (resetValues.current) {
-        values.current = { ...values.current, ...resetValues.current };
-        resetValues.current = null;
-      }
-      setTimeout(() => setValues(values.current));
+      vals.current = {};
+      defaultVals.current = {
+        ...defaultValues,
+        ...paramValues,
+        ...resetVals.current,
+      };
+      resetVals.current = null;
+      setTimeout(setValues);
     },
     [defaultValues, messages, setValues, validators],
   );
 
   const reset = useCallback((values?: IFormValues | null) => {
-    resetValues.current = values;
+    resetVals.current = values;
     ref.current?.reset();
   }, []);
 
-  const handleChange = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+  const change = useCallback(
+    <V>(value: unknown, name?: string): [string, V] => {
+      const fieldName = getName(value) ?? name;
+      if (!fieldName) {
+        throw new Error(
+          'react-swift-form was unable to retrieve the field name',
+        );
+      }
+      const val = getValue<V>(value, transformers?.[fieldName]);
+      vals.current[fieldName] = val;
       debouncedValidate(
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
         false,
-        getFormInput(event.target as IFormElement).name,
+        fieldName,
       );
+      return [fieldName, val];
     },
-    [mode, debouncedValidate, revalidateMode],
+    [debouncedValidate, mode, revalidateMode, transformers],
+  );
+
+  const handleChange = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      const name = getName(event);
+      if (name && changeNames.current[name]) {
+        // Prevent double call to the change function when we use the onChange handler
+        // The handler is called first and then the event propagates
+        // But we can't always prevent it because sometimes we don't have access to the event object
+        // Like with the MUI Datepicker
+        changeNames.current[name] = false;
+      } else if (
+        !(
+          (typeof onChangeOptOut === 'string' &&
+            (onChangeOptOut === 'all' || onChangeOptOut === name)) ||
+          (onChangeOptOut instanceof Array &&
+            name &&
+            onChangeOptOut.includes(name))
+        )
+      ) {
+        change(event);
+      }
+    },
+    [change, onChangeOptOut],
   );
 
   const handleReset = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      const resetValues = onReset?.(event, values.current);
+      const resetValues = onReset?.(event, vals.current);
       resetForm(resetValues);
       debouncedValidate();
     },
@@ -265,19 +307,25 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (event: FormEvent<HTMLFormElement>) => {
       const [isValid, errors] = validate(true, false, focusOnError);
       if (isValid && ref.current) {
-        onSubmit?.(event, getData(ref.current, values.current), reset);
+        onSubmit?.(
+          event,
+          getData({ form: ref.current, transformers, values: vals.current }),
+          reset,
+        );
       } else {
         event.preventDefault();
         onSubmitError?.(event, errors, reset);
       }
     },
-    [focusOnError, onSubmit, onSubmitError, reset, validate],
+    [focusOnError, onSubmit, onSubmitError, reset, transformers, validate],
   );
 
   useEffect(() => {
-    setValues(defaultValues);
+    defaultVals.current = defaultValues ?? {};
+    setValues();
+    debouncedValidate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setValues]);
+  }, [defaultValues, setValues]);
 
   useEffect(() => {
     debouncedValidate();
@@ -296,7 +344,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',
             false,
-            event.target.getAttribute('name'),
+            event.target.name,
           );
         }
       };
@@ -323,40 +371,34 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const onChangeHandler = useCallback(
     <V, T extends unknown[] = unknown[]>(
+      callback: (value: V, ...args: T) => void,
       params: IOnChangeHandlerParams<V, T> = {},
     ) => {
-      const { callback, getError, name, transformer } = params;
-      return (value: unknown, ...args: T) => {
-        const fieldName = getName(value) ?? name;
-        if (!fieldName) {
-          throw new Error(
-            'react-swift-form was unable to retrieve the field name',
-          );
-        }
-        let val = getValue(value) as V;
-        if (transformer) {
-          val = transformer(val);
-        }
-        values.current[fieldName] = val;
+      const { getError, name } = params;
+      // Initialize the value
+      if (
+        name &&
+        vals.current[name] === undefined &&
+        defaultVals.current[name] !== undefined
+      ) {
+        vals.current[name] = defaultVals.current[name];
+      }
+      return (value: unknown, ...args: T): void => {
+        const [fieldName, val] = change<V>(value, name);
+        changeNames.current[fieldName] = true;
         if (getError) {
           onErrorHandler(fieldName)(getError(val, ...args));
         }
-        debouncedValidate(
-          mode === 'all' || mode === 'change',
-          revalidateMode === 'change',
-          false,
-          name,
-        );
-        callback?.(val, ...args);
+        callback(val, ...args);
       };
     },
-    [debouncedValidate, mode, onErrorHandler, revalidateMode],
+    [change, onErrorHandler],
   );
 
   const onResetHandler = useCallback(
     (callback?: IResetHandler) => {
       return (event: FormEvent<HTMLFormElement>) => {
-        const resetValues = callback?.(event, values.current);
+        const resetValues = callback?.(event, vals.current);
         resetForm(resetValues);
         debouncedValidate();
       };
@@ -369,14 +411,18 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       return (event: FormEvent<HTMLFormElement>) => {
         const [isValid, errors] = validate(true, false, focusOnError);
         if (isValid && ref.current) {
-          validCallback?.(event, getData(ref.current, values.current), reset);
+          validCallback?.(
+            event,
+            getData({ form: ref.current, transformers, values: vals.current }),
+            reset,
+          );
         } else {
           event.preventDefault();
           invalidCallback?.(event, errors, reset);
         }
       };
     },
-    [focusOnError, reset, validate],
+    [focusOnError, reset, transformers, validate],
   );
 
   const watch = useCallback(

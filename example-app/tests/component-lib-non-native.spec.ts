@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import {
   disableNativeValidation,
   goto,
@@ -9,7 +10,7 @@ import {
 const url = '/component-lib';
 const minError = 'Value is too low';
 const missError = 'Did you miss something ?';
-const muiValidatorError = 'Choose a date';
+const muiValidatorError = 'Choose a date after the 15th.';
 const muiMinError = 'Select a date in the future';
 
 test.describe('Component Lib Non Native', () => {
@@ -84,41 +85,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
@@ -203,41 +256,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).toHaveText(missError);
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).toHaveText(missError);
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
@@ -324,41 +429,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).toHaveText(missError);
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
@@ -445,41 +602,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).toHaveText(missError);
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).toHaveText(missError);
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
@@ -564,41 +773,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
@@ -683,41 +944,93 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     // fix manual error
     const today = new Date();
-    const date = new Intl.DateTimeFormat('en-US', {
-      month: '2-digit',
+    const dateAfterTodayButBelowThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1,
+    );
+    const dateAfterTodayButBelowThe15Us = new Intl.DateTimeFormat('en-US', {
       day: '2-digit',
-      year: 'numeric',
-    }).format(today);
-    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
       month: '2-digit',
-      day: '2-digit',
       year: 'numeric',
-    }).format(today);
-    await page.getByTestId('mui').fill(date);
+    }).format(dateAfterTodayButBelowThe15);
+    const dateAfterTodayButBelowThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayButBelowThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayButBelowThe15Us);
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).toHaveText(muiMinError);
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await page.getByTestId('mui').blur();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rsf-submit').click();
+    expect(page.getByTestId('number')).not.toBeFocused();
+    expect(page.getByTestId('mui')).toBeFocused();
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayButBelowThe15Fr,
+    );
+    // fix validator error
+    const dateAfterTodayAndAfterThe15 = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      16,
+    );
+    const dateAfterTodayAndAfterThe15Us = new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    const dateAfterTodayAndAfterThe15Fr = new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dateAfterTodayAndAfterThe15);
+    await page.getByTestId('mui').fill(dateAfterTodayAndAfterThe15Us);
+    await expect(page.getByTestId('number-error')).not.toBeVisible();
+    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
     await page.getByTestId('rsf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     expect(await consoleMsg).toBe(true);
     // manual reset
     await page.getByTestId('number').fill('');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await page.getByTestId('number').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
     await expect(page.getByTestId('mui-error')).not.toBeVisible();
-    await expect(page.getByTestId('watch')).toHaveText(formattedDate);
+    await expect(page.getByTestId('watch')).toHaveText(
+      dateAfterTodayAndAfterThe15Fr,
+    );
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();

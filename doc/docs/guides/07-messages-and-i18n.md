@@ -37,7 +37,7 @@ import HookErrorMessagesSource from '!!raw-loader!@site/src/demo/HookErrorMessag
 import ComponentErrorMessages from '@site/src/demo/ComponentErrorMessages';
 import ComponentErrorMessagesSource from '!!raw-loader!@site/src/demo/ComponentErrorMessages';
 
-<DemoTabs Component={ComponentErrorMessages} Hook={HookErrorMessages} componentCode={ComponentErrorMessagesSource} componentMetastring="{16-20,38}" hookCode={HookErrorMessagesSource} hookMetastring="{16-20,37}" withModes withRevalidateModes />
+<DemoTabs Component={ComponentErrorMessages} Hook={HookErrorMessages} componentCode={ComponentErrorMessagesSource} componentMetastring="{15-19,37}" hookCode={HookErrorMessagesSource} hookMetastring="{15-19,36}" withModes withRevalidateModes />
 
 :::tip
 
@@ -47,7 +47,7 @@ By using this technique you centralize all translations in one place which is mo
 
 ## Local custom messages
 
-You can also provide local custom messages useing the `useInput` or `useInputs` hooks:
+You can also provide local custom messages using the `useInput` or `useInputs` hooks:
 
 import LocalValidationHookMessages from '@site/src/demo/LocalValidationHookMessages';
 import LocalValidationHookMessagesSource from '!!raw-loader!@site/src/demo/LocalValidationHookMessages';

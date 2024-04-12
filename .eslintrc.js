@@ -27,6 +27,13 @@ module.exports = {
         'react/no-multi-comp': 'off',
       },
     },
+    {
+      files: ['example-app/tests/**/*'],
+      rules: {
+        'jest/require-hook': 'off',
+        'testing-library/prefer-screen-queries': 'off',
+      },
+    },
   ],
   parserOptions: {
     project: ['./tsconfig.json'],

@@ -1,11 +1,17 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { useId } from 'react';
 import { useInput } from 'react-swift-form';
+
 import { fooValidator } from '../../helpers/validators';
 
-function Simple(props: JSX.IntrinsicElements['input']) {
+function Simple(props: JSX.IntrinsicElements['input']): ReactElement {
+  const { name } = props;
   const id = useId();
   const { error } = useInput({
-    name: props.name ?? id,
+    name: name ?? id,
     validators: fooValidator,
   });
 
@@ -14,9 +20,9 @@ function Simple(props: JSX.IntrinsicElements['input']) {
       <label htmlFor="file">simple</label>
       <div className="input">
         <input autoComplete="off" data-testid="simple" name={id} {...props} />
-        {error && (
+        {Boolean(error) && (
           <div className="error" data-testid="simple-error">
-            {error.error}
+            {error?.error}
           </div>
         )}
       </div>

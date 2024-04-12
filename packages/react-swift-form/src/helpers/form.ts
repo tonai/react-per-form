@@ -38,7 +38,7 @@ export function getFormInputs(form: HTMLFormElement): IFormElement[] {
   return [...form.elements].filter(
     (input) =>
       isFormElement(input) &&
-      input.getAttribute('name') &&
+      input.name &&
       !disallowedInputTypes.includes(input.type),
   ) as IFormElement[];
 }
@@ -136,6 +136,18 @@ export function isCheckbox(target: EventTarget): target is HTMLInputElement {
   return Boolean('type' in target && target.type === 'checkbox');
 }
 
+export function isFileInput(
+  input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+): input is HTMLInputElement {
+  return input.type === 'file';
+}
+
+export function isSelect(
+  input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+): input is HTMLSelectElement {
+  return input.tagName === 'SELECT';
+}
+
 const tagNames = ['INPUT', 'SELECT', 'TEXTAREA'];
 export function isField(
   target: EventTarget,
@@ -147,19 +159,47 @@ export function isField(
 
 export function getName(event: unknown): string | null {
   if (isEvent(event) && event.target && isField(event.target)) {
-    return event.target.getAttribute('name');
+    return event.target.name;
   }
   return null;
 }
 
-export function getValue(event: unknown): unknown {
+export function getInputValue(
+  value: unknown,
+  input?: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+): unknown {
+  if (input && 'multiple' in input && input.multiple) {
+    if (input.type === 'email') {
+      return String(value)
+        .split(',')
+        .map((v) => v.trim());
+    } else if (isFileInput(input) && input.files) {
+      return [...input.files];
+    } else if (isSelect(input)) {
+      return [...input.options]
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+    }
+  } else if (input && isFileInput(input) && input.files) {
+    return input.files[0];
+  }
+  return value;
+}
+
+export function getValue<V>(
+  event: unknown,
+  transformer?: (value: unknown) => unknown,
+): V {
+  let val: unknown = event;
   if (isEvent(event) && event.target) {
     if (isCheckbox(event.target)) {
-      return event.target.checked;
-    }
-    if ('value' in event.target) {
-      return event.target.value;
+      val = event.target.checked;
+    } else if (isField(event.target)) {
+      val = getInputValue(event.target.value, event.target);
     }
   }
-  return event;
+  if (transformer) {
+    return transformer(val) as V;
+  }
+  return val as V;
 }

@@ -61,7 +61,7 @@ import HookErrorsSource from '!!raw-loader!@site/src/demo/HookErrors';
 import ComponentErrors from '@site/src/demo/ComponentErrors';
 import ComponentErrorsSource from '!!raw-loader!@site/src/demo/ComponentErrors';
 
-<DemoTabs Component={ComponentErrors} Hook={HookErrors} componentCode={ComponentErrorsSource} componentMetastring="{21-23,35,37,39}" hookCode={HookErrorsSource} hookMetastring="{21-23,35,37,39}" withModes withRevalidateModes />
+<DemoTabs Component={ComponentErrors} Hook={HookErrors} componentCode={ComponentErrorsSource} hookCode={HookErrorsSource} withModes withRevalidateModes />
 
 1. Submit without choosing any date and you will trigger the native validation (with the `required` attribute)
 2. Choose a date that is before the 15th of each month to trigger the validation error (with the validator).

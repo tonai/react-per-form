@@ -1,9 +1,14 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { useInputs } from 'react-swift-form';
+
 import { doubleValidator } from '../../helpers/validators';
 
 const names = ['double-1', 'double-2'];
 
-function Double() {
+function Double(): ReactElement {
   const { errors } = useInputs({
     id: 'double',
     names,
@@ -22,7 +27,7 @@ function Double() {
             required
             type="number"
           />
-          {errors.all?.['double-1'] && (
+          {Boolean(errors.all['double-1']) && (
             <div className="error" data-testid="double-1-error">
               {errors.native['double-1']}
             </div>
@@ -39,14 +44,14 @@ function Double() {
             required
             type="number"
           />
-          {errors.all?.['double-2'] && (
+          {Boolean(errors.all['double-2']) && (
             <div className="error" data-testid="double-2-error">
               {errors.native['double-2']}
             </div>
           )}
         </div>
       </div>
-      {errors.validator?.double && (
+      {Boolean(errors.validator.double) && (
         <div className="error" data-testid="double-validator-error">
           {errors.validator.double.error}
         </div>

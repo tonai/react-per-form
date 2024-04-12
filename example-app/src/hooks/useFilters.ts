@@ -1,7 +1,25 @@
-import { useState } from 'react';
-import { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+import type { Dispatch, SetStateAction } from 'react';
+import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
-export function useFilters() {
+import { useState } from 'react';
+
+interface IUseFiltersResult {
+  filtersProps: {
+    mode: IFormMode;
+    revalidateMode: IFormRevalidateMode;
+    setMode: Dispatch<SetStateAction<IFormMode>>;
+    setRevalidateMode: Dispatch<SetStateAction<IFormRevalidateMode>>;
+    setUseNativeValidation: Dispatch<SetStateAction<boolean>>;
+    useNativeValidation: boolean;
+  };
+  formData: {
+    mode: IFormMode;
+    revalidateMode: IFormRevalidateMode;
+    useNativeValidation: boolean;
+  };
+}
+
+export function useFilters(): IUseFiltersResult {
   const [mode, setMode] = useState<IFormMode>('submit');
   const [revalidateMode, setRevalidateMode] =
     useState<IFormRevalidateMode>('submit');

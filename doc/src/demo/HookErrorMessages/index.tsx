@@ -4,6 +4,7 @@ import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
 import { type IFormValues, useForm } from 'react-swift-form';
 
+const defaultValues = { mui: null };
 const validators = {
   mui: (values: IFormValues) => {
     const date = values.mui as Dayjs;
@@ -11,11 +12,9 @@ const validators = {
   },
 };
 
-const defaultValues = { mui: null };
-
 const messages = {
   dateUnderflow: 'Choose a date after the 15th.',
-  minDate: 'The date should be greater than or equal to today.',
+  minDate: 'The date must be greater than or equal to today.',
   valueMissing: 'Did you miss something ?',
 };
 
@@ -35,6 +34,7 @@ export default function Demo(props: IProps) {
     ...props,
     defaultValues,
     messages,
+    onChangeOptOut: 'mui',
     onReset: handleReset,
     onSubmit: handleSubmit,
     validators,
@@ -45,7 +45,7 @@ export default function Demo(props: IProps) {
       <DatePicker
         minDate={dayjs()}
         name="mui"
-        onChange={onChange({ callback: setValue, name: 'mui' })}
+        onChange={onChange(setValue, { name: 'mui' })}
         onError={onError('mui')}
         slotProps={{ textField: { required: true } }}
         value={value}

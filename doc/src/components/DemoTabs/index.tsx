@@ -1,6 +1,7 @@
 import type { ElementType, ReactElement } from 'react';
 
 import { Tabs } from '@mantine/core';
+import { memo } from 'react';
 
 import Demo from '../Demo';
 
@@ -18,7 +19,7 @@ interface IDemoProps {
   withUseNativeValidation?: boolean;
 }
 
-export default function DemoTabs(props: IDemoProps): ReactElement {
+function DemoTabs(props: IDemoProps): ReactElement {
   const {
     Component,
     Hook,
@@ -64,3 +65,5 @@ export default function DemoTabs(props: IDemoProps): ReactElement {
     </div>
   );
 }
+
+export default memo(DemoTabs);

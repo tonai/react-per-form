@@ -1,13 +1,13 @@
-import { Dayjs } from 'dayjs';
-import { IFormValues } from 'react-swift-form';
+import type { Dayjs } from 'dayjs';
+import type { IFormValues } from 'react-swift-form';
 
-export function fooValidator(values: IFormValues) {
+export function fooValidator(values: IFormValues): string {
   return String(values.foo).includes('foo')
     ? ''
     : 'Value does not include "foo"';
 }
 
-export function doubleValidator(values: IFormValues, names: string[]) {
+export function doubleValidator(values: IFormValues, names: string[]): string {
   if (values[names[0]] === '' || values[names[1]] === '') {
     return '';
   }
@@ -16,33 +16,33 @@ export function doubleValidator(values: IFormValues, names: string[]) {
     : 'Second value must be greater than first value';
 }
 
-export function dynamicValidator(values: IFormValues) {
+export function dynamicValidator(values: IFormValues): string {
   return Object.values(values).reduce((a, b) => Number(a) + Number(b), 0) === 12
     ? ''
     : 'The sum must be equal to 12';
 }
 
-export function globalFooValidator(values: IFormValues) {
+export function globalFooValidator(values: IFormValues): string {
   return String(values.foo).includes('bar')
     ? ''
     : 'Value should also contains "bar"';
 }
 
-export function colorValidator(values: IFormValues) {
+export function colorValidator(values: IFormValues): string {
   const red = parseInt(String(values.color).slice(1, 3), 16);
   return red > 200 ? '' : 'The red part should be greater than 200';
 }
 
-export function radioValidator(values: IFormValues) {
+export function radioValidator(values: IFormValues): string {
   return String(values.radio) === '3' ? '' : 'Select the third value';
 }
 
-export function rangeValidator(values: IFormValues) {
+export function rangeValidator(values: IFormValues): string {
   return Number(values.range) > 75 ? '' : 'The value should be greater than 75';
 }
 
 export function multipleValidator(name: string) {
-  return (values: IFormValues) => {
+  return (values: IFormValues): string => {
     const value = values[name];
     return value && value instanceof Array && value.length > 1
       ? ''
@@ -50,6 +50,7 @@ export function multipleValidator(name: string) {
   };
 }
 
-export function muiValidator(values: IFormValues) {
-  return !values.mui || !(values.mui as Dayjs).isValid() ? 'Choose a date' : '';
+export function muiValidator(values: IFormValues): string {
+  const date = values.mui as Dayjs | null;
+  return (date?.date() ?? 0) > 15 ? '' : 'Choose a date after the 15th.';
 }

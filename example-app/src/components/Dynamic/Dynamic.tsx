@@ -1,8 +1,13 @@
+'use client';
+
+import type { ReactElement } from 'react';
+
 import { useMemo, useRef, useState } from 'react';
 import { useInputs } from 'react-swift-form';
+
 import { dynamicValidator } from '../../helpers/validators';
 
-function Dynamic() {
+function Dynamic(): ReactElement {
   const ref = useRef(0);
   const [ids, setIds] = useState<number[]>([]);
   const names = useMemo(() => ids.map((id) => `dynamic-${id}`), [ids]);
@@ -12,12 +17,12 @@ function Dynamic() {
     validators: dynamicValidator,
   });
 
-  function handleAdd() {
+  function handleAdd(): void {
     setIds(ids.concat(ref.current));
     ref.current++;
   }
 
-  function handleRemove(id: number) {
+  function handleRemove(id: number): void {
     setIds(ids.filter((i) => i !== id));
   }
 
@@ -39,23 +44,23 @@ function Dynamic() {
                 type="number"
               />
               <button
-                data-testid={`dynamic-${id}-remove`}
                 className="inline"
+                data-testid={`dynamic-${id}-remove`}
                 onClick={() => handleRemove(id)}
                 type="button"
               >
                 Remove
               </button>
             </div>
-            {errors.all?.[`dynamic-${id}`] && (
+            {Boolean(errors.all[`dynamic-${id}`]) && (
               <div className="error" data-testid={`dynamic-${id}-error`}>
-                {errors.native?.[`dynamic-${id}`]}
+                {errors.native[`dynamic-${id}`]}
               </div>
             )}
           </div>
         </div>
       ))}
-      {errors.validator?.dynamic && (
+      {Boolean(errors.validator.dynamic) && (
         <div className="error" data-testid="dynamic-validator-error">
           {errors.validator.dynamic.error}
         </div>

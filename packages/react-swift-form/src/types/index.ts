@@ -97,13 +97,12 @@ export type IErrorHandler = (error: string | null) => void;
 export type IOnErrorHandler = (name: string) => IErrorHandler;
 
 export interface IOnChangeHandlerParams<V, T extends unknown[] = unknown[]> {
-  callback?: ((value: V, ...args: T) => void) | null;
   getError?: ((value: V, ...args: T) => string | null) | null;
   name?: string;
-  transformer?: ((value: unknown) => V) | null;
 }
 
 export type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(
+  callback: (value: V, ...args: T) => void,
   params?: IOnChangeHandlerParams<V, T>,
 ) => (value: unknown, ...args: T) => void;
 

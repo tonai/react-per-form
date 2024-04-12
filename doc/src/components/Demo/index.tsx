@@ -6,7 +6,7 @@ import { localStorageColorSchemeManager } from '@mantine/core';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import DemoContent from './DemoContent';
 
@@ -14,7 +14,7 @@ const manager = localStorageColorSchemeManager({
   key: 'theme',
 });
 
-export default function Demo(props: IDemoProps): ReactElement {
+function Demo(props: IDemoProps): ReactElement {
   const {
     mode: defaultMode = 'submit',
     revalidateMode: defaultRevalidateMode = 'submit',
@@ -61,3 +61,5 @@ export default function Demo(props: IDemoProps): ReactElement {
     </ThemeProvider>
   );
 }
+
+export default memo(Demo);
