@@ -177,7 +177,7 @@ test.describe('Component Lib Native', () => {
     await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     expect(await getErrorMessage(page, 'number')).toEqual('');
-    expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
+    expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
   });

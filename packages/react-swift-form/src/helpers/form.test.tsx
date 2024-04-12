@@ -41,6 +41,19 @@ describe('form helper', () => {
           },
         ),
       ).toEqual({ bar: 12, foo: '42' });
+      expect(
+        getDefaultValues(
+          new Set([
+            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
+            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+          ]),
+          {
+            foo: 42,
+          },
+          { foo: 'foo' },
+          { bar: 'bar' },
+        ),
+      ).toEqual({ bar: 'bar', foo: 'foo' });
     });
   });
 

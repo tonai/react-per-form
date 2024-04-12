@@ -1,6 +1,7 @@
 import type {
   IFormElement,
   IFormValidator,
+  IFormValues,
   IMessages,
   IRegisterParams,
   ITransformers,
@@ -234,9 +235,12 @@ export function getTransformers(
 
 export function getDefaultValues(
   fields: Set<IRegisterParams>,
-  defaultValues: Record<string, unknown>,
-): Record<string, unknown> {
-  return [...fields].reduce((acc, { defaultValues }) => {
+  defaultValues?: IFormValues,
+  paramValues?: IFormValues | null | void,
+  resetValues?: IFormValues | null,
+): IFormValues {
+  const defaultVals = [...fields].reduce((acc, { defaultValues }) => {
     return { ...acc, ...defaultValues };
   }, defaultValues);
+  return { ...defaultVals, ...paramValues, ...resetValues };
 }

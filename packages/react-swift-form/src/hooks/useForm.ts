@@ -89,6 +89,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const resetVals = useRef<IFormValues | null | undefined>(null);
   const manualErrors = useRef<Record<string, string | null>>({});
   const changeNames = useRef<Record<string, boolean>>({});
+  const changeHandlerInitializers = useRef<Record<string, () => void>>({});
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -207,6 +208,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (params: IRegisterParams) => {
       fields.current.add(params);
       if (params.defaultValues) {
+        defaultVals.current = {
+          ...defaultVals.current,
+          ...params.defaultValues,
+        };
         setValues(params.defaultValues);
       }
       debouncedValidate();
@@ -236,15 +241,22 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         }
       }
       vals.current = {};
-      defaultVals.current = getDefaultValues(fields.current, {
-        ...defaultValues,
-        ...paramValues,
-        ...resetVals.current,
-      });
+      defaultVals.current = getDefaultValues(
+        fields.current,
+        defaultValues,
+        paramValues,
+        resetVals.current,
+      );
       resetVals.current = null;
-      setTimeout(() => setValues(defaultVals.current));
+      for (const init of Object.values(changeHandlerInitializers.current)) {
+        init();
+      }
+      setTimeout(() => {
+        setValues(defaultVals.current);
+        debouncedValidate();
+      });
     },
-    [defaultValues, messages, setValues, validators],
+    [debouncedValidate, defaultValues, messages, setValues, validators],
   );
 
   const reset = useCallback((values?: IFormValues | null) => {
@@ -294,9 +306,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (event: FormEvent<HTMLFormElement>) => {
       const resetValues = onReset?.(event, vals.current);
       resetForm(resetValues);
-      debouncedValidate();
     },
-    [debouncedValidate, onReset, resetForm],
+    [onReset, resetForm],
   );
 
   const handleSubmit = useCallback(
@@ -321,7 +332,10 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
 
   useEffect(() => {
-    defaultVals.current = defaultValues ?? {};
+    defaultVals.current = { ...defaultVals.current, ...defaultValues };
+    for (const init of Object.values(changeHandlerInitializers.current)) {
+      init();
+    }
     setValues(defaultVals.current);
     debouncedValidate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -375,13 +389,18 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       params: IOnChangeHandlerParams<V, T> = {},
     ) => {
       const { getError, name } = params;
-      // Initialize the value
-      if (
-        name &&
-        vals.current[name] === undefined &&
-        defaultVals.current[name] !== undefined
-      ) {
-        vals.current[name] = defaultVals.current[name];
+      if (name) {
+        // Value initializer
+        const init = (): void => {
+          if (
+            vals.current[name] === undefined &&
+            defaultVals.current[name] !== undefined
+          ) {
+            vals.current[name] = defaultVals.current[name];
+          }
+        };
+        changeHandlerInitializers.current[name] = init;
+        init();
       }
       return (value: unknown, ...args: T): void => {
         const [fieldName, val] = change<V>(value, name);
@@ -400,10 +419,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       return (event: FormEvent<HTMLFormElement>) => {
         const resetValues = callback?.(event, vals.current);
         resetForm(resetValues);
-        debouncedValidate();
       };
     },
-    [debouncedValidate, resetForm],
+    [resetForm],
   );
 
   const onSubmitHandler = useCallback(
