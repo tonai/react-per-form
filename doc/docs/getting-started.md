@@ -68,4 +68,4 @@ import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNon
 
 <Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{12,18}" />
 
-Check the [guide page about errors](/docs/guides/errors) for more information.
+Check the [guide page about errors](/docs/guides/errors-and-styling) for more information.

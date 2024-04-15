@@ -25,7 +25,7 @@ See [here](/docs/api/types) for the types.
 | Property | Type               | Description                                                                                                                                                                        |
 | -------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | error    | `IMainError`       | The main error associated with the field                                                                                                                                           |
-| errors   | `IError`           | Field errors (see [errors guide](/docs/guides/errors) for more information)                                                                                                        |
+| errors   | `IError`           | Field errors (see [errors guide](/docs/guides/errors-and-styling) for more information)                                                                                            |
 | onChange | `IOnChangeHandler` | Change handler (see [type casting guide](/docs/guides/type-casting-and-default-values) and [controlled components guide](/docs/guides/controlled-components) for more information) |
 | onError  | `IOnErrorHandler`  | Manual error handler (see [controlled components guide](/docs/guides/controlled-components#managing-manual-errors) for more information)                                           |
 | onReset  | `IOnResetHandler`  | Reset handler (see [reset guide](/docs/guides/submit-and-reset#with-the-onreset-handler) for more information)                                                                     |
