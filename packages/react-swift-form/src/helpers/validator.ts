@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
+  IFieldMessages,
   IFormElement,
   IFormValidator,
   IFormValues,
@@ -12,6 +13,8 @@ import type {
   IValidatorObject,
 } from '../types';
 import type { Dispatch, SetStateAction } from 'react';
+
+import { defaultSymbol } from '../constants';
 
 import { intersection } from './array';
 import { getFormInputs, getInputValue } from './form';
@@ -302,21 +305,20 @@ export function getNativeError(params: IGetNativeErrorParams): string {
 }
 
 interface IGetNativeErrorsParams {
-  fieldMessages: Record<string, IMessages>;
+  fieldMessages: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
 }
 
 export function getNativeErrors(
   params: IGetNativeErrorsParams,
 ): Record<string, string> {
-  const { fieldMessages, form, messages } = params;
+  const { fieldMessages, form } = params;
   const inputs = getFormInputs(form);
   return inputs.reduce<Record<string, string>>((acc, input) => {
     const inputName = getFormInput(input).name ?? '';
     acc[inputName] = getNativeError({
       input,
-      messages: fieldMessages[inputName] ?? messages,
+      messages: fieldMessages[inputName] ?? fieldMessages[defaultSymbol],
     });
     return acc;
   }, {});
@@ -324,19 +326,21 @@ export function getNativeErrors(
 
 interface IGetManualError {
   errors?: Record<string, string | null>;
-  fieldMessages?: Record<string, IMessages>;
+  fieldMessages?: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
 }
 
 export function getManualError(
   params: IGetManualError,
 ): Record<string, string | null> {
-  const { errors = {}, fieldMessages = {}, form, messages } = params;
+  const { errors = {}, fieldMessages = {}, form } = params;
   const manualErrors = Object.fromEntries(
     Object.entries(errors).map(([name, error]) => [
       name,
-      getCustomMessage(error, fieldMessages[name] ?? messages),
+      getCustomMessage(
+        error,
+        fieldMessages[name] ?? fieldMessages[defaultSymbol],
+      ),
     ]),
   );
   for (const [name, error] of Object.entries(manualErrors)) {
@@ -350,9 +354,8 @@ export function getManualError(
 }
 
 interface IGetValidatorErrorParams {
-  fieldMessages?: Record<string, IMessages>;
+  fieldMessages?: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
   transformers?: ITransformers;
   validatorEntries?: [string, Set<IFormValidator>][];
   values?: IFormValues;
@@ -364,7 +367,6 @@ export function getValidatorError(
   const {
     fieldMessages = {},
     form,
-    messages,
     transformers = {},
     validatorEntries = [],
     values = {},
@@ -382,7 +384,7 @@ export function getValidatorError(
           getData({ form, names: fieldNames, transformers, values }),
           fieldNames,
         ),
-        fieldMessages[name] ?? messages,
+        fieldMessages[name] ?? fieldMessages[defaultSymbol],
       );
       for (const fieldName of fieldNames) {
         // @ts-expect-error access HTMLFormControlsCollection with input name
@@ -537,29 +539,28 @@ export function validateForm(params: IValidateFormParams): IError {
     values = {},
   } = params;
   const validatorEntries = Array.from(validatorMap.entries());
-  const fieldMessages = Object.fromEntries(
+  const fieldMessages: IFieldMessages = Object.fromEntries(
     validatorEntries.map(([name, set]) => [
       name,
       getFieldMessages(set, messages),
     ]),
   );
+  fieldMessages[defaultSymbol] = messages ?? {};
 
   // 1. native errors.
-  const nativeErrors = getNativeErrors({ fieldMessages, form, messages });
+  const nativeErrors = getNativeErrors({ fieldMessages, form });
 
   // 2. manual errors.
   const manualErrors = getManualError({
     errors,
     fieldMessages,
     form,
-    messages,
   });
 
   // 3. validator errors.
   const validatorErrors = getValidatorError({
     fieldMessages,
     form,
-    messages,
     transformers,
     validatorEntries,
     values,

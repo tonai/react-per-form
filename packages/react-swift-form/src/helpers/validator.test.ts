@@ -1,6 +1,6 @@
 import type { IError, IFormElement, IRegisterParams } from '../types';
 
-import { initialError } from '../constants';
+import { defaultSymbol, initialError } from '../constants';
 
 import {
   displayErrors,
@@ -1016,9 +1016,8 @@ describe('validator helper', () => {
       expect(
         getManualError({
           errors: { foo: 'manual' },
-          fieldMessages: {},
+          fieldMessages: { [defaultSymbol]: { manual: 'Manual error' } },
           form,
-          messages: { manual: 'Manual error' },
         }),
       ).toEqual({
         foo: 'Manual error',
@@ -1095,9 +1094,10 @@ describe('validator helper', () => {
       });
       expect(
         getNativeErrors({
-          fieldMessages: {},
+          fieldMessages: {
+            [defaultSymbol]: { valueMissing: 'Did you miss something ?' },
+          },
           form,
-          messages: { valueMissing: 'Did you miss something ?' },
         }),
       ).toEqual({
         bar: '',
@@ -1211,9 +1211,8 @@ describe('validator helper', () => {
       ];
       expect(
         getValidatorError({
-          fieldMessages: {},
+          fieldMessages: { [defaultSymbol]: { validator: 'Validator error' } },
           form,
-          messages: { validator: 'Validator error' },
           validatorEntries: validators,
           values: {},
         }),

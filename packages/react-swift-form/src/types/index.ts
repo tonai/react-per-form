@@ -14,6 +14,8 @@ export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;
 
 export type IMessages = Record<string, string>;
 
+export type IFieldMessages = Record<string | symbol, IMessages>;
+
 export type IValidate = (
   mode: IFormMode,
   formData: FormData,
