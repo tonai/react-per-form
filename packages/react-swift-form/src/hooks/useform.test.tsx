@@ -268,7 +268,7 @@ describe('useForm hook', () => {
     result.current.formProps.onSubmit(
       {} as unknown as FormEvent<HTMLFormElement>,
     );
-    expect(validator).toHaveBeenCalledTimes(1);
+    expect(validator).toHaveBeenCalledTimes(2); // init + submit
     expect(validator).toHaveBeenCalledWith({ foo: '42' }, ['foo']);
   });
 
@@ -289,7 +289,7 @@ describe('useForm hook', () => {
       target: { name: 'foo', tagName: 'INPUT', value: '12' },
     } as unknown as FormEvent<HTMLFormElement>);
     act(() => jest.runAllTimers());
-    expect(validator).toHaveBeenCalledTimes(1);
+    expect(validator).toHaveBeenCalledTimes(2); // init + change
     expect(validator).toHaveBeenCalledWith({ foo: '12' }, ['foo']);
   });
 
@@ -311,7 +311,7 @@ describe('useForm hook', () => {
       target: { name: 'foo', tagName: 'INPUT', value: '12' },
     } as unknown as FormEvent<HTMLFormElement>);
     act(() => jest.runAllTimers());
-    expect(validator).toHaveBeenCalledTimes(1);
+    expect(validator).toHaveBeenCalledTimes(2); // init + change
     expect(validator).toHaveBeenCalledWith({ foo: 12 }, ['foo']);
   });
 
@@ -855,22 +855,11 @@ describe('useForm hook', () => {
     expect(input2.value).toEqual('baz');
   });
 
-  it('should call the watch on initialization', () => {
-    const spy = jest.fn();
-    const { result } = renderHook(() => useForm({ form }));
-    // Watch
-    result.current.watch(spy);
-    act(() => jest.runAllTimers());
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith({ bar: '', foo: '' });
-  });
-
   it('should call the watch on value change', () => {
     const spy = jest.fn();
     const { result } = renderHook(() => useForm({ form }));
     // Watch
     result.current.watch(spy);
-    act(() => jest.runAllTimers());
     spy.mockClear();
     // Change
     result.current.onChange(() => null, { name: 'foo' })(12);
@@ -884,7 +873,6 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm({ form }));
     // Watch
     result.current.watch(spy);
-    act(() => jest.runAllTimers());
     spy.mockClear();
     // Change
     result.current.onChange(() => null, { name: 'foo' })(12);
@@ -902,7 +890,6 @@ describe('useForm hook', () => {
     const { result } = renderHook(() => useForm({ form }));
     // Watch
     result.current.watch(spy);
-    act(() => jest.runAllTimers());
     spy.mockClear();
     // Change
     result.current.onChange(() => null, { name: 'foo' })(12);

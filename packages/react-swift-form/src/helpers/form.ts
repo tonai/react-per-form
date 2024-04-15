@@ -167,12 +167,11 @@ export function getName(event: unknown): string | null {
 }
 
 export function getInputValue(
-  value: unknown,
-  input?: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+  input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
 ): unknown {
-  if (input && 'multiple' in input && input.multiple) {
+  if ('multiple' in input && input.multiple) {
     if (input.type === 'email') {
-      return String(value)
+      return String(input.value)
         .split(',')
         .map((v) => v.trim());
     } else if (isFileInput(input) && input.files) {
@@ -182,10 +181,10 @@ export function getInputValue(
         .filter((option) => option.selected)
         .map((option) => option.value);
     }
-  } else if (input && isFileInput(input) && input.files) {
+  } else if (isFileInput(input) && input.files) {
     return input.files[0];
   }
-  return value;
+  return input.value;
 }
 
 export function getValue<V>(
@@ -197,7 +196,7 @@ export function getValue<V>(
     if (isCheckbox(event.target)) {
       val = event.target.checked;
     } else if (isField(event.target)) {
-      val = getInputValue(event.target.value, event.target);
+      val = getInputValue(event.target);
     }
   }
   if (transformer) {

@@ -343,13 +343,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       init();
     }
     setValues(defaultVals.current);
-    debouncedValidate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, setValues]);
 
   useEffect(() => {
-    debouncedValidate();
-  }, [debouncedValidate]);
+    validate();
+  });
 
   // Manage blur event listeners
   useEffect(() => {

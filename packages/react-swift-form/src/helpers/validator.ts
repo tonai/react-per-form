@@ -87,25 +87,24 @@ export function getData<V extends IFormValues>(params: IGetDataParams): V {
       return [input.name, input];
     }),
   );
-  const valuesMap = Array.from(formData.entries())
-    .filter(([name]) => !names || names.includes(name))
-    .reduce<Map<string, [string, unknown]>>((acc, [name, value]) => {
-      const mapTuple = acc.get(name);
-      if (!mapTuple) {
+  const keys = Array.from(
+    new Set(Object.keys(values).concat(Array.from(formData.keys()))),
+  );
+  const vals = keys
+    .filter((name) => !names || names.includes(name))
+    .reduce<IFormValues>((acc, name) => {
+      if (values[name] !== undefined) {
+        acc[name] = values[name];
+      } else {
         const input = inputsMap.get(name);
-        acc.set(name, [name, getInputValue(value, input)]);
+        acc[name] = input ? getInputValue(input) : formData.get(name);
+      }
+      if (transformers[name]) {
+        acc[name] = transformers[name](acc[name]);
       }
       return acc;
-    }, new Map());
-  return Object.fromEntries(
-    Array.from(valuesMap.values()).map(([name, value]) => {
-      let val = name in values ? values[name] : value;
-      if (transformers[name]) {
-        val = transformers[name](val);
-      }
-      return [name, val];
-    }),
-  ) as V;
+    }, {}) as V;
+  return vals;
 }
 
 export function getFieldMessages(

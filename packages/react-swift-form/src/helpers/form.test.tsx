@@ -81,7 +81,7 @@ describe('form helper', () => {
       const text = document.createElement('input');
       text.setAttribute('name', 'text');
       text.setAttribute('value', 'some value');
-      expect(getInputValue(text.value, text)).toEqual('some value');
+      expect(getInputValue(text)).toEqual('some value');
     });
 
     it('should return the input file value', () => {
@@ -92,7 +92,7 @@ describe('form helper', () => {
       });
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const input = screen.getByTestId('file') as HTMLInputElement;
-      expect(getInputValue(input.value, input)).toEqual(expect.any(File));
+      expect(getInputValue(input)).toEqual(expect.any(File));
     });
 
     it('should return multiple file values', () => {
@@ -104,7 +104,7 @@ describe('form helper', () => {
       });
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const input = screen.getByTestId('file') as HTMLInputElement;
-      expect(getInputValue(input.value, input)).toEqual([
+      expect(getInputValue(input)).toEqual([
         expect.any(File),
         expect.any(File),
       ]);
@@ -116,7 +116,7 @@ describe('form helper', () => {
       email.setAttribute('type', 'email');
       email.setAttribute('multiple', 'email');
       email.setAttribute('value', 'foo@bar, bar@baz');
-      expect(getInputValue(email.value, email)).toEqual(['foo@bar', 'bar@baz']);
+      expect(getInputValue(email)).toEqual(['foo@bar', 'bar@baz']);
     });
 
     it('should return multiple selected values', () => {
@@ -135,10 +135,7 @@ describe('form helper', () => {
       const option3 = document.createElement('option');
       option3.setAttribute('value', 'opt 3');
       select.appendChild(option3);
-      expect(getInputValue(select.value, select)).toEqual([
-        'opt 1',
-        'Option 2',
-      ]);
+      expect(getInputValue(select)).toEqual(['opt 1', 'Option 2']);
     });
   });
 
