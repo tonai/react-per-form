@@ -1,10 +1,16 @@
-import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-swift-form';
+import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { FormProvider, useForm, useFormValid } from 'react-swift-form';
+import {
+  FormProvider,
+  type IFormValues,
+  useForm,
+  useSubscribe,
+} from 'react-swift-form';
 
 function Submit() {
-  const isValid = useFormValid();
+  const [isValid, setIsValid] = useState(false);
+  useSubscribe(({ states }) => setIsValid(states.valid));
+
   return (
     <button disabled={!isValid} type="submit">
       Submit
@@ -12,15 +18,15 @@ function Submit() {
   );
 }
 
-export default function Demo({ useNativeValidation }: IProps) {
+export default function Demo(props: IProps) {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
     e.preventDefault();
     console.log(values);
   }
 
   const { formProps, ...context } = useForm({
+    ...props,
     onSubmit: handleSubmit,
-    useNativeValidation,
   });
   const { errors } = context;
 

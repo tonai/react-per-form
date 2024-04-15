@@ -78,6 +78,10 @@ body {
   border-radius: 2px;
 }
 
+.flex {
+  display: flex;
+}
+
 html[data-theme='dark'] {
   .header-github-link:before {
     filter: invert(1);

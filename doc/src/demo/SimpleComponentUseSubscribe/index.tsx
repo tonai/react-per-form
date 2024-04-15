@@ -1,9 +1,16 @@
-import type { FormEvent } from 'react';
+import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormValid } from 'react-swift-form';
+import {
+  Form,
+  type IFormContext,
+  type IFormValues,
+  useSubscribe,
+} from 'react-swift-form';
 
 function Submit() {
-  const isValid = useFormValid();
+  const [isValid, setIsValid] = useState(false);
+  useSubscribe(({ states }) => setIsValid(states.valid));
+
   return (
     <button disabled={!isValid} type="submit">
       Submit
@@ -18,8 +25,8 @@ export default function Demo(props: IProps) {
   }
 
   return (
-    <Form {...props} onSubmit={handleSubmit} useNativeValidation={false}>
-      {({ errors }) => (
+    <Form {...props} onSubmit={handleSubmit}>
+      {({ errors }: IFormContext) => (
         <>
           <input name="text" required />
           {errors.all.text && <div className="error">{errors.all.text}</div>}

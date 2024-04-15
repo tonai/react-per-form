@@ -1,6 +1,6 @@
 # `useFormValid`
 
-`useFormValid` return the form valid state from the form context.
+`useFormValid` return the form valid React state from the form context.
 
 ## Parameters
 
@@ -8,7 +8,7 @@ There is no parameters for `useFormValid`.
 
 ## Returns
 
-`useFormValid` directly return the valid boolean state.
+`useFormValid` directly return the valid boolean React state.
 
 ## Usage
 

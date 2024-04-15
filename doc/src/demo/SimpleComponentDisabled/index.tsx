@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
 import { Form, type IFormValues, useFormValid } from 'react-swift-form';
 
@@ -12,6 +12,12 @@ function Submit() {
 }
 
 export default function Demo(props: IProps) {
+  const [disabled, setDisabled] = useState(false);
+
+  function handleToggle() {
+    setDisabled((x) => !x);
+  }
+
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
     e.preventDefault();
     console.log(values);
@@ -21,7 +27,12 @@ export default function Demo(props: IProps) {
     <Form {...props} onSubmit={handleSubmit} useNativeValidation={false}>
       {({ errors }) => (
         <>
-          <input name="text" required />
+          <div className="flex">
+            <input disabled={disabled} name="text" required />
+            <button onClick={handleToggle} type="button">
+              {disabled ? 'Enable' : 'Disable'}
+            </button>
+          </div>
           {errors.all.text && <div className="error">{errors.all.text}</div>}
           <Submit />
         </>

@@ -1,10 +1,10 @@
-# `useFormWatch`
+# `useWatch`
 
-`useFormWatch` return the a state for the values of the field being watched.
+`useWatch` return a React state for the values of the field being watched.
 
 ## Parameters
 
-`useFormWatch` take the name of the fields to watch:
+`useWatch` take the name of the fields to watch:
 
 - it can be a string for a single field
 - it can be an array a string for multiple fields
@@ -12,7 +12,7 @@
 
 ## Returns
 
-`useFormWatch` return the values as state.
+`useWatch` return the values as React state.
 
 ## Usage
 
