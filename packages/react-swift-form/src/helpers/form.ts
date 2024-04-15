@@ -224,6 +224,24 @@ export function shouldChange(
   );
 }
 
+export function shouldBlur(
+  fields: Set<IRegisterParams>,
+  name: string | null,
+  onBlurOptOut?: string[] | string,
+): boolean {
+  if (!name || onBlurOptOut === 'all' || onBlurOptOut === name) {
+    return false;
+  }
+  if (onBlurOptOut instanceof Array && onBlurOptOut.includes(name)) {
+    return false;
+  }
+  return ![...fields].some(
+    ({ onBlurOptOut }) =>
+      onBlurOptOut === name ||
+      (onBlurOptOut instanceof Array && onBlurOptOut.includes(name)),
+  );
+}
+
 export function getTransformers(
   fields: Set<IRegisterParams>,
   transformers?: ITransformers,

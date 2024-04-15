@@ -45,6 +45,7 @@ export interface IRegisterParams {
   id: string;
   messages?: IMessages;
   names: string[];
+  onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
   setErrors?: Dispatch<SetStateAction<IError>>;
   transformers?: ITransformers;

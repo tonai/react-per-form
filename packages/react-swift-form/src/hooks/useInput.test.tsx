@@ -237,7 +237,8 @@ describe('useInputs hook', () => {
       expect.any(Function),
     );
   });
-  it('should trigger the change (and the validator)', () => {
+
+  it('should trigger the validator when the value change', () => {
     const validator = jest.fn();
     renderHook(
       () =>
@@ -263,7 +264,7 @@ describe('useInputs hook', () => {
     expect(validator).toHaveBeenCalled();
   });
 
-  it('should not trigger the change when using onChangeOptOut', () => {
+  it('should not trigger the validator when using onChangeOptOut', () => {
     const validator = jest.fn();
     renderHook(
       () =>
@@ -287,6 +288,60 @@ describe('useInputs hook', () => {
     validator.mockClear();
     // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
+    act(() => jest.runAllTimers());
+    expect(validator).not.toHaveBeenCalled();
+  });
+
+  it('should trigger the validator when the field focus out', () => {
+    const validator = jest.fn();
+    renderHook(
+      () =>
+        useInput({
+          name: 'foo',
+          validator,
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form mode="blur" useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Blur
+    fireEvent.blur(screen.getByTestId('foo'));
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+  });
+
+  it('should not trigger the change when using onBlurOptOut', () => {
+    const validator = jest.fn();
+    renderHook(
+      () =>
+        useInput({
+          name: 'foo',
+          onBlurOptOut: true,
+          validator,
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form mode="blur" useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    act(() => jest.runAllTimers());
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Blur
+    fireEvent.blur(screen.getByTestId('foo'));
     act(() => jest.runAllTimers());
     expect(validator).not.toHaveBeenCalled();
   });

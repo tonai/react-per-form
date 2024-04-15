@@ -33,6 +33,7 @@ import {
   getValue,
   isCheckbox,
   isFormElement,
+  shouldBlur,
   shouldChange,
   validateForm,
 } from '../helpers';
@@ -43,6 +44,7 @@ export interface IUseFormProps {
   form?: HTMLFormElement;
   messages?: IMessages;
   mode?: IFormMode;
+  onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
   onReset?: IResetHandler;
   onSubmit?: ISubmitHandler;
@@ -72,6 +74,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     form = null,
     messages,
     mode = 'submit',
+    onBlurOptOut,
     onChangeOptOut,
     onReset,
     onSubmit,
@@ -353,7 +356,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     ) {
       const form = ref.current;
       const handleFocusOut = (event: FocusEvent): void => {
-        if (event.target && isFormElement(event.target)) {
+        if (
+          event.target &&
+          isFormElement(event.target) &&
+          shouldBlur(fields.current, event.target.name, onBlurOptOut)
+        ) {
           validate(
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',
@@ -366,7 +373,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       return () => form.removeEventListener('focusout', handleFocusOut);
     }
     return undefined;
-  }, [mode, revalidateMode, validate]);
+  }, [mode, onBlurOptOut, revalidateMode, validate]);
 
   const onErrorHandler = useCallback(
     (name: string) => {

@@ -12,6 +12,7 @@ import {
   isCheckbox,
   isEvent,
   isFormElement,
+  shouldBlur,
   shouldChange,
 } from './form';
 
@@ -472,6 +473,60 @@ describe('form helper', () => {
     it('should test if param is event or not', () => {
       expect(isEvent({})).toEqual(false);
       expect(isEvent(new Event('click'))).toEqual(true);
+    });
+  });
+
+  describe('shouldBlur', () => {
+    it('should return true', () => {
+      expect(shouldBlur(new Set(), 'foo', 'bar')).toEqual(true);
+      expect(shouldBlur(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
+      expect(
+        shouldBlur(
+          new Set([{ id: 'bar', names: ['bar'], onBlurOptOut: 'bar' }]),
+          'foo',
+        ),
+      ).toEqual(true);
+      expect(
+        shouldBlur(
+          new Set([
+            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar;baz',
+              names: ['bar', 'baz'],
+              onBlurOptOut: ['bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(true);
+    });
+
+    it('should return false', () => {
+      expect(shouldBlur(new Set(), 'foo', 'foo')).toEqual(false);
+      expect(shouldBlur(new Set(), 'foo', ['foo', 'bar', 'baz'])).toEqual(
+        false,
+      );
+      expect(
+        shouldBlur(
+          new Set([{ id: 'foo', names: ['foo'], onBlurOptOut: 'foo' }]),
+          'foo',
+        ),
+      ).toEqual(false);
+      expect(
+        shouldBlur(
+          new Set([
+            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'foo;bar;baz',
+              names: ['foo', 'bar', 'baz'],
+              onBlurOptOut: ['foo', 'bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(false);
     });
   });
 
