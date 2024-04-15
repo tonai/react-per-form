@@ -22,6 +22,7 @@ describe('useSubscribe hook', () => {
       form: expect.any(HTMLFormElement) as HTMLFormElement,
       names: undefined,
       prevValues: {},
+      states: { valid: true },
       values: { foo: 'bar' },
     });
   });
@@ -42,6 +43,7 @@ describe('useSubscribe hook', () => {
       form: expect.any(HTMLFormElement) as HTMLFormElement,
       names: ['foo'],
       prevValues: {},
+      states: { valid: true },
       values: { foo: 'foo' },
     });
   });
@@ -62,6 +64,7 @@ describe('useSubscribe hook', () => {
       form: expect.any(HTMLFormElement) as HTMLFormElement,
       names: ['foo'],
       prevValues: {},
+      states: { valid: true },
       values: { foo: 'foo' },
     });
   });
@@ -84,6 +87,7 @@ describe('useSubscribe hook', () => {
       form: expect.any(HTMLFormElement) as HTMLFormElement,
       names: undefined,
       prevValues: { foo: 'bar' },
+      states: { valid: true },
       values: { foo: 'baz' },
     });
   });
@@ -106,9 +110,11 @@ describe('useSubscribe hook', () => {
       form: expect.any(HTMLFormElement) as HTMLFormElement,
       names: undefined,
       prevValues: { foo: 'bar' },
+      states: { valid: true },
       values: { foo: 'bar' },
     });
   });
+
   it('should not register the same callback twice', () => {
     const spy = jest.fn();
     function useTwice(): void {

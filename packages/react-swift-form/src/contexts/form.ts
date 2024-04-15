@@ -16,6 +16,9 @@ export const formContext = createContext<IFormContext>({
   register() {},
   reset: () => null,
   revalidateMode: 'submit',
+  states: {
+    valid: true,
+  },
   subscribe() {
     return () => {};
   },

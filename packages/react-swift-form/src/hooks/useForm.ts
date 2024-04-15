@@ -128,6 +128,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           form: ref.current,
           names,
           prevValues: prevFilteredValues,
+          states: {
+            valid: Boolean(ref.current.checkValidity()),
+          },
           values: newFilteredValues,
         });
       }
@@ -493,6 +496,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
+      states: {
+        valid: Boolean(ref.current?.checkValidity()),
+      },
       subscribe,
       unregister,
       useNativeValidation,

@@ -89,10 +89,15 @@ export interface IError {
   validator: Record<string, IValidatorError>;
 }
 
+export interface IFormStates {
+  valid: boolean;
+}
+
 export interface ISubscriberParams {
   form: HTMLFormElement | null;
   names?: string[];
   prevValues: IFormValues;
+  states: IFormStates;
   values: IFormValues;
 }
 
@@ -159,7 +164,6 @@ export type ISubscribe = (
   subscriber: ISubscriber,
   names?: string[] | string,
 ) => IUnSubscribe;
-
 export interface IFormContext extends IFormHandlers {
   errors: IError;
   form: RefObject<HTMLFormElement>;
@@ -168,6 +172,7 @@ export interface IFormContext extends IFormHandlers {
   register: IRegister;
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
+  states: IFormStates;
   subscribe: ISubscribe;
   unregister: IUnregister;
   useNativeValidation: boolean;

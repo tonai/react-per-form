@@ -47,6 +47,7 @@ describe('useForm hook', () => {
     expect(result.current.mode).toEqual('submit');
     expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('submit');
+    expect(result.current.states).toEqual({ valid: false });
     expect(result.current.subscribe).toBeDefined();
     expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(true);
@@ -79,6 +80,7 @@ describe('useForm hook', () => {
     expect(result.current.mode).toEqual('all');
     expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('change');
+    expect(result.current.states).toEqual({ valid: false });
     expect(result.current.subscribe).toBeDefined();
     expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(false);
