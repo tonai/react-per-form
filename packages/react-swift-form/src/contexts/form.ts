@@ -16,13 +16,16 @@ export const formContext = createContext<IFormContext>({
   register() {},
   reset: () => null,
   revalidateMode: 'submit',
+  states: {
+    valid: true,
+  },
   subscribe() {
     return () => {};
   },
   unregister() {},
   useNativeValidation: true,
   validate() {
-    return [true, initialError];
+    return Promise.resolve([true, initialError]);
   },
   watch: () => () => null,
 });

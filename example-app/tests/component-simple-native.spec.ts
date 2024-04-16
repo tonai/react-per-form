@@ -6,8 +6,7 @@ const url = '/component-simple';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
-const submitText =
-  'This form has been submitted 1 time(s) in total and the last value submitted is "foobar"';
+const submitText = 'the last value submitted is "foobar"';
 
 test.describe('Component Simple Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.

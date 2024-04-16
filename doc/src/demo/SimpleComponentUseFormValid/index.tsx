@@ -3,17 +3,16 @@ import type { IProps } from '../types';
 import { Form, type IFormValues, useFormValid } from 'react-swift-form';
 
 function Submit() {
-  const valid = useFormValid();
+  const isValid = useFormValid();
   return (
-    <button disabled={!valid} type="submit">
+    <button disabled={!isValid} type="submit">
       Submit
     </button>
   );
 }
 
 export default function Demo(props: IProps) {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

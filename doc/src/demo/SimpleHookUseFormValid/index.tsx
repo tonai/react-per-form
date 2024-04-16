@@ -4,17 +4,16 @@ import type { IProps } from '../types';
 import { FormProvider, useForm, useFormValid } from 'react-swift-form';
 
 function Submit() {
-  const valid = useFormValid();
+  const isValid = useFormValid();
   return (
-    <button disabled={!valid} type="submit">
+    <button disabled={!isValid} type="submit">
       Submit
     </button>
   );
 }
 
 export default function Demo({ useNativeValidation }: IProps) {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

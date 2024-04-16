@@ -39,4 +39,7 @@ module.exports = {
     project: ['./tsconfig.json'],
   },
   root: true,
+  rules: {
+    'no-void': 'off',
+  },
 };

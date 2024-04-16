@@ -20,4 +20,4 @@ import SimpleHookSubmitComponentSource from '!!raw-loader!@site/src/demo/SimpleH
 import SimpleComponentSubmitComponent from '@site/src/demo/SimpleComponentSubmitComponent';
 import SimpleComponentSubmitComponentSource from '!!raw-loader!@site/src/demo/SimpleComponentSubmitComponent';
 
-<DemoTabs Component={SimpleComponentSubmitComponent} Hook={SimpleHookSubmitComponent} componentCode={SimpleComponentSubmitComponentSource} componentMetastring="{22}" hookCode={SimpleHookSubmitComponentSource} hookMetastring="{27}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentSubmitComponent} Hook={SimpleHookSubmitComponent} componentCode={SimpleComponentSubmitComponentSource} componentMetastring="{21}" hookCode={SimpleHookSubmitComponentSource} hookMetastring="{26}" withModes withRevalidateModes />

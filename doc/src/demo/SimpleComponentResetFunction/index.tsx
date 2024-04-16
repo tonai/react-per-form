@@ -9,11 +9,10 @@ import {
 
 export default function Demo(props: IProps) {
   function handleSubmit(
-    e: FormEvent<HTMLFormElement>,
+    _e: FormEvent<HTMLFormElement>,
     values: IFormValues,
     reset: IFormReset,
   ) {
-    e.preventDefault();
     reset();
     console.log(values);
   }

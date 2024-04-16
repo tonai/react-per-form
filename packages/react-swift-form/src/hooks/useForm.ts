@@ -33,6 +33,7 @@ import {
   getValue,
   isCheckbox,
   isFormElement,
+  shouldBlur,
   shouldChange,
   validateForm,
 } from '../helpers';
@@ -43,6 +44,7 @@ export interface IUseFormProps {
   form?: HTMLFormElement;
   messages?: IMessages;
   mode?: IFormMode;
+  onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
   onReset?: IResetHandler;
   onSubmit?: ISubmitHandler;
@@ -72,6 +74,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     form = null,
     messages,
     mode = 'submit',
+    onBlurOptOut,
     onChangeOptOut,
     onReset,
     onSubmit,
@@ -90,6 +93,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const manualErrors = useRef<Record<string, string | null>>({});
   const changeNames = useRef<Record<string, boolean>>({});
   const changeHandlerInitializers = useRef<Record<string, () => void>>({});
+  const prevErrors = useRef<IError>(initialError);
   const [errors, setErrors] = useState<IError>(initialError);
 
   // Observer
@@ -125,6 +129,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           form: ref.current,
           names,
           prevValues: prevFilteredValues,
+          states: {
+            valid: Boolean(ref.current.checkValidity()),
+          },
           values: newFilteredValues,
         });
       }
@@ -133,12 +140,12 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   }, [transformers]);
 
   const validate = useCallback(
-    (
+    async (
       display = false,
       revalidate = false,
       focusOnError = false,
       names?: string[] | string | null,
-    ): [boolean, IError] => {
+    ): Promise<[boolean, IError]> => {
       if (!ref.current) {
         return [false, initialError];
       }
@@ -150,7 +157,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       );
 
       // Validate
-      const errors = validateForm({
+      const errors = await validateForm({
         display,
         errors: manualErrors.current,
         focusOnError,
@@ -166,7 +173,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       });
 
       notify();
-      return [Boolean(ref.current.checkValidity()), errors];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      return [Boolean(ref.current?.checkValidity()), errors];
     },
     [messages, notify, useNativeValidation, transformers, validators],
   );
@@ -181,7 +189,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     ) => {
       clearTimeout(timer.current);
       timer.current = setTimeout(
-        () => validate(display, revalidate, focusOnError, names),
+        () => void validate(display, revalidate, focusOnError, names),
         0,
       );
     },
@@ -286,11 +294,52 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [debouncedValidate, mode, revalidateMode, transformers],
   );
 
+  let submitted = false;
+  const submit = useCallback(
+    async (
+      event: FormEvent<HTMLFormElement>,
+      validCallback?: ISubmitHandler,
+      invalidCallback?: ISubmitErrorHandler,
+    ) => {
+      // Prevent submit infinite loop
+      if (submitted) {
+        return;
+      }
+      // We have to prevent the event (even for server actions) because we need to await the validation
+      event.preventDefault();
+      const [isValid, errors] = await validate(true, false, focusOnError);
+      if (isValid && ref.current) {
+        // If the form action is not null then it should a server action
+        // In that case re-submit the form (set flag to true before to avoid infinite loop)
+        if (ref.current.getAttribute('action') !== null) {
+          // eslint-disable-next-line require-atomic-updates, react-hooks/exhaustive-deps
+          submitted = true;
+          setTimeout(() => {
+            ref.current?.requestSubmit();
+            submitted = false;
+          });
+        }
+        validCallback?.(
+          event,
+          getData({
+            form: ref.current,
+            transformers: getTransformers(fields.current, transformers),
+            values: vals.current,
+          }),
+          reset,
+        );
+      } else {
+        invalidCallback?.(event, errors, reset);
+      }
+    },
+    [focusOnError, reset, transformers, validate],
+  );
+
   const handleChange = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       const name = getName(event);
       if (name && changeNames.current[name]) {
-        // Prevent double call to the change function when we use the onChange handler
+        // Prevent double call to the change function when the onChange handler is used
         // The handler is called first and then the event propagates
         // But we can't always prevent it because sometimes we don't have access to the event object
         // Like with the MUI Datepicker
@@ -312,23 +361,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      const [isValid, errors] = validate(true, false, focusOnError);
-      if (isValid && ref.current) {
-        onSubmit?.(
-          event,
-          getData({
-            form: ref.current,
-            transformers: getTransformers(fields.current, transformers),
-            values: vals.current,
-          }),
-          reset,
-        );
-      } else {
-        event.preventDefault();
-        onSubmitError?.(event, errors, reset);
-      }
+      return submit(event, onSubmit, onSubmitError);
     },
-    [focusOnError, onSubmit, onSubmitError, reset, transformers, validate],
+    [onSubmit, onSubmitError, submit],
   );
 
   useEffect(() => {
@@ -337,13 +372,23 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       init();
     }
     setValues(defaultVals.current);
-    debouncedValidate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues, setValues]);
 
   useEffect(() => {
-    debouncedValidate();
-  }, [debouncedValidate]);
+    // Prevent re-validating when we just update the errors state
+    if (prevErrors.current !== errors) {
+      prevErrors.current = errors;
+      return;
+    }
+    // Do not call debounceValidate because when don't want this call to cancel a previous debounceValidate call
+    // For example when we change a value and mode=change (in that case render=true but in the useEffect render=false)
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    validate().then(() => {
+      if (ref.current) {
+        ref.current.dataset.rsf = 'init';
+      }
+    });
+  });
 
   // Manage blur event listeners
   useEffect(() => {
@@ -353,8 +398,12 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     ) {
       const form = ref.current;
       const handleFocusOut = (event: FocusEvent): void => {
-        if (event.target && isFormElement(event.target)) {
-          validate(
+        if (
+          event.target &&
+          isFormElement(event.target) &&
+          shouldBlur(fields.current, event.target.name, onBlurOptOut)
+        ) {
+          void validate(
             mode === 'all' || mode === 'blur',
             revalidateMode === 'blur',
             false,
@@ -366,7 +415,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       return () => form.removeEventListener('focusout', handleFocusOut);
     }
     return undefined;
-  }, [mode, revalidateMode, validate]);
+  }, [mode, onBlurOptOut, revalidateMode, validate]);
 
   const onErrorHandler = useCallback(
     (name: string) => {
@@ -426,25 +475,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const onSubmitHandler = useCallback(
     (validCallback?: ISubmitHandler, invalidCallback?: ISubmitErrorHandler) => {
-      return (event: FormEvent<HTMLFormElement>) => {
-        const [isValid, errors] = validate(true, false, focusOnError);
-        if (isValid && ref.current) {
-          validCallback?.(
-            event,
-            getData({
-              form: ref.current,
-              transformers: getTransformers(fields.current, transformers),
-              values: vals.current,
-            }),
-            reset,
-          );
-        } else {
-          event.preventDefault();
-          invalidCallback?.(event, errors, reset);
-        }
+      return async (event: FormEvent<HTMLFormElement>) => {
+        return submit(event, validCallback, invalidCallback);
       };
     },
-    [focusOnError, reset, transformers, validate],
+    [submit],
   );
 
   const watch = useCallback(
@@ -486,6 +521,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
+      states: {
+        valid: Boolean(ref.current?.checkValidity()),
+      },
       subscribe,
       unregister,
       useNativeValidation,

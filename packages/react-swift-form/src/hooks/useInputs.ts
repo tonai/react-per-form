@@ -18,6 +18,7 @@ export interface IUseInputsProps {
   id?: string;
   messages?: IMessages;
   names: string[];
+  onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
   transformers?: ITransformers;
   validators?:
@@ -37,6 +38,7 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     id,
     messages,
     names,
+    onBlurOptOut,
     onChangeOptOut,
     transformers,
     validators,
@@ -52,6 +54,7 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
       id: id ?? String(names),
       messages,
       names,
+      onBlurOptOut,
       onChangeOptOut,
       setErrors,
       transformers,
@@ -64,6 +67,7 @@ export function useInputs(props: IUseInputsProps): IUseInputsResult {
     id,
     messages,
     names,
+    onBlurOptOut,
     onChangeOptOut,
     register,
     transformers,

@@ -17,4 +17,4 @@ import SimpleHookResetComponentSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentResetComponent from '@site/src/demo/SimpleComponentResetComponent';
 import SimpleComponentResetComponentSource from '!!raw-loader!@site/src/demo/SimpleComponentResetComponent';
 
-<DemoTabs Component={SimpleComponentResetComponent} Hook={SimpleHookResetComponent} componentCode={SimpleComponentResetComponentSource} componentMetastring="{24}" hookCode={SimpleHookResetComponentSource} hookMetastring="{22}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentResetComponent} Hook={SimpleHookResetComponent} componentCode={SimpleComponentResetComponentSource} componentMetastring="{23}" hookCode={SimpleHookResetComponentSource} hookMetastring="{21}" withModes withRevalidateModes />

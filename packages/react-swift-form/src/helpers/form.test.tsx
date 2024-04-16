@@ -12,6 +12,7 @@ import {
   isCheckbox,
   isEvent,
   isFormElement,
+  shouldBlur,
   shouldChange,
 } from './form';
 
@@ -80,7 +81,7 @@ describe('form helper', () => {
       const text = document.createElement('input');
       text.setAttribute('name', 'text');
       text.setAttribute('value', 'some value');
-      expect(getInputValue(text.value, text)).toEqual('some value');
+      expect(getInputValue(text)).toEqual('some value');
     });
 
     it('should return the input file value', () => {
@@ -91,7 +92,7 @@ describe('form helper', () => {
       });
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const input = screen.getByTestId('file') as HTMLInputElement;
-      expect(getInputValue(input.value, input)).toEqual(expect.any(File));
+      expect(getInputValue(input)).toEqual(expect.any(File));
     });
 
     it('should return multiple file values', () => {
@@ -103,7 +104,7 @@ describe('form helper', () => {
       });
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const input = screen.getByTestId('file') as HTMLInputElement;
-      expect(getInputValue(input.value, input)).toEqual([
+      expect(getInputValue(input)).toEqual([
         expect.any(File),
         expect.any(File),
       ]);
@@ -115,7 +116,7 @@ describe('form helper', () => {
       email.setAttribute('type', 'email');
       email.setAttribute('multiple', 'email');
       email.setAttribute('value', 'foo@bar, bar@baz');
-      expect(getInputValue(email.value, email)).toEqual(['foo@bar', 'bar@baz']);
+      expect(getInputValue(email)).toEqual(['foo@bar', 'bar@baz']);
     });
 
     it('should return multiple selected values', () => {
@@ -134,10 +135,7 @@ describe('form helper', () => {
       const option3 = document.createElement('option');
       option3.setAttribute('value', 'opt 3');
       select.appendChild(option3);
-      expect(getInputValue(select.value, select)).toEqual([
-        'opt 1',
-        'Option 2',
-      ]);
+      expect(getInputValue(select)).toEqual(['opt 1', 'Option 2']);
     });
   });
 
@@ -472,6 +470,60 @@ describe('form helper', () => {
     it('should test if param is event or not', () => {
       expect(isEvent({})).toEqual(false);
       expect(isEvent(new Event('click'))).toEqual(true);
+    });
+  });
+
+  describe('shouldBlur', () => {
+    it('should return true', () => {
+      expect(shouldBlur(new Set(), 'foo', 'bar')).toEqual(true);
+      expect(shouldBlur(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
+      expect(
+        shouldBlur(
+          new Set([{ id: 'bar', names: ['bar'], onBlurOptOut: 'bar' }]),
+          'foo',
+        ),
+      ).toEqual(true);
+      expect(
+        shouldBlur(
+          new Set([
+            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar;baz',
+              names: ['bar', 'baz'],
+              onBlurOptOut: ['bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(true);
+    });
+
+    it('should return false', () => {
+      expect(shouldBlur(new Set(), 'foo', 'foo')).toEqual(false);
+      expect(shouldBlur(new Set(), 'foo', ['foo', 'bar', 'baz'])).toEqual(
+        false,
+      );
+      expect(
+        shouldBlur(
+          new Set([{ id: 'foo', names: ['foo'], onBlurOptOut: 'foo' }]),
+          'foo',
+        ),
+      ).toEqual(false);
+      expect(
+        shouldBlur(
+          new Set([
+            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
+            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'foo;bar;baz',
+              names: ['foo', 'bar', 'baz'],
+              onBlurOptOut: ['foo', 'bar', 'baz'],
+            },
+          ]),
+          'foo',
+        ),
+      ).toEqual(false);
     });
   });
 

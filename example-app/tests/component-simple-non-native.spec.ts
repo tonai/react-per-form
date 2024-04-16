@@ -11,8 +11,7 @@ const url = '/component-simple';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
-const submitText =
-  'This form has been submitted 1 time(s) in total and the last value submitted is "foobar"';
+const submitText = 'the last value submitted is "foobar"';
 
 test.describe('Component Simple Non Native', () => {
   test('mode=submit', async ({ page }) => {
@@ -84,7 +83,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -173,7 +172,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
@@ -262,7 +261,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -351,7 +350,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
@@ -440,7 +439,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
@@ -529,7 +528,7 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('rsf-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();

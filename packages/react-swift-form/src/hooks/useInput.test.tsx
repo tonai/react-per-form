@@ -1,13 +1,12 @@
-import { act, fireEvent, renderHook, screen } from '@testing-library/react';
+import { fireEvent, renderHook, screen, waitFor } from '@testing-library/react';
 
 import { Form } from '../components/Form/Form';
 
 import { useInput } from './useInput';
 
-jest.useFakeTimers();
-
 describe('useInputs hook', () => {
-  it('should return no errors', () => {
+  it('should return no errors', async () => {
+    // Init
     const { result } = renderHook(() => useInput({ name: 'foo' }), {
       wrapper: ({ children }) => (
         <Form useNativeValidation={false}>
@@ -16,6 +15,9 @@ describe('useInputs hook', () => {
         </Form>
       ),
     });
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
@@ -26,7 +28,8 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return native errors when submitting the form', () => {
+  it('should return native errors when submitting the form', async () => {
+    // Init
     const { result } = renderHook(() => useInput({ name: 'foo' }), {
       wrapper: ({ children }) => (
         <Form useNativeValidation={false}>
@@ -35,7 +38,9 @@ describe('useInputs hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
@@ -46,12 +51,14 @@ describe('useInputs hook', () => {
     });
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    expect(result.current.error).toEqual({
-      error: 'Constraints not satisfied',
-      global: false,
-      id: 'foo',
-      names: ['foo'],
-    });
+    await waitFor(() =>
+      expect(result.current.error).toEqual({
+        error: 'Constraints not satisfied',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      }),
+    );
     expect(result.current.errors).toEqual({
       all: {
         foo: 'Constraints not satisfied',
@@ -71,7 +78,8 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return validator errors when submitting the form', () => {
+  it('should return validator errors when submitting the form', async () => {
+    // Init
     const { result } = renderHook(
       () =>
         useInput({
@@ -87,7 +95,9 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
@@ -98,12 +108,14 @@ describe('useInputs hook', () => {
     });
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    expect(result.current.error).toEqual({
-      error: 'Validator error',
-      global: false,
-      id: 'foo',
-      names: ['foo'],
-    });
+    await waitFor(() =>
+      expect(result.current.error).toEqual({
+        error: 'Validator error',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      }),
+    );
     expect(result.current.errors).toEqual({
       all: {
         foo: 'Validator error',
@@ -129,7 +141,8 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should return custom errors when submitting the form', () => {
+  it('should return custom errors when submitting the form', async () => {
+    // Init
     const { result } = renderHook(
       () =>
         useInput({
@@ -145,7 +158,9 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current.error).toEqual(undefined);
     expect(result.current.errors).toEqual({
       all: {},
@@ -156,12 +171,14 @@ describe('useInputs hook', () => {
     });
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    expect(result.current.error).toEqual({
-      error: 'Custom error',
-      global: false,
-      id: 'foo',
-      names: ['foo'],
-    });
+    await waitFor(() =>
+      expect(result.current.error).toEqual({
+        error: 'Custom error',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      }),
+    );
     expect(result.current.errors).toEqual({
       all: {
         foo: 'Custom error',
@@ -181,7 +198,8 @@ describe('useInputs hook', () => {
     });
   });
 
-  it('should initialize default values', () => {
+  it('should initialize default values', async () => {
+    // Init
     renderHook(
       () =>
         useInput({
@@ -197,12 +215,15 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(screen.getByTestId('foo')).toHaveValue('42');
   });
 
-  it('should transform the value', () => {
+  it('should transform the value', async () => {
     const onSubmit = jest.fn();
+    // Init
     renderHook(
       () =>
         useInput({
@@ -218,27 +239,35 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.any(Object),
-      { foo: 0 },
-      expect.any(Function),
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.any(Object),
+        { foo: 0 },
+        expect.any(Function),
+      ),
     );
+    onSubmit.mockClear();
     // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
-    act(() => jest.runAllTimers());
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.any(Object),
-      { foo: 42 },
-      expect.any(Function),
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.any(Object),
+        { foo: 42 },
+        expect.any(Function),
+      ),
     );
   });
-  it('should trigger the change (and the validator)', () => {
+
+  it('should trigger the validator when the value change', async () => {
     const validator = jest.fn();
+    // Init
     renderHook(
       () =>
         useInput({
@@ -254,17 +283,20 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(validator).toHaveBeenCalled();
     validator.mockClear();
     // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
-    act(() => jest.runAllTimers());
-    expect(validator).toHaveBeenCalled();
+    await waitFor(() => expect(validator).toHaveBeenCalled());
   });
 
-  it('should not trigger the change when using onChangeOptOut', () => {
+  it('should not trigger the validator when using onChangeOptOut', async () => {
+    const onSubmit = jest.fn();
     const validator = jest.fn();
+    // Init
     renderHook(
       () =>
         useInput({
@@ -274,7 +306,7 @@ describe('useInputs hook', () => {
         }),
       {
         wrapper: ({ children }) => (
-          <Form useNativeValidation={false}>
+          <Form onSubmit={onSubmit} useNativeValidation={false}>
             <input data-testid="foo" name="foo" />
             <input name="bar" />
             {children}
@@ -282,12 +314,88 @@ describe('useInputs hook', () => {
         ),
       },
     );
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(validator).toHaveBeenCalled();
     validator.mockClear();
     // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: '42' } });
-    act(() => jest.runAllTimers());
     expect(validator).not.toHaveBeenCalled();
+    // Submit
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    expect(validator).toHaveBeenCalledTimes(1);
+  });
+
+  it('should trigger the validator when the field focus out', async () => {
+    // Init
+    const validator = jest.fn();
+    const { result } = renderHook(
+      () =>
+        useInput({
+          name: 'foo',
+          validator,
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form mode="blur" useNativeValidation={false}>
+            <input data-testid="foo" name="foo" required />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Blur
+    fireEvent.blur(screen.getByTestId('foo'));
+    await waitFor(() => {
+      expect(result.current.error).toEqual({
+        error: 'Constraints not satisfied',
+        global: false,
+        id: 'foo',
+        names: ['foo'],
+      });
+    });
+    expect(validator).toHaveBeenCalled();
+  });
+
+  it('should not trigger the change when using onBlurOptOut', async () => {
+    const onSubmit = jest.fn();
+    const validator = jest.fn();
+    // Init
+    renderHook(
+      () =>
+        useInput({
+          name: 'foo',
+          onBlurOptOut: true,
+          validator,
+        }),
+      {
+        wrapper: ({ children }) => (
+          <Form mode="blur" onSubmit={onSubmit} useNativeValidation={false}>
+            <input data-testid="foo" name="foo" />
+            <input name="bar" />
+            {children}
+          </Form>
+        ),
+      },
+    );
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
+    expect(validator).toHaveBeenCalled();
+    validator.mockClear();
+    // Blur
+    fireEvent.blur(screen.getByTestId('foo'));
+    expect(validator).not.toHaveBeenCalled();
+    // Submit
+    fireEvent.submit(screen.getByTestId('rsf-form'));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    expect(validator).toHaveBeenCalledTimes(1);
   });
 });

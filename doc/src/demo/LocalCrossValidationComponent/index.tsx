@@ -22,8 +22,7 @@ function Inputs() {
 }
 
 export default function Demo({ useNativeValidation }: IProps) {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

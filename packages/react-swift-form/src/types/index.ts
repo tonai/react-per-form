@@ -14,6 +14,8 @@ export type IValidityMessages = Partial<Record<keyof ValidityState, string>>;
 
 export type IMessages = Record<string, string>;
 
+export type IFieldMessages = Record<string | symbol, IMessages>;
+
 export type IValidate = (
   mode: IFormMode,
   formData: FormData,
@@ -25,11 +27,14 @@ export type IFormValidate = (
   revalidate?: boolean,
   focusOnError?: boolean,
   name?: string[] | string,
-) => [boolean, IError];
+) => Promise<[boolean, IError]>;
 
 export type IFormValues = Record<string, unknown>;
 
-export type IValidator = (values: IFormValues, names: string[]) => string;
+export type IValidator = (
+  values: IFormValues,
+  names: string[],
+) => Promise<string> | string;
 
 export interface IValidatorObject {
   names: string[];
@@ -43,6 +48,7 @@ export interface IRegisterParams {
   id: string;
   messages?: IMessages;
   names: string[];
+  onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
   setErrors?: Dispatch<SetStateAction<IError>>;
   transformers?: ITransformers;
@@ -86,10 +92,15 @@ export interface IError {
   validator: Record<string, IValidatorError>;
 }
 
+export interface IFormStates {
+  valid: boolean;
+}
+
 export interface ISubscriberParams {
   form: HTMLFormElement | null;
   names?: string[];
   prevValues: IFormValues;
+  states: IFormStates;
   values: IFormValues;
 }
 
@@ -165,6 +176,7 @@ export interface IFormContext extends IFormHandlers {
   register: IRegister;
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
+  states: IFormStates;
   subscribe: ISubscribe;
   unregister: IUnregister;
   useNativeValidation: boolean;

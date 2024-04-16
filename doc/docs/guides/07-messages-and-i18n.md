@@ -13,7 +13,7 @@ import SimpleHookMessagesSource from '!!raw-loader!@site/src/demo/SimpleHookMess
 import SimpleComponentMessages from '@site/src/demo/SimpleComponentMessages';
 import SimpleComponentMessagesSource from '!!raw-loader!@site/src/demo/SimpleComponentMessages';
 
-<DemoTabs Component={SimpleComponentMessages} Hook={SimpleHookMessages} componentCode={SimpleComponentMessagesSource} componentMetastring="{5,15}" hookCode={SimpleHookMessagesSource} hookMetastring="{5,15}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentMessages} Hook={SimpleHookMessages} componentCode={SimpleComponentMessagesSource} componentMetastring="{5,13}" hookCode={SimpleHookMessagesSource} hookMetastring="{5,14}" withModes withRevalidateModes />
 
 ## Error keys
 
@@ -37,7 +37,7 @@ import HookErrorMessagesSource from '!!raw-loader!@site/src/demo/HookErrorMessag
 import ComponentErrorMessages from '@site/src/demo/ComponentErrorMessages';
 import ComponentErrorMessagesSource from '!!raw-loader!@site/src/demo/ComponentErrorMessages';
 
-<DemoTabs Component={ComponentErrorMessages} Hook={HookErrorMessages} componentCode={ComponentErrorMessagesSource} componentMetastring="{15-19,37}" hookCode={HookErrorMessagesSource} hookMetastring="{15-19,36}" withModes withRevalidateModes />
+<DemoTabs Component={ComponentErrorMessages} Hook={HookErrorMessages} componentCode={ComponentErrorMessagesSource} componentMetastring="{15-19,36}" hookCode={HookErrorMessagesSource} hookMetastring="{15-19,35}" withModes withRevalidateModes />
 
 :::tip
 
@@ -54,7 +54,7 @@ import LocalValidationHookMessagesSource from '!!raw-loader!@site/src/demo/Local
 import LocalValidationComponentMessages from '@site/src/demo/LocalValidationComponentMessages';
 import LocalValidationComponentMessagesSource from '!!raw-loader!@site/src/demo/LocalValidationComponentMessages';
 
-<DemoTabs Component={LocalValidationComponentMessages} Hook={LocalValidationHookMessages} componentCode={LocalValidationComponentMessagesSource} componentMetastring="{8,9,13,33}" hookCode={LocalValidationHookMessagesSource} hookMetastring="{9,10,14,33}" withModes withRevalidateModes />
+<DemoTabs Component={LocalValidationComponentMessages} Hook={LocalValidationHookMessages} componentCode={LocalValidationComponentMessagesSource} componentMetastring="{8,9,13,32}" hookCode={LocalValidationHookMessagesSource} hookMetastring="{9,10,14,32}" withModes withRevalidateModes />
 
 :::tip
 

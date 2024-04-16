@@ -21,7 +21,7 @@
 - 👯 Multiple validation modes
 - 📑 Custom validation with
   - 🎉 Cross inputs validation
-  - 😎 Global form validation
+  - 😎 Async validation
   - 🔥 Support dynamic form
 - 💬 Custom messages / translations
 - 💯 Fully tested
@@ -51,7 +51,6 @@ import { type IFormValues, useForm } from 'react-swift-form';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
     console.log(values);
   }
 
@@ -76,7 +75,6 @@ import { Form, type IFormValues } from 'react-swift-form';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
     console.log(values);
   }
 

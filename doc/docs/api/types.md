@@ -3,7 +3,7 @@
 ## `IError`
 
 ```ts
-{
+interface IError {
   all: Record<string, string>;
   global: Record<string, IValidatorError>;
   main?: IMainError;
@@ -16,7 +16,7 @@
 ## `IFormContext`
 
 ```ts
-{
+interface IFormContext {
   errors: IError;
   form: RefObject<HTMLFormElement>;
   messages?: IMessages;
@@ -39,13 +39,13 @@
 ## `IFormReset`
 
 ```ts
-(resetValues?: Record<string, unknown> | null) => void
+type IFormReset = (resetValues?: Record<string, unknown> | null) => void;
 ```
 
 ## `IMainError`
 
 ```ts
-{
+interface IMainError {
   error: string;
   global: boolean;
   id: string;
@@ -56,7 +56,7 @@
 ## `IOnChangeHandler`
 
 ```ts
-<V, T extends unknown[] = unknown[]>(params?: {
+type IOnChangeHandler = <V, T extends unknown[] = unknown[]>(params?: {
   callback?: ((value: V, ...args: T) => void) | null;
   getError?: ((value: V, ...args: T) => string | null) | null;
   name?: string;
@@ -67,62 +67,92 @@
 ## `IOnErrorHandler`
 
 ```ts
-(name: string) => (error: string | null) => void
+type IOnErrorHandler = (name: string) => (error: string | null) => void;
 ```
 
 ## `IOnResetHandler`
 
 ```ts
-(callback?: IResetHandler) => (event: FormEvent<HTMLFormElement>) => void
+type IOnResetHandler = (
+  callback?: IResetHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
 ```
 
 ## `IOnSubmitHandler`
 
 ```ts
-(
+type IOnSubmitHandler = (
   validCallback?: ISubmitHandler,
-  invalidCallback?: ISubmitErrorHandler
-) => (event: FormEvent<HTMLFormElement>) => void
+  invalidCallback?: ISubmitErrorHandler,
+) => (event: FormEvent<HTMLFormElement>) => void;
 ```
 
 ## `IResetHandler`
 
 ```ts
-(
+type IResetHandler = (
   event: FormEvent<HTMLFormElement>,
   values: Record<string, unknown>,
-) => Record<string, unknown> | null | void
+) => Record<string, unknown> | null | void;
 ```
 
 ## `ISubmitHandler`
 
 ```ts
-(
+type ISubmitHandler = (
   event: FormEvent<HTMLFormElement>,
   values: Record<string, unknown>,
-  reset: IFormReset
-) => void
+  reset: IFormReset,
+) => void;
 ```
 
 ## `ISubmitErrorHandler`
 
 ```ts
-(
+type ISubmitErrorHandler = (
   event: FormEvent<HTMLFormElement>,
-  error: IError, reset: IFormReset
-) => void
+  error: IError,
+  reset: IFormReset,
+) => void;
+```
+
+## `ISubscribe`
+
+```ts
+type ISubscribe = (
+  subscriber: ISubscriber,
+  names?: string[] | string,
+) => IUnSubscribe;
+```
+
+## `ISubscriber`
+
+```ts
+type ISubscriber = (params: ISubscriberParams) => void;
+```
+
+## `ISubscriberParams`
+
+```ts
+interface ISubscriberParams {
+  form: HTMLFormElement | null;
+  names?: string[];
+  prevValues: IFormValues;
+  states: IFormStates;
+  values: IFormValues;
+}
 ```
 
 ## `IValidator`
 
 ```ts
-(values: Record<string, unknown>, names: string[]) => string;
+type IValidator = (values: Record<string, unknown>, names: string[]) => string;
 ```
 
 ## `IValidatorError`
 
 ```ts
-{
+interface IValidatorError {
   error: string;
   global: boolean;
   names: string[];
@@ -132,7 +162,7 @@
 ## `IValidatorObject`
 
 ```ts
-{
+interface IValidatorObject {
   names: string[];
   validator: IValidator;
 }
@@ -141,7 +171,7 @@
 ## `IWatch`
 
 ```ts
-<V extends Record<string, unknown>>(
+type IWatch = <V extends Record<string, unknown>>(
   callback: (values: V) => void,
   names?: string[] | string,
 ) => IUnSubscribe;

@@ -9,7 +9,7 @@ import { serverAction } from '../../actions';
 import Filters from '../../components/Filters/Filters';
 import Loader from '../../components/Loader/Loader';
 import Simple from '../../components/Simple/Simple';
-import { handleSubmitServerAction } from '../../helpers/form';
+import { handleSubmit } from '../../helpers/form';
 import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
@@ -34,7 +34,7 @@ export default function ComponentSimpleForm(): ReactElement {
         className="form"
         data-testid="form"
         messages={messages}
-        onSubmit={handleSubmitServerAction}
+        onSubmit={handleSubmit}
         validators={{
           foobar: { names: ['foo'], validator: globalFooValidator },
         }}

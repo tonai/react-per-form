@@ -1,3 +1,5 @@
+'use server';
+
 let submissions = 0;
 
 export async function serverAction(

@@ -23,7 +23,7 @@ import SimpleHookUseWatchSource from '!!raw-loader!@site/src/demo/SimpleHookUseW
 import SimpleComponentUseWatch from '@site/src/demo/SimpleComponentUseWatch';
 import SimpleComponentUseWatchSource from '!!raw-loader!@site/src/demo/SimpleComponentUseWatch';
 
-<DemoTabs Component={SimpleComponentUseWatch} Hook={SimpleHookUseWatch} componentCode={SimpleComponentUseWatchSource} componentMetastring="{12,17}" hookCode={SimpleHookUseWatchSource} hookMetastring="{13,18,29,35,43}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseWatch} Hook={SimpleHookUseWatch} componentCode={SimpleComponentUseWatchSource} componentMetastring="{12,17}" hookCode={SimpleHookUseWatchSource} hookMetastring="{13,18,28,34,42}" withModes withRevalidateModes />
 
 :::warning
 
@@ -45,7 +45,7 @@ import SimpleHookWatchSource from '!!raw-loader!@site/src/demo/SimpleHookWatch';
 import SimpleComponentWatch from '@site/src/demo/SimpleComponentWatch';
 import SimpleComponentWatchSource from '!!raw-loader!@site/src/demo/SimpleComponentWatch';
 
-<DemoTabs Component={SimpleComponentWatch} Hook={SimpleHookWatch} componentCode={SimpleComponentWatchSource} componentMetastring="{6,8-11,17}" hookCode={SimpleHookWatchSource} hookMetastring="{11,16-19,25}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentWatch} Hook={SimpleHookWatch} componentCode={SimpleComponentWatchSource} componentMetastring="{6,8-11,17}" hookCode={SimpleHookWatchSource} hookMetastring="{10,15-18,24}" withModes withRevalidateModes />
 
 :::note
 

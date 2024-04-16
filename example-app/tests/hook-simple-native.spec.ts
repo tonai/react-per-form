@@ -6,8 +6,7 @@ const url = '/';
 const missError = 'Did you miss something ?';
 const fooError = 'Value does not include "foo"';
 const barError = 'Value should also contains "bar"';
-const submitText =
-  'This form has been submitted 1 time(s) in total and the last value submitted is "foobar"';
+const submitText = 'the last value submitted is "foobar"';
 
 test.describe('Hook Simple Native', () => {
   // For native errors, we cannot detect whether the error message is displayed or not.
@@ -65,7 +64,7 @@ test.describe('Hook Simple Native', () => {
     expect(page.getByTestId('simple')).not.toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual('');
     expect(await consoleMsg).toBe(true);
-    await expect(page.getByTestId('message')).toHaveText(submitText);
+    await expect(page.getByTestId('message')).toContainText(submitText);
     // manual reset
     await page.getByTestId('simple').fill('');
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);

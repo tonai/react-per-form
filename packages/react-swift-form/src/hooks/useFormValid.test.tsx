@@ -1,4 +1,4 @@
-import { act, fireEvent, renderHook, screen } from '@testing-library/react';
+import { fireEvent, renderHook, screen, waitFor } from '@testing-library/react';
 
 import { Form } from '../components/Form/Form';
 
@@ -7,7 +7,8 @@ import { useFormValid } from './useFormValid';
 jest.useFakeTimers();
 
 describe('useFormValid hook', () => {
-  it('should return true when the form is valid', () => {
+  it('should return true when the form is valid', async () => {
+    // Init
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
@@ -16,11 +17,14 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current).toEqual(true);
   });
 
-  it('should return false when the form is invalid', () => {
+  it('should return false when the form is invalid', async () => {
+    // Init
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
@@ -29,11 +33,14 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current).toEqual(false);
   });
 
-  it('should then return true is the form is updated and valid', () => {
+  it('should then return true is the form is updated and valid', async () => {
+    // Init
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
@@ -42,12 +49,14 @@ describe('useFormValid hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current).toEqual(false);
+    // Change
     fireEvent.change(screen.getByTestId('rsf-input'), {
       target: { value: 'foo' },
     });
-    act(() => jest.runAllTimers());
-    expect(result.current).toEqual(true);
+    await waitFor(() => expect(result.current).toEqual(true));
   });
 });

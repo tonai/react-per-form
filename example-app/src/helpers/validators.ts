@@ -1,10 +1,10 @@
 import type { Dayjs } from 'dayjs';
 import type { IFormValues } from 'react-swift-form';
 
-export function fooValidator(values: IFormValues): string {
-  return String(values.foo).includes('foo')
-    ? ''
-    : 'Value does not include "foo"';
+export function fooValidator(values: IFormValues): Promise<string> {
+  return Promise.resolve(
+    String(values.foo).includes('foo') ? '' : 'Value does not include "foo"',
+  );
 }
 
 export function doubleValidator(values: IFormValues, names: string[]): string {

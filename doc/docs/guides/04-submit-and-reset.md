@@ -11,13 +11,7 @@ import SimpleHookPropsSource from '!!raw-loader!@site/src/demo/SimpleHookProps';
 import SimpleComponentProps from '@site/src/demo/SimpleComponentProps';
 import SimpleComponentPropsSource from '!!raw-loader!@site/src/demo/SimpleComponentProps';
 
-<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{6-9,12}" hookCode={SimpleHookPropsSource} hookMetastring="{6-9,13}" withModes withRevalidateModes />
-
-:::tip
-
-When using client side form submission, do not forget to prevent the default behavior of the form being submitted with `preventDefault()` on the event object.
-
-:::
+<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{6-8,11}" hookCode={SimpleHookPropsSource} hookMetastring="{6-8,12}" withModes withRevalidateModes />
 
 ### Submit error with the `onSubmitError` parameter
 
@@ -34,7 +28,7 @@ import SimpleHookSubmitErrorSource from '!!raw-loader!@site/src/demo/SimpleHookS
 import SimpleComponentSubmitError from '@site/src/demo/SimpleComponentSubmitError';
 import SimpleComponentSubmitErrorSource from '!!raw-loader!@site/src/demo/SimpleComponentSubmitError';
 
-<DemoTabs Component={SimpleComponentSubmitError} Hook={SimpleHookSubmitError} componentCode={SimpleComponentSubmitErrorSource} componentMetastring="{16-17,21}" hookCode={SimpleHookSubmitErrorSource} hookMetastring="{11-13,18}" withModes withRevalidateModes withUseNativeValidation={false} />
+<DemoTabs Component={SimpleComponentSubmitError} Hook={SimpleHookSubmitError} componentCode={SimpleComponentSubmitErrorSource} componentMetastring="{15-17,20}" hookCode={SimpleHookSubmitErrorSource} hookMetastring="{10-12,17}" withModes withRevalidateModes withUseNativeValidation={false} />
 
 :::info
 
@@ -51,7 +45,7 @@ You can also provide a second parameter for the submit error callback (that agai
 import SimpleHookSubmit from '@site/src/demo/SimpleHookSubmit';
 import SimpleHookSubmitSource from '!!raw-loader!@site/src/demo/SimpleHookSubmit';
 
-<Demo Component={SimpleHookSubmit} code={SimpleHookSubmitSource} metastring="{15,18}" withModes withRevalidateModes withUseNativeValidation />
+<Demo Component={SimpleHookSubmit} code={SimpleHookSubmitSource} metastring="{14,17}" withModes withRevalidateModes withUseNativeValidation />
 
 ## Reset
 
@@ -64,7 +58,7 @@ import SimpleHookResetSource from '!!raw-loader!@site/src/demo/SimpleHookReset';
 import SimpleComponentReset from '@site/src/demo/SimpleComponentReset';
 import SimpleComponentResetSource from '!!raw-loader!@site/src/demo/SimpleComponentReset';
 
-<DemoTabs Component={SimpleComponentReset} Hook={SimpleHookReset} componentCode={SimpleComponentResetSource} componentMetastring="{19}" hookCode={SimpleHookResetSource} hookMetastring="{22}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentReset} Hook={SimpleHookReset} componentCode={SimpleComponentResetSource} componentMetastring="{18}" hookCode={SimpleHookResetSource} hookMetastring="{21}" withModes withRevalidateModes />
 
 The reset action will clear all values and will reset all errors.
 
@@ -85,7 +79,7 @@ import SimpleHookResetFunctionSource from '!!raw-loader!@site/src/demo/SimpleHoo
 import SimpleComponentResetFunction from '@site/src/demo/SimpleComponentResetFunction';
 import SimpleComponentResetFunctionSource from '!!raw-loader!@site/src/demo/SimpleComponentResetFunction';
 
-<DemoTabs Component={SimpleComponentResetFunction} Hook={SimpleHookResetFunction} componentCode={SimpleComponentResetFunctionSource} componentMetastring="{14,17}" hookCode={SimpleHookResetFunctionSource} hookMetastring="{8,12}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentResetFunction} Hook={SimpleHookResetFunction} componentCode={SimpleComponentResetFunctionSource} componentMetastring="{14,16}" hookCode={SimpleHookResetFunctionSource} hookMetastring="{7,11}" withModes withRevalidateModes />
 
 :::tip
 
@@ -116,7 +110,7 @@ import SimpleHookOnResetSource from '!!raw-loader!@site/src/demo/SimpleHookOnRes
 import SimpleComponentOnReset from '@site/src/demo/SimpleComponentOnReset';
 import SimpleComponentOnResetSource from '!!raw-loader!@site/src/demo/SimpleComponentOnReset';
 
-<DemoTabs Component={SimpleComponentOnReset} Hook={SimpleHookOnReset} componentCode={SimpleComponentOnResetSource} componentMetastring="{6-8,16}" hookCode={SimpleHookOnResetSource} hookMetastring="{6-8,17}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentOnReset} Hook={SimpleHookOnReset} componentCode={SimpleComponentOnResetSource} componentMetastring="{6-8,15}" hookCode={SimpleHookOnResetSource} hookMetastring="{6-8,16}" withModes withRevalidateModes />
 
 ### With the `onReset` handler
 
@@ -125,4 +119,4 @@ For the hook version you can also use the `onReset` handler if you prefer:
 import SimpleHookOnResetHandler from '@site/src/demo/SimpleHookOnResetHandler';
 import SimpleHookOnResetHandlerSource from '!!raw-loader!@site/src/demo/SimpleHookOnResetHandler';
 
-<Demo Component={SimpleHookOnResetHandler} code={SimpleHookOnResetHandlerSource} metastring="{6-8,15,20}" withModes withRevalidateModes withUseNativeValidation />
+<Demo Component={SimpleHookOnResetHandler} code={SimpleHookOnResetHandlerSource} metastring="{6-8,14,19}" withModes withRevalidateModes withUseNativeValidation />

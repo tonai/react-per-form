@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type {
   IError,
+  IFieldMessages,
   IFormElement,
   IFormValidator,
   IFormValues,
@@ -12,6 +13,8 @@ import type {
   IValidatorObject,
 } from '../types';
 import type { Dispatch, SetStateAction } from 'react';
+
+import { defaultSymbol } from '../constants';
 
 import { intersection } from './array';
 import { getFormInputs, getInputValue } from './form';
@@ -84,25 +87,24 @@ export function getData<V extends IFormValues>(params: IGetDataParams): V {
       return [input.name, input];
     }),
   );
-  const valuesMap = Array.from(formData.entries())
-    .filter(([name]) => !names || names.includes(name))
-    .reduce<Map<string, [string, unknown]>>((acc, [name, value]) => {
-      const mapTuple = acc.get(name);
-      if (!mapTuple) {
+  const keys = Array.from(
+    new Set(Object.keys(values).concat(Array.from(formData.keys()))),
+  );
+  const vals = keys
+    .filter((name) => !names || names.includes(name))
+    .reduce<IFormValues>((acc, name) => {
+      if (values[name] !== undefined) {
+        acc[name] = values[name];
+      } else {
         const input = inputsMap.get(name);
-        acc.set(name, [name, getInputValue(value, input)]);
+        acc[name] = input ? getInputValue(input) : formData.get(name);
+      }
+      if (transformers[name]) {
+        acc[name] = transformers[name](acc[name]);
       }
       return acc;
-    }, new Map());
-  return Object.fromEntries(
-    Array.from(valuesMap.values()).map(([name, value]) => {
-      let val = name in values ? values[name] : value;
-      if (transformers[name]) {
-        val = transformers[name](val);
-      }
-      return [name, val];
-    }),
-  ) as V;
+    }, {}) as V;
+  return vals;
 }
 
 export function getFieldMessages(
@@ -302,21 +304,20 @@ export function getNativeError(params: IGetNativeErrorParams): string {
 }
 
 interface IGetNativeErrorsParams {
-  fieldMessages: Record<string, IMessages>;
+  fieldMessages: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
 }
 
 export function getNativeErrors(
   params: IGetNativeErrorsParams,
 ): Record<string, string> {
-  const { fieldMessages, form, messages } = params;
+  const { fieldMessages, form } = params;
   const inputs = getFormInputs(form);
   return inputs.reduce<Record<string, string>>((acc, input) => {
     const inputName = getFormInput(input).name ?? '';
     acc[inputName] = getNativeError({
       input,
-      messages: fieldMessages[inputName] ?? messages,
+      messages: fieldMessages[inputName] ?? fieldMessages[defaultSymbol],
     });
     return acc;
   }, {});
@@ -324,19 +325,21 @@ export function getNativeErrors(
 
 interface IGetManualError {
   errors?: Record<string, string | null>;
-  fieldMessages?: Record<string, IMessages>;
+  fieldMessages?: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
 }
 
 export function getManualError(
   params: IGetManualError,
 ): Record<string, string | null> {
-  const { errors = {}, fieldMessages = {}, form, messages } = params;
+  const { errors = {}, fieldMessages = {}, form } = params;
   const manualErrors = Object.fromEntries(
     Object.entries(errors).map(([name, error]) => [
       name,
-      getCustomMessage(error, fieldMessages[name] ?? messages),
+      getCustomMessage(
+        error,
+        fieldMessages[name] ?? fieldMessages[defaultSymbol],
+      ),
     ]),
   );
   for (const [name, error] of Object.entries(manualErrors)) {
@@ -350,54 +353,64 @@ export function getManualError(
 }
 
 interface IGetValidatorErrorParams {
-  fieldMessages?: Record<string, IMessages>;
+  fieldMessages?: IFieldMessages;
   form: HTMLFormElement;
-  messages?: IMessages;
   transformers?: ITransformers;
   validatorEntries?: [string, Set<IFormValidator>][];
   values?: IFormValues;
 }
 
-export function getValidatorError(
+interface IValidatorParams extends IFormValidator {
+  name: string;
+}
+
+export async function getValidatorError(
   params: IGetValidatorErrorParams,
-): Record<string, IValidatorError> {
+): Promise<Record<string, IValidatorError>> {
   const {
     fieldMessages = {},
     form,
-    messages,
     transformers = {},
     validatorEntries = [],
     values = {},
   } = params;
-  const validatorErrors: Record<string, IValidatorError> = {};
 
+  const validatorParams: IValidatorParams[] = [];
+  const validatorResults: Record<string, Promise<string> | string> = {};
   for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {
-      const { id, names: fieldNames, setErrors, validator } = params;
-      if (id in validatorErrors || !validator) {
+      const { id, names, validator } = params;
+      if (!validator || id in validatorResults) {
         continue;
       }
-      const error = getCustomMessage(
-        validator(
-          getData({ form, names: fieldNames, transformers, values }),
-          fieldNames,
-        ),
-        fieldMessages[name] ?? messages,
+      validatorParams.push({ ...params, name });
+      validatorResults[id] = validator(
+        getData({ form, names, transformers, values }),
+        names,
       );
-      for (const fieldName of fieldNames) {
-        // @ts-expect-error access HTMLFormControlsCollection with input name
-        const input = getFormInput(form.elements[fieldName] as IFormElement);
-        if (input && error && !input.validationMessage) {
-          input.setCustomValidity(error);
-        }
-      }
-      validatorErrors[id] = {
-        error,
-        global: !setErrors,
-        names: fieldNames,
-      };
     }
   }
+
+  const validatorErrors: Record<string, IValidatorError> = {};
+  (await Promise.all(Object.values(validatorResults))).forEach((result, i) => {
+    const { id, names, name, setErrors } = validatorParams[i];
+    const error = getCustomMessage(
+      result,
+      fieldMessages[name] ?? fieldMessages[defaultSymbol],
+    );
+    for (const fieldName of names) {
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      const input = getFormInput(form.elements[fieldName] as IFormElement);
+      if (input && error && !input.validationMessage) {
+        input.setCustomValidity(error);
+      }
+    }
+    validatorErrors[id] = {
+      error,
+      global: !setErrors,
+      names,
+    };
+  });
 
   return validatorErrors;
 }
@@ -521,7 +534,9 @@ interface IValidateFormParams {
   values?: IFormValues;
 }
 
-export function validateForm(params: IValidateFormParams): IError {
+export async function validateForm(
+  params: IValidateFormParams,
+): Promise<IError> {
   const {
     display,
     errors = {},
@@ -537,29 +552,28 @@ export function validateForm(params: IValidateFormParams): IError {
     values = {},
   } = params;
   const validatorEntries = Array.from(validatorMap.entries());
-  const fieldMessages = Object.fromEntries(
+  const fieldMessages: IFieldMessages = Object.fromEntries(
     validatorEntries.map(([name, set]) => [
       name,
       getFieldMessages(set, messages),
     ]),
   );
+  fieldMessages[defaultSymbol] = messages ?? {};
 
   // 1. native errors.
-  const nativeErrors = getNativeErrors({ fieldMessages, form, messages });
+  const nativeErrors = getNativeErrors({ fieldMessages, form });
 
   // 2. manual errors.
   const manualErrors = getManualError({
     errors,
     fieldMessages,
     form,
-    messages,
   });
 
   // 3. validator errors.
-  const validatorErrors = getValidatorError({
+  const validatorErrors = await getValidatorError({
     fieldMessages,
     form,
-    messages,
     transformers,
     validatorEntries,
     values,
