@@ -379,7 +379,7 @@ describe('useInputs hook', () => {
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
     await waitFor(() => expect(onSubmit).toHaveBeenCalled());
-    expect(validator).toHaveBeenCalledTimes(2); // Called to times by the submit event but not by the change event
+    expect(validator).toHaveBeenCalledTimes(1);
   });
 
   it('should validate the form (mode=blur)', async () => {

@@ -1128,6 +1128,7 @@ describe('useForm hook', () => {
   });
 
   it('should reset the form from the onSubmit valid callback (return)', async () => {
+    const preventDefault = jest.fn();
     input1.value = 'bar';
     // Init
     const { result } = renderHook(() => useForm({ form }));
@@ -1135,8 +1136,9 @@ describe('useForm hook', () => {
     const submitCallback = result.current.onSubmit((_a, _b, reset) => reset());
     expect(input1.value).toEqual('bar');
     // Submit
-    submitCallback({} as unknown as FormEvent<HTMLFormElement>);
+    submitCallback({ preventDefault } as unknown as FormEvent<HTMLFormElement>);
     await waitFor(() => expect(input1.value).toEqual(''));
+    expect(preventDefault).toHaveBeenCalled();
   });
 
   it('should reset the form from the onSubmit invalid callback (return)', async () => {

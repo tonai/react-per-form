@@ -3,7 +3,7 @@ import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
 
 export default function Demo() {
   const id = useId();
-  const safeId = CSS.escape(id);
+  const safeId = id.replace(/:/g, '\\:');
   const css = `#${safeId} input:valid {
   background-color: rgba(0, 255, 0, 0.1);
   border: 1px solid rgba(0, 255, 0, 0.8);
