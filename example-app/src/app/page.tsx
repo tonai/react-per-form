@@ -8,7 +8,7 @@ import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
 import { serverAction } from '../actions';
 import Filters from '../components/Filters/Filters';
 import Loader from '../components/Loader/Loader';
-import { handleSubmitServerAction } from '../helpers/form';
+import { handleSubmit } from '../helpers/form';
 import { fooValidator, globalFooValidator } from '../helpers/validators';
 import { useFilters } from '../hooks/useFilters';
 
@@ -44,7 +44,7 @@ export default function HookSimpleForm(): ReactElement {
           action={formAction}
           className="form"
           data-testid="form"
-          onSubmit={onSubmit(handleSubmitServerAction)}
+          onSubmit={onSubmit(handleSubmit)}
         >
           <div className="field">
             <label htmlFor="file">simple</label>
