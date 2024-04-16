@@ -1,13 +1,12 @@
-import { act, fireEvent, renderHook, screen } from '@testing-library/react';
+import { fireEvent, renderHook, screen, waitFor } from '@testing-library/react';
 
 import { Form } from '../components/Form/Form';
 
 import { useWatch } from './useWatch';
 
-jest.useFakeTimers();
-
 describe('useWatch hook', () => {
-  it('should return the form initial values', () => {
+  it('should return the form initial values', async () => {
+    // Init
     const { result } = renderHook(() => useWatch(), {
       wrapper: ({ children }) => (
         <Form>
@@ -16,11 +15,14 @@ describe('useWatch hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current).toEqual({ foo: 'bar' });
   });
 
-  it('should return the form filtered values', () => {
+  it('should return the form filtered values', async () => {
+    // Init
     const { result } = renderHook(() => useWatch(['foo']), {
       wrapper: ({ children }) => (
         <Form>
@@ -30,11 +32,14 @@ describe('useWatch hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
     expect(result.current).toEqual({ foo: 'foo' });
   });
 
-  it('should return the form changed values', () => {
+  it('should return the form changed values', async () => {
+    // Init
     const { result } = renderHook(() => useWatch(['foo']), {
       wrapper: ({ children }) => (
         <Form>
@@ -43,9 +48,11 @@ describe('useWatch hook', () => {
         </Form>
       ),
     });
-    act(() => jest.runAllTimers());
+    await waitFor(() =>
+      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+    );
+    // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: 'baz' } });
-    act(() => jest.runAllTimers());
-    expect(result.current).toEqual({ foo: 'baz' });
+    await waitFor(() => expect(result.current).toEqual({ foo: 'baz' }));
   });
 });

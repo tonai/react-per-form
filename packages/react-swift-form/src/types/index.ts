@@ -27,11 +27,14 @@ export type IFormValidate = (
   revalidate?: boolean,
   focusOnError?: boolean,
   name?: string[] | string,
-) => [boolean, IError];
+) => Promise<[boolean, IError]>;
 
 export type IFormValues = Record<string, unknown>;
 
-export type IValidator = (values: IFormValues, names: string[]) => string;
+export type IValidator = (
+  values: IFormValues,
+  names: string[],
+) => Promise<string> | string;
 
 export interface IValidatorObject {
   names: string[];

@@ -360,9 +360,13 @@ interface IGetValidatorErrorParams {
   values?: IFormValues;
 }
 
-export function getValidatorError(
+interface IValidatorParams extends IFormValidator {
+  name: string;
+}
+
+export async function getValidatorError(
   params: IGetValidatorErrorParams,
-): Record<string, IValidatorError> {
+): Promise<Record<string, IValidatorError>> {
   const {
     fieldMessages = {},
     form,
@@ -370,35 +374,43 @@ export function getValidatorError(
     validatorEntries = [],
     values = {},
   } = params;
-  const validatorErrors: Record<string, IValidatorError> = {};
 
+  const validatorParams: IValidatorParams[] = [];
+  const validatorResults: Record<string, Promise<string> | string> = {};
   for (const [name, set] of validatorEntries) {
     for (const params of set.values()) {
-      const { id, names: fieldNames, setErrors, validator } = params;
-      if (id in validatorErrors || !validator) {
+      const { id, names, validator } = params;
+      if (!validator || id in validatorResults) {
         continue;
       }
-      const error = getCustomMessage(
-        validator(
-          getData({ form, names: fieldNames, transformers, values }),
-          fieldNames,
-        ),
-        fieldMessages[name] ?? fieldMessages[defaultSymbol],
+      validatorParams.push({ ...params, name });
+      validatorResults[id] = validator(
+        getData({ form, names, transformers, values }),
+        names,
       );
-      for (const fieldName of fieldNames) {
-        // @ts-expect-error access HTMLFormControlsCollection with input name
-        const input = getFormInput(form.elements[fieldName] as IFormElement);
-        if (input && error && !input.validationMessage) {
-          input.setCustomValidity(error);
-        }
-      }
-      validatorErrors[id] = {
-        error,
-        global: !setErrors,
-        names: fieldNames,
-      };
     }
   }
+
+  const validatorErrors: Record<string, IValidatorError> = {};
+  (await Promise.all(Object.values(validatorResults))).forEach((result, i) => {
+    const { id, names, name, setErrors } = validatorParams[i];
+    const error = getCustomMessage(
+      result,
+      fieldMessages[name] ?? fieldMessages[defaultSymbol],
+    );
+    for (const fieldName of names) {
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      const input = getFormInput(form.elements[fieldName] as IFormElement);
+      if (input && error && !input.validationMessage) {
+        input.setCustomValidity(error);
+      }
+    }
+    validatorErrors[id] = {
+      error,
+      global: !setErrors,
+      names,
+    };
+  });
 
   return validatorErrors;
 }
@@ -522,7 +534,9 @@ interface IValidateFormParams {
   values?: IFormValues;
 }
 
-export function validateForm(params: IValidateFormParams): IError {
+export async function validateForm(
+  params: IValidateFormParams,
+): Promise<IError> {
   const {
     display,
     errors = {},
@@ -557,7 +571,7 @@ export function validateForm(params: IValidateFormParams): IError {
   });
 
   // 3. validator errors.
-  const validatorErrors = getValidatorError({
+  const validatorErrors = await getValidatorError({
     fieldMessages,
     form,
     transformers,

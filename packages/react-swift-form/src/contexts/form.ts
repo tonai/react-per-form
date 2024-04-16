@@ -25,7 +25,7 @@ export const formContext = createContext<IFormContext>({
   unregister() {},
   useNativeValidation: true,
   validate() {
-    return [true, initialError];
+    return Promise.resolve([true, initialError]);
   },
   watch: () => () => null,
 });

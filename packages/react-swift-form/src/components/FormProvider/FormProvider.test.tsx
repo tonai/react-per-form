@@ -25,6 +25,7 @@ function Input(): ReactElement {
 
 describe('FormProvider component', () => {
   it('should render the component and set the context', () => {
+    // Init
     render(
       <Component>
         <Input />
