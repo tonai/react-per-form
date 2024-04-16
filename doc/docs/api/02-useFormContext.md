@@ -39,4 +39,4 @@ import SimpleHookUseFormContextSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentUseFormContext from '@site/src/demo/SimpleComponentUseFormContext';
 import SimpleComponentUseFormContextSource from '!!raw-loader!@site/src/demo/SimpleComponentUseFormContext';
 
-<DemoTabs Component={SimpleComponentUseFormContext} Hook={SimpleHookUseFormContext} componentCode={SimpleComponentUseFormContextSource} componentMetastring="{6,22,25}" hookCode={SimpleHookUseFormContextSource} hookMetastring="{7,28,33}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseFormContext} Hook={SimpleHookUseFormContext} componentCode={SimpleComponentUseFormContextSource} componentMetastring="{6,21,24}" hookCode={SimpleHookUseFormContextSource} hookMetastring="{7,27,32}" withModes withRevalidateModes />

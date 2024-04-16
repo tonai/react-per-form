@@ -42,4 +42,4 @@ import LocalCrossValidationHookSource from '!!raw-loader!@site/src/demo/LocalCro
 import LocalCrossValidationComponent from '@site/src/demo/LocalCrossValidationComponent';
 import LocalCrossValidationComponentSource from '!!raw-loader!@site/src/demo/LocalCrossValidationComponent';
 
-<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{12,31,34}" hookCode={LocalCrossValidationHookSource} hookMetastring="{13,37,42}" />
+<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{12,30,33}" hookCode={LocalCrossValidationHookSource} hookMetastring="{13,36,41}" />

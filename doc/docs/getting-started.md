@@ -28,7 +28,7 @@ Use the `useForm` hook combined with a native HTML `<form>` component:
 import SimpleHook from '@site/src/demo/SimpleHook';
 import SimpleHookSource from '!!raw-loader!@site/src/demo/SimpleHook';
 
-<Demo Component={SimpleHook} code={SimpleHookSource} metastring="{10-12,15}"/>
+<Demo Component={SimpleHook} code={SimpleHookSource} metastring="{9-11,14}"/>
 
 Easy isn't it ?
 
@@ -49,7 +49,7 @@ Use the `<Form>` component like the native HTML `<form>` component:
 import SimpleComponent from '@site/src/demo/SimpleComponent';
 import SimpleComponentSource from '!!raw-loader!@site/src/demo/SimpleComponent';
 
-<Demo Component={SimpleComponent} code={SimpleComponentSource} metastring="{11,14}"/>
+<Demo Component={SimpleComponent} code={SimpleComponentSource} metastring="{10,13}"/>
 
 And that's it !
 
@@ -66,6 +66,6 @@ By default react-swift-form use native form validation, but you can also choose 
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
-<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{12,18}" />
+<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{11,17}" />
 
 Check the [guide page about errors](/docs/guides/errors-and-styling) for more information.

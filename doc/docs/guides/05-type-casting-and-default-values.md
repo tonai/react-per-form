@@ -11,7 +11,7 @@ import SimpleHookTransformersSource from '!!raw-loader!@site/src/demo/SimpleHook
 import SimpleComponentTransformers from '@site/src/demo/SimpleComponentTransformers';
 import SimpleComponentTransformersSource from '!!raw-loader!@site/src/demo/SimpleComponentTransformers';
 
-<DemoTabs Component={SimpleComponentTransformers} Hook={SimpleHookTransformers} componentCode={SimpleComponentTransformersSource} componentMetastring="{5,14}" hookCode={SimpleHookTransformersSource} hookMetastring="{5,16}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentTransformers} Hook={SimpleHookTransformers} componentCode={SimpleComponentTransformersSource} componentMetastring="{5,13}" hookCode={SimpleHookTransformersSource} hookMetastring="{5,15}" withModes withRevalidateModes />
 
 The transformer function ges the value to cast as parameter and should return the casted value.
 
@@ -32,7 +32,7 @@ import SimpleHookDefaultValueSource from '!!raw-loader!@site/src/demo/SimpleHook
 import SimpleComponentDefaultValue from '@site/src/demo/SimpleComponentDefaultValue';
 import SimpleComponentDefaultValueSource from '!!raw-loader!@site/src/demo/SimpleComponentDefaultValue';
 
-<DemoTabs Component={SimpleComponentDefaultValue} Hook={SimpleHookDefaultValue} componentCode={SimpleComponentDefaultValueSource} componentMetastring="{15}" hookCode={SimpleHookDefaultValueSource} hookMetastring="{18}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentDefaultValue} Hook={SimpleHookDefaultValue} componentCode={SimpleComponentDefaultValueSource} componentMetastring="{14}" hookCode={SimpleHookDefaultValueSource} hookMetastring="{17}" withModes withRevalidateModes />
 
 ### With the `defaultValues` parameter
 
@@ -43,7 +43,7 @@ import SimpleHookDefaultValuesSource from '!!raw-loader!@site/src/demo/SimpleHoo
 import SimpleComponentDefaultValues from '@site/src/demo/SimpleComponentDefaultValues';
 import SimpleComponentDefaultValuesSource from '!!raw-loader!@site/src/demo/SimpleComponentDefaultValues';
 
-<DemoTabs Component={SimpleComponentDefaultValues} Hook={SimpleHookDefaultValues} componentCode={SimpleComponentDefaultValuesSource} componentMetastring="{5,14}" hookCode={SimpleHookDefaultValuesSource} hookMetastring="{5,15}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentDefaultValues} Hook={SimpleHookDefaultValues} componentCode={SimpleComponentDefaultValuesSource} componentMetastring="{5,13}" hookCode={SimpleHookDefaultValuesSource} hookMetastring="{5,14}" withModes withRevalidateModes />
 
 :::warning
 
@@ -77,7 +77,7 @@ import SimpleHookTransformersDefaultValuesSource from '!!raw-loader!@site/src/de
 import SimpleComponentTransformersDefaultValues from '@site/src/demo/SimpleComponentTransformersDefaultValues';
 import SimpleComponentTransformersDefaultValuesSource from '!!raw-loader!@site/src/demo/SimpleComponentTransformersDefaultValues';
 
-<DemoTabs Component={SimpleComponentTransformersDefaultValues} Hook={SimpleHookTransformersDefaultValues} componentCode={SimpleComponentTransformersDefaultValuesSource} componentMetastring="{5,6,17,19}" hookCode={SimpleHookTransformersDefaultValuesSource} hookMetastring="{5,6,16,18}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentTransformersDefaultValues} Hook={SimpleHookTransformersDefaultValues} componentCode={SimpleComponentTransformersDefaultValuesSource} componentMetastring="{5,6,16,18}" hookCode={SimpleHookTransformersDefaultValuesSource} hookMetastring="{5,6,15,17}" withModes withRevalidateModes />
 
 ### Loading default values asynchronously
 
@@ -88,7 +88,7 @@ import SimpleHookDefaultValuesAsyncSource from '!!raw-loader!@site/src/demo/Simp
 import SimpleComponentDefaultValuesAsync from '@site/src/demo/SimpleComponentDefaultValuesAsync';
 import SimpleComponentDefaultValuesAsyncSource from '!!raw-loader!@site/src/demo/SimpleComponentDefaultValuesAsync';
 
-<DemoTabs Component={SimpleComponentDefaultValuesAsync} Hook={SimpleHookDefaultValuesAsync} componentCode={SimpleComponentDefaultValuesAsyncSource} componentMetastring="{7,18}" hookCode={SimpleHookDefaultValuesAsyncSource} hookMetastring="{7,21}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentDefaultValuesAsync} Hook={SimpleHookDefaultValuesAsync} componentCode={SimpleComponentDefaultValuesAsyncSource} componentMetastring="{7,17}" hookCode={SimpleHookDefaultValuesAsyncSource} hookMetastring="{7,20}" withModes withRevalidateModes />
 
 :::tip
 

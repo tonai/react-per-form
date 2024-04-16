@@ -6,8 +6,7 @@ import { useData } from '../useData';
 export default function Demo(props: IProps) {
   const data = useData();
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

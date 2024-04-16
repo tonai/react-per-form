@@ -11,7 +11,7 @@ You can directly access the error object from the `useForm` hook:
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';
 
-<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{10,18}" />
+<Demo Component={SimpleHookNonNative} code={SimpleHookNonNativeSource} metastring="{9,17}" />
 
 ## With the `<Form>` component
 
@@ -22,7 +22,7 @@ You can access the error object using the children of the `<Form>` component as 
 import SimpleComponentNonNativeRender from '@site/src/demo/SimpleComponentNonNativeRender';
 import SimpleComponentNonNativeRenderSource from '!!raw-loader!@site/src/demo/SimpleComponentNonNativeRender';
 
-<Demo Component={SimpleComponentNonNativeRender} code={SimpleComponentNonNativeRenderSource} metastring="{12,15}"/>
+<Demo Component={SimpleComponentNonNativeRender} code={SimpleComponentNonNativeRenderSource} metastring="{11,14}"/>
 
 ### Context method
 
@@ -48,7 +48,7 @@ import SimpleHookCssPseudoClassSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentCssPseudoClass from '@site/src/demo/SimpleComponentCssPseudoClass';
 import SimpleComponentCssPseudoClassSource from '!!raw-loader!@site/src/demo/SimpleComponentCssPseudoClass';
 
-<DemoTabs Component={SimpleComponentCssPseudoClass} Hook={SimpleHookCssPseudoClass} componentCode={SimpleComponentCssPseudoClassSource} componentMetastring="{7-16,30}" hookCode={SimpleHookCssPseudoClassSource} hookMetastring="{7-16,30}" />
+<DemoTabs Component={SimpleComponentCssPseudoClass} Hook={SimpleHookCssPseudoClass} componentCode={SimpleComponentCssPseudoClassSource} componentMetastring="{7-16,26}" hookCode={SimpleHookCssPseudoClassSource} hookMetastring="{7-16,29}" />
 
 :::info
 
@@ -67,7 +67,7 @@ import SimpleHookClassNameSource from '!!raw-loader!@site/src/demo/SimpleHookCla
 import SimpleComponentClassName from '@site/src/demo/SimpleComponentClassName';
 import SimpleComponentClassNameSource from '!!raw-loader!@site/src/demo/SimpleComponentClassName';
 
-<DemoTabs Component={SimpleComponentClassName} Hook={SimpleHookClassName} componentCode={SimpleComponentClassNameSource} componentMetastring="{16}" hookCode={SimpleHookClassNameSource} hookMetastring="{19}" />
+<DemoTabs Component={SimpleComponentClassName} Hook={SimpleHookClassName} componentCode={SimpleComponentClassNameSource} componentMetastring="{15}" hookCode={SimpleHookClassNameSource} hookMetastring="{18}" />
 
 :::tip
 

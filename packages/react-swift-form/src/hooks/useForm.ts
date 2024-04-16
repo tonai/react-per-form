@@ -173,7 +173,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       });
 
       notify();
-      return [Boolean(ref.current.checkValidity()), errors];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      return [Boolean(ref.current?.checkValidity()), errors];
     },
     [messages, notify, useNativeValidation, transformers, validators],
   );

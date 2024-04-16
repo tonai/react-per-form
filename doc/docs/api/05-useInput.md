@@ -42,4 +42,4 @@ import LocalValidationHookSource from '!!raw-loader!@site/src/demo/LocalValidati
 import LocalValidationComponent from '@site/src/demo/LocalValidationComponent';
 import LocalValidationComponentSource from '!!raw-loader!@site/src/demo/LocalValidationComponent';
 
-<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{9,25,28}" hookCode={LocalValidationHookSource} hookMetastring="{10,31,36}" />
+<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{9,24,27}" hookCode={LocalValidationHookSource} hookMetastring="{10,30,35}" />

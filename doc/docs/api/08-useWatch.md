@@ -21,4 +21,4 @@ import SimpleHookUseWatchSource from '!!raw-loader!@site/src/demo/SimpleHookUseW
 import SimpleComponentUseWatch from '@site/src/demo/SimpleComponentUseWatch';
 import SimpleComponentUseWatchSource from '!!raw-loader!@site/src/demo/SimpleComponentUseWatch';
 
-<DemoTabs Component={SimpleComponentUseWatch} Hook={SimpleHookUseWatch} componentCode={SimpleComponentUseWatchSource} componentMetastring="{12,29,35}" hookCode={SimpleHookUseWatchSource} hookMetastring="{13,35,43}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseWatch} Hook={SimpleHookUseWatch} componentCode={SimpleComponentUseWatchSource} componentMetastring="{12,28,34}" hookCode={SimpleHookUseWatchSource} hookMetastring="{13,34,42}" withModes withRevalidateModes />

@@ -15,7 +15,7 @@ import LocalValidationHookSource from '!!raw-loader!@site/src/demo/LocalValidati
 import LocalValidationComponent from '@site/src/demo/LocalValidationComponent';
 import LocalValidationComponentSource from '!!raw-loader!@site/src/demo/LocalValidationComponent';
 
-<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{5-6,9}" hookCode={LocalValidationHookSource} hookMetastring="{6-7,10,25,31,36}" />
+<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{5-6,9}" hookCode={LocalValidationHookSource} hookMetastring="{6-7,10,24,30,35}" />
 
 :::warning
 
@@ -38,7 +38,7 @@ import LocalCrossValidationHookSource from '!!raw-loader!@site/src/demo/LocalCro
 import LocalCrossValidationComponent from '@site/src/demo/LocalCrossValidationComponent';
 import LocalCrossValidationComponentSource from '!!raw-loader!@site/src/demo/LocalCrossValidationComponent';
 
-<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{5-9,12}" hookCode={LocalCrossValidationHookSource} hookMetastring="{6-10,13,31,37,42}" />
+<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{5-9,12}" hookCode={LocalCrossValidationHookSource} hookMetastring="{6-10,13,30,36,41}" />
 
 :::tip
 

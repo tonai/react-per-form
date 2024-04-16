@@ -19,8 +19,7 @@ export default function Demo(props: IProps) {
     setDisabled((x) => !x);
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

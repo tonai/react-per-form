@@ -20,4 +20,4 @@ import SimpleHookErrorComponentSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentErrorComponent from '@site/src/demo/SimpleComponentErrorComponent';
 import SimpleComponentErrorComponentSource from '!!raw-loader!@site/src/demo/SimpleComponentErrorComponent';
 
-<DemoTabs Component={SimpleComponentErrorComponent} Hook={SimpleHookErrorComponent} componentCode={SimpleComponentErrorComponentSource} componentMetastring="{20,23,26,29,32}" hookCode={SimpleHookErrorComponentSource} hookMetastring="{32,35,38,41,44}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentErrorComponent} Hook={SimpleHookErrorComponent} componentCode={SimpleComponentErrorComponentSource} componentMetastring="{19,22,25,28,31}" hookCode={SimpleHookErrorComponentSource} hookMetastring="{31,34,37,40,43}" withModes withRevalidateModes />

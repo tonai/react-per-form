@@ -37,4 +37,4 @@ To set up the `<FormProvider>` destructure the context value from the `useForm` 
 import SimpleHookUseFormErrors from '@site/src/demo/SimpleHookUseFormErrors';
 import SimpleHookUseFormErrorsSource from '!!raw-loader!@site/src/demo/SimpleHookUseFormErrors';
 
-<Demo Component={SimpleHookUseFormErrors} code={SimpleHookUseFormErrorsSource} metastring="{22,28,33}" withModes withRevalidateModes withUseNativeValidation/>
+<Demo Component={SimpleHookUseFormErrors} code={SimpleHookUseFormErrorsSource} metastring="{21,27,32}" withModes withRevalidateModes withUseNativeValidation/>

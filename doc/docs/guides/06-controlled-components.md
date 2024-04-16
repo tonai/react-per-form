@@ -28,7 +28,7 @@ import SimpleHookControlledSource from '!!raw-loader!@site/src/demo/SimpleHookCo
 import SimpleComponentControlled from '@site/src/demo/SimpleComponentControlled';
 import SimpleComponentControlledSource from '!!raw-loader!@site/src/demo/SimpleComponentControlled';
 
-<DemoTabs Component={SimpleComponentControlled} Hook={SimpleHookControlled} componentCode={SimpleComponentControlledSource} componentMetastring="{6,8-10,12-14,22,25,27}" hookCode={SimpleHookControlledSource} hookMetastring="{6,8-10,12-14,23,29,31}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentControlled} Hook={SimpleHookControlled} componentCode={SimpleComponentControlledSource} componentMetastring="{6,8-10,12-14,21,24,26}" hookCode={SimpleHookControlledSource} hookMetastring="{6,8-10,12-14,22,28,30}" withModes withRevalidateModes />
 
 :::note
 
@@ -49,7 +49,7 @@ import SimpleHookControlledCastSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentControlledCast from '@site/src/demo/SimpleComponentControlledCast';
 import SimpleComponentControlledCastSource from '!!raw-loader!@site/src/demo/SimpleComponentControlledCast';
 
-<DemoTabs Component={SimpleComponentControlledCast} Hook={SimpleHookControlledCast} componentCode={SimpleComponentControlledCastSource} componentMetastring="{6,9,12,26,28,32,38}" hookCode={SimpleHookControlledCastSource} hookMetastring="{6,9,12,20,25,32,39}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentControlledCast} Hook={SimpleHookControlledCast} componentCode={SimpleComponentControlledCastSource} componentMetastring="{6,9,12,25,27,31,37}" hookCode={SimpleHookControlledCastSource} hookMetastring="{6,9,12,19,24,31,38}" withModes withRevalidateModes />
 
 :::info
 
@@ -72,7 +72,7 @@ import DatepickerHookControlledSource from '!!raw-loader!@site/src/demo/Datepick
 import DatepickerComponentControlled from '@site/src/demo/DatepickerComponentControlled';
 import DatepickerComponentControlledSource from '!!raw-loader!@site/src/demo/DatepickerComponentControlled';
 
-<DemoTabs Component={DatepickerComponentControlled} Hook={DatepickerHookControlled} componentCode={DatepickerComponentControlledSource} componentMetastring="{11,25,26}" hookCode={DatepickerHookControlledSource} hookMetastring="{11,29,30}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentControlled} Hook={DatepickerHookControlled} componentCode={DatepickerComponentControlledSource} componentMetastring="{11,24,25}" hookCode={DatepickerHookControlledSource} hookMetastring="{11,28,29}" withModes withRevalidateModes />
 
 :::info
 
@@ -101,7 +101,7 @@ import DatepickerHookControlledOnErrorSource from '!!raw-loader!@site/src/demo/D
 import DatepickerComponentControlledOnError from '@site/src/demo/DatepickerComponentControlledOnError';
 import DatepickerComponentControlledOnErrorSource from '!!raw-loader!@site/src/demo/DatepickerComponentControlledOnError';
 
-<DemoTabs Component={DatepickerComponentControlledOnError} Hook={DatepickerHookControlledOnError} componentCode={DatepickerComponentControlledOnErrorSource} componentMetastring="{24,27}" hookCode={DatepickerHookControlledOnErrorSource} hookMetastring="{28,31}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentControlledOnError} Hook={DatepickerHookControlledOnError} componentCode={DatepickerComponentControlledOnErrorSource} componentMetastring="{23,26}" hookCode={DatepickerHookControlledOnErrorSource} hookMetastring="{27,30}" withModes withRevalidateModes />
 
 :::info
 
@@ -132,7 +132,7 @@ import DatepickerHookControlledOnChangeSource from '!!raw-loader!@site/src/demo/
 import DatepickerComponentControlledOnChange from '@site/src/demo/DatepickerComponentControlledOnChange';
 import DatepickerComponentControlledOnChangeSource from '!!raw-loader!@site/src/demo/DatepickerComponentControlledOnChange';
 
-<DemoTabs Component={DatepickerComponentControlledOnChange} Hook={DatepickerHookControlledOnChange} componentCode={DatepickerComponentControlledOnChangeSource} componentMetastring="{19-21,28,30,32}" hookCode={DatepickerHookControlledOnChangeSource} hookMetastring="{19-21,32,34,36}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentControlledOnChange} Hook={DatepickerHookControlledOnChange} componentCode={DatepickerComponentControlledOnChangeSource} componentMetastring="{18-20,27,29,31}" hookCode={DatepickerHookControlledOnChangeSource} hookMetastring="{18-20,31,33,35}" withModes withRevalidateModes />
 
 ### Default values
 
@@ -145,7 +145,7 @@ import DatepickerHookControlledDefaultValuesSource from '!!raw-loader!@site/src/
 import DatepickerComponentControlledDefaultValues from '@site/src/demo/DatepickerComponentControlledDefaultValues';
 import DatepickerComponentControlledDefaultValuesSource from '!!raw-loader!@site/src/demo/DatepickerComponentControlledDefaultValues';
 
-<DemoTabs Component={DatepickerComponentControlledDefaultValues} Hook={DatepickerHookControlledDefaultValues} componentCode={DatepickerComponentControlledDefaultValuesSource} componentMetastring="{7,10,13,24}" hookCode={DatepickerHookControlledDefaultValuesSource} hookMetastring="{7,10,13,23}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentControlledDefaultValues} Hook={DatepickerHookControlledDefaultValues} componentCode={DatepickerComponentControlledDefaultValuesSource} componentMetastring="{7,10,13,23}" hookCode={DatepickerHookControlledDefaultValuesSource} hookMetastring="{7,10,13,22}" withModes withRevalidateModes />
 
 ### Validators and `onChange` event opt-out
 
@@ -168,7 +168,7 @@ import DatepickerHookControlledValidatorsSource from '!!raw-loader!@site/src/dem
 import DatepickerComponentControlledValidators from '@site/src/demo/DatepickerComponentControlledValidators';
 import DatepickerComponentControlledValidatorsSource from '!!raw-loader!@site/src/demo/DatepickerComponentControlledValidators';
 
-<DemoTabs Component={DatepickerComponentControlledValidators} Hook={DatepickerHookControlledValidators} componentCode={DatepickerComponentControlledValidatorsSource} componentMetastring="{7-13,30,31,34}" hookCode={DatepickerHookControlledValidatorsSource} hookMetastring="{7-13,29,30,33}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentControlledValidators} Hook={DatepickerHookControlledValidators} componentCode={DatepickerComponentControlledValidatorsSource} componentMetastring="{7-13,29,30,33}" hookCode={DatepickerHookControlledValidatorsSource} hookMetastring="{7-13,28,29,32}" withModes withRevalidateModes />
 
 :::note
 
@@ -187,7 +187,7 @@ import DatepickerHookUncontrolledSource from '!!raw-loader!@site/src/demo/Datepi
 import DatepickerComponentUncontrolled from '@site/src/demo/DatepickerComponentUncontrolled';
 import DatepickerComponentUncontrolledSource from '!!raw-loader!@site/src/demo/DatepickerComponentUncontrolled';
 
-<DemoTabs Component={DatepickerComponentUncontrolled} Hook={DatepickerHookUncontrolled} componentCode={DatepickerComponentUncontrolledSource} componentMetastring="{7,8,17,21}" hookCode={DatepickerHookUncontrolledSource} hookMetastring="{7,8,19,25}" withModes withRevalidateModes />
+<DemoTabs Component={DatepickerComponentUncontrolled} Hook={DatepickerHookUncontrolled} componentCode={DatepickerComponentUncontrolledSource} componentMetastring="{7,8,16,20}" hookCode={DatepickerHookUncontrolledSource} hookMetastring="{7,8,18,24}" withModes withRevalidateModes />
 
 :::note
 

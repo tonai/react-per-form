@@ -16,8 +16,7 @@ export default function Demo({ useNativeValidation }: IProps) {
     setNames(names.concat(`dynamic-${ref.current++}`));
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

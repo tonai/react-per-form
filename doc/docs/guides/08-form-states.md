@@ -17,7 +17,7 @@ import SimpleHookBadStatesSource from '!!raw-loader!@site/src/demo/SimpleHookBad
 import SimpleComponentBadStates from '@site/src/demo/SimpleComponentBadStates';
 import SimpleComponentBadStatesSource from '!!raw-loader!@site/src/demo/SimpleComponentBadStates';
 
-<DemoTabs Component={SimpleComponentBadStates} Hook={SimpleHookBadStates} componentCode={SimpleComponentBadStatesSource} componentMetastring="{13,17}" hookCode={SimpleHookBadStatesSource} hookMetastring="{11,20}" />
+<DemoTabs Component={SimpleComponentBadStates} Hook={SimpleHookBadStates} componentCode={SimpleComponentBadStatesSource} componentMetastring="{12,16}" hookCode={SimpleHookBadStatesSource} hookMetastring="{10,19}" />
 
 :::info
 
@@ -36,7 +36,7 @@ import SimpleHookSubmitComponentSource from '!!raw-loader!@site/src/demo/SimpleH
 import SimpleComponentSubmitComponent from '@site/src/demo/SimpleComponentSubmitComponent';
 import SimpleComponentSubmitComponentSource from '!!raw-loader!@site/src/demo/SimpleComponentSubmitComponent';
 
-<DemoTabs Component={SimpleComponentSubmitComponent} Hook={SimpleHookSubmitComponent} componentCode={SimpleComponentSubmitComponentSource} componentMetastring="{22}" hookCode={SimpleHookSubmitComponentSource} hookMetastring="{27}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentSubmitComponent} Hook={SimpleHookSubmitComponent} componentCode={SimpleComponentSubmitComponentSource} componentMetastring="{21}" hookCode={SimpleHookSubmitComponentSource} hookMetastring="{26}" withModes withRevalidateModes />
 
 ## With the `useFormValid` hook
 
@@ -47,7 +47,7 @@ import SimpleHookUseFormValidSource from '!!raw-loader!@site/src/demo/SimpleHook
 import SimpleComponentUseFormValid from '@site/src/demo/SimpleComponentUseFormValid';
 import SimpleComponentUseFormValidSource from '!!raw-loader!@site/src/demo/SimpleComponentUseFormValid';
 
-<DemoTabs Component={SimpleComponentUseFormValid} Hook={SimpleHookUseFormValid} componentCode={SimpleComponentUseFormValidSource} componentMetastring="{6,21,29}" hookCode={SimpleHookUseFormValidSource} hookMetastring="{7,28,34}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseFormValid} Hook={SimpleHookUseFormValid} componentCode={SimpleComponentUseFormValidSource} componentMetastring="{6,20,28}" hookCode={SimpleHookUseFormValidSource} hookMetastring="{7,27,33}" withModes withRevalidateModes />
 
 :::warning
 
@@ -85,7 +85,7 @@ import SimpleHookSubscribeSource from '!!raw-loader!@site/src/demo/SimpleHookSub
 import SimpleComponentSubscribe from '@site/src/demo/SimpleComponentSubscribe';
 import SimpleComponentSubscribeSource from '!!raw-loader!@site/src/demo/SimpleComponentSubscribe';
 
-<DemoTabs Component={SimpleComponentSubscribe} Hook={SimpleHookSubscribe} componentCode={SimpleComponentSubscribeSource} componentMetastring="{11,13-16,19}" hookCode={SimpleHookSubscribeSource} hookMetastring="{11,16-19,25}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentSubscribe} Hook={SimpleHookSubscribe} componentCode={SimpleComponentSubscribeSource} componentMetastring="{11,13-16,19}" hookCode={SimpleHookSubscribeSource} hookMetastring="{10,15-18,24}" withModes withRevalidateModes />
 
 :::info
 
@@ -102,7 +102,7 @@ import SimpleHookDisabledSource from '!!raw-loader!@site/src/demo/SimpleHookDisa
 import SimpleComponentDisabled from '@site/src/demo/SimpleComponentDisabled';
 import SimpleComponentDisabledSource from '!!raw-loader!@site/src/demo/SimpleComponentDisabled';
 
-<DemoTabs Component={SimpleComponentDisabled} Hook={SimpleHookDisabled} componentCode={SimpleComponentDisabledSource} componentMetastring="{15,18,31}" hookCode={SimpleHookDisabledSource} hookMetastring="{16,19,37}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentDisabled} Hook={SimpleHookDisabled} componentCode={SimpleComponentDisabledSource} componentMetastring="{15,18,30}" hookCode={SimpleHookDisabledSource} hookMetastring="{16,19,36}" withModes withRevalidateModes />
 
 :::info
 

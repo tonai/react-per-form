@@ -5,8 +5,7 @@ import { type IFormValues, useForm } from 'react-swift-form';
 const messages = { valueMissing: 'Did you miss something ?' };
 
 export default function Demo(props: IProps) {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

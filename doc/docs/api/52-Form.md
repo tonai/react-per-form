@@ -32,4 +32,4 @@ See [here](/docs/api/types) for the types.
 import SimpleComponentProps from '@site/src/demo/SimpleComponentProps';
 import SimpleComponentPropsSource from '!!raw-loader!@site/src/demo/SimpleComponentProps';
 
-<Demo Component={SimpleComponentProps} code={SimpleComponentPropsSource} metastring="{12,20}" withModes withRevalidateModes withUseNativeValidation/>
+<Demo Component={SimpleComponentProps} code={SimpleComponentPropsSource} metastring="{11,19}" withModes withRevalidateModes withUseNativeValidation/>

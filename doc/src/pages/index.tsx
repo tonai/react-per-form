@@ -42,7 +42,7 @@ export default function Home(): ReactElement {
             📑 Custom validation with
             <ul>
               <li>🎉 Cross inputs validation</li>
-              <li>😎 Global form validation</li>
+              <li>😎 Async validation</li>
               <li>🔥 Support dynamic form</li>
             </ul>
           </li>

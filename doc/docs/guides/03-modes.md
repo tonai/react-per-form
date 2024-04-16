@@ -16,7 +16,7 @@ import SimpleHookPropsSource from '!!raw-loader!@site/src/demo/SimpleHookProps';
 import SimpleComponentProps from '@site/src/demo/SimpleComponentProps';
 import SimpleComponentPropsSource from '!!raw-loader!@site/src/demo/SimpleComponentProps';
 
-<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{12}" hookCode={SimpleHookPropsSource} hookMetastring="{12}" withModes />
+<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{11}" hookCode={SimpleHookPropsSource} hookMetastring="{11}" withModes />
 
 :::warning
 
@@ -38,7 +38,7 @@ You can use the `revalidateMode` parameter for that:
 
 Here you can test the different revalidate modes :
 
-<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{12}" hookCode={SimpleHookPropsSource} hookMetastring="{12}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentProps} Hook={SimpleHookProps} componentCode={SimpleComponentPropsSource} componentMetastring="{11}" hookCode={SimpleHookPropsSource} hookMetastring="{11}" withModes withRevalidateModes />
 
 :::warning
 

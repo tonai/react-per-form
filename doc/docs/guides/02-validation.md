@@ -9,7 +9,7 @@ import ValidationHookSource from '!!raw-loader!@site/src/demo/ValidationHook';
 import ValidationComponent from '@site/src/demo/ValidationComponent';
 import ValidationComponentSource from '!!raw-loader!@site/src/demo/ValidationComponent';
 
-<DemoTabs Component={ValidationComponent} Hook={ValidationHook} componentCode={ValidationComponentSource} componentMetastring="{5-8,20}" hookCode={ValidationHookSource} hookMetastring="{5-8,19}" />
+<DemoTabs Component={ValidationComponent} Hook={ValidationHook} componentCode={ValidationComponentSource} componentMetastring="{5-8,19}" hookCode={ValidationHookSource} hookMetastring="{5-8,18}" />
 
 :::info
 
@@ -30,6 +30,23 @@ With this syntax the key used in the error object will be the name of the field.
 
 If you need to do a validation based on multiple field values check the next section.
 
+## Async validation
+
+Validator can also return a promise containing the error string:
+
+import AsyncValidationHook from '@site/src/demo/AsyncValidationHook';
+import AsyncValidationHookSource from '!!raw-loader!@site/src/demo/AsyncValidationHook';
+import AsyncValidationComponent from '@site/src/demo/AsyncValidationComponent';
+import AsyncValidationComponentSource from '!!raw-loader!@site/src/demo/AsyncValidationComponent';
+
+<DemoTabs Component={AsyncValidationComponent} Hook={AsyncValidationHook} componentCode={AsyncValidationComponentSource} componentMetastring="{6-11,22}" hookCode={AsyncValidationHookSource} hookMetastring="{6-11,21}" />
+
+:::note
+
+In this example `delay` is just a function that return a Promise that will be resolved after 1s.
+
+:::
+
 ## Cross field validation
 
 Cross field validation enable the possibility of having a validator applied on multiples fields at the same time.
@@ -41,7 +58,7 @@ import CrossValidationHookSource from '!!raw-loader!@site/src/demo/CrossValidati
 import CrossValidationComponent from '@site/src/demo/CrossValidationComponent';
 import CrossValidationComponentSource from '!!raw-loader!@site/src/demo/CrossValidationComponent';
 
-<DemoTabs Component={CrossValidationComponent} Hook={CrossValidationHook} componentCode={CrossValidationComponentSource} componentMetastring="{5-13,25}" hookCode={CrossValidationHookSource} hookMetastring="{5-13,24}" />
+<DemoTabs Component={CrossValidationComponent} Hook={CrossValidationHook} componentCode={CrossValidationComponentSource} componentMetastring="{5-13,24}" hookCode={CrossValidationHookSource} hookMetastring="{5-13,23}" />
 
 In that case, when the validator does not pass:
 
@@ -58,4 +75,4 @@ import DynamicValidationHookSource from '!!raw-loader!@site/src/demo/DynamicVali
 import DynamicValidationComponent from '@site/src/demo/DynamicValidationComponent';
 import DynamicValidationComponentSource from '!!raw-loader!@site/src/demo/DynamicValidationComponent';
 
-<DemoTabs Component={DynamicValidationComponent} Hook={DynamicValidationHook} componentCode={DynamicValidationComponentSource} componentMetastring="{5-9,28}" hookCode={DynamicValidationHookSource} hookMetastring="{5-9,27}" />
+<DemoTabs Component={DynamicValidationComponent} Hook={DynamicValidationHook} componentCode={DynamicValidationComponentSource} componentMetastring="{5-9,27}" hookCode={DynamicValidationHookSource} hookMetastring="{5-9,26}" />

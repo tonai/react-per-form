@@ -2,8 +2,7 @@ import type { FormEvent } from 'react';
 import { type IFormValues, useForm } from 'react-swift-form';
 
 export default function Demo() {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

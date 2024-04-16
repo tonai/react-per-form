@@ -7,8 +7,7 @@ export default function Demo(props: IProps) {
     return { text: 'reset value' };
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 

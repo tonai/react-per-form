@@ -25,4 +25,4 @@ import SimpleHookUseSubscribeSource from '!!raw-loader!@site/src/demo/SimpleHook
 import SimpleComponentUseSubscribe from '@site/src/demo/SimpleComponentUseSubscribe';
 import SimpleComponentUseSubscribeSource from '!!raw-loader!@site/src/demo/SimpleComponentUseSubscribe';
 
-<DemoTabs Component={SimpleComponentUseSubscribe} Hook={SimpleHookUseSubscribe} componentCode={SimpleComponentUseSubscribeSource} componentMetastring="{11,12,15,28,36}" hookCode={SimpleHookUseSubscribeSource} hookMetastring="{11,12,15,34,40}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseSubscribe} Hook={SimpleHookUseSubscribe} componentCode={SimpleComponentUseSubscribeSource} componentMetastring="{11,12,15,27,35}" hookCode={SimpleHookUseSubscribeSource} hookMetastring="{11,12,15,33,39}" withModes withRevalidateModes />

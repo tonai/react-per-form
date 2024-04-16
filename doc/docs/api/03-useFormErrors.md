@@ -19,4 +19,4 @@ import SimpleHookUseFormErrorsSource from '!!raw-loader!@site/src/demo/SimpleHoo
 import SimpleComponentUseFormErrors from '@site/src/demo/SimpleComponentUseFormErrors';
 import SimpleComponentUseFormErrorsSource from '!!raw-loader!@site/src/demo/SimpleComponentUseFormErrors';
 
-<DemoTabs Component={SimpleComponentUseFormErrors} Hook={SimpleHookUseFormErrors} componentCode={SimpleComponentUseFormErrorsSource} componentMetastring="{6,22,25}" hookCode={SimpleHookUseFormErrorsSource} hookMetastring="{7,28,33}" withModes withRevalidateModes />
+<DemoTabs Component={SimpleComponentUseFormErrors} Hook={SimpleHookUseFormErrors} componentCode={SimpleComponentUseFormErrorsSource} componentMetastring="{6,21,24}" hookCode={SimpleHookUseFormErrorsSource} hookMetastring="{7,27,32}" withModes withRevalidateModes />

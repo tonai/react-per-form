@@ -59,4 +59,4 @@ Just add `{...formProps}` to your `<form>` and you are ready:
 import SimpleHookProps from '@site/src/demo/SimpleHookProps';
 import SimpleHookPropsSource from '!!raw-loader!@site/src/demo/SimpleHookProps';
 
-<Demo Component={SimpleHookProps} code={SimpleHookPropsSource} metastring="{11-14}" withModes withRevalidateModes withUseNativeValidation/>
+<Demo Component={SimpleHookProps} code={SimpleHookPropsSource} metastring="{10-13}" withModes withRevalidateModes withUseNativeValidation/>

@@ -3,8 +3,7 @@ import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
 import clsx from 'clsx';
 
 export default function Demo() {
-  function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
-    e.preventDefault();
+  function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 
