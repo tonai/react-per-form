@@ -1153,7 +1153,7 @@ describe('useForm hook', () => {
     });
     // Submit
     const submitCallback = result.current.onSubmit(
-      () => null,
+      () => undefined,
       (_a, _b, reset) => reset(),
     );
     expect(input1.value).toEqual('bar');

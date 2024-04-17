@@ -1,4 +1,4 @@
-import type { IError, IFormElement, IRegisterParams } from '../types';
+import type { IError, IRegisterParams } from '../types';
 
 import { defaultSymbol, initialError } from '../constants';
 
@@ -11,7 +11,6 @@ import {
   getErrorObject,
   getFieldMessages,
   getFilteredErrors,
-  getFormInput,
   getManualError,
   getNativeError,
   getNativeErrorKey,
@@ -965,17 +964,6 @@ describe('validator helper', () => {
         foo: 'error',
       });
       expect(getFilteredErrors({ foo: 'error' }, ['bar'])).toEqual({});
-    });
-  });
-
-  describe('getFormInput', () => {
-    it('should return the form input', () => {
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      expect(getFormInput(form.elements.foo as IFormElement)).toEqual(input1);
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      expect(getFormInput(form.elements.bar as IFormElement)).toEqual(input2);
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      expect(getFormInput(form.elements.radio as IFormElement)).toEqual(input3);
     });
   });
 

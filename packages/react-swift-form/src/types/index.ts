@@ -92,8 +92,24 @@ export interface IError {
   validator: Record<string, IValidatorError>;
 }
 
-export interface IFormStates {
-  valid: boolean;
+export interface IStates {
+  changedFields: Set<string>;
+  isReady: boolean;
+  isSubmitting: boolean;
+  isValidating: boolean;
+  submitCount: number;
+  touchedFields: Set<string>;
+}
+
+export interface IFormStates
+  extends Omit<IStates, 'changedFields' | 'touchedFields'> {
+  changedFields: string[];
+  dirtyFields: string[];
+  isDirty: boolean;
+  isPristine: boolean;
+  isSubmitted: boolean;
+  isValid: boolean;
+  touchedFields: string[];
 }
 
 export interface ISubscriberParams {
@@ -133,17 +149,17 @@ export type IOnResetHandler = (
   callback?: IResetHandler,
 ) => (event: FormEvent<HTMLFormElement>) => void;
 
-export type ISubmitHandler = (
+export type ISubmitHandler<T = unknown> = (
   event: FormEvent<HTMLFormElement>,
   values: IFormValues,
   reset: IFormReset,
-) => void;
+) => Promise<T> | T;
 
-export type ISubmitErrorHandler = (
+export type ISubmitErrorHandler<T = unknown> = (
   event: FormEvent<HTMLFormElement>,
   error: IError,
   reset: IFormReset,
-) => void;
+) => Promise<T> | T;
 
 export type IOnSubmitHandler = (
   validCallback?: ISubmitHandler,

@@ -17,7 +17,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { defaultSymbol } from '../constants';
 
 import { intersection } from './array';
-import { getFormInputs, getInputValue } from './form';
+import { getFormInput, getFormInputs, getInputValue } from './form';
 import { filterObject } from './object';
 
 export function isValidator(
@@ -60,15 +60,6 @@ export function getNativeErrorKey(
     }
   }
   return null;
-}
-
-export function getFormInput(
-  input: IFormElement,
-): Exclude<IFormElement, RadioNodeList> {
-  if (input instanceof RadioNodeList) {
-    return input[0] as HTMLInputElement;
-  }
-  return input;
 }
 
 interface IGetDataParams {

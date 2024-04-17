@@ -1,7 +1,10 @@
+import type { IFormElement } from '../types';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
   getDefaultValues,
+  getFormInput,
   getFormInputs,
   getInputValue,
   getName,
@@ -55,6 +58,36 @@ describe('form helper', () => {
           { bar: 'bar' },
         ),
       ).toEqual({ bar: 'bar', foo: 'foo' });
+    });
+  });
+
+  describe('getFormInput', () => {
+    it('should return the form input', () => {
+      const form = document.createElement('form');
+      const input1 = document.createElement('input');
+      input1.setAttribute('name', 'foo');
+      input1.setAttribute('value', '');
+      form.appendChild(input1);
+      const input2 = document.createElement('input');
+      input2.setAttribute('name', 'bar');
+      input2.setAttribute('value', '');
+      form.appendChild(input2);
+      const input3 = document.createElement('input');
+      input3.setAttribute('name', 'radio');
+      input3.setAttribute('type', 'checkbox');
+      input3.setAttribute('value', '1');
+      form.appendChild(input3);
+      const input4 = document.createElement('input');
+      input4.setAttribute('name', 'radio');
+      input4.setAttribute('type', 'checkbox');
+      input4.setAttribute('value', '2');
+      form.appendChild(input4);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.foo as IFormElement)).toEqual(input1);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.bar as IFormElement)).toEqual(input2);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.radio as IFormElement)).toEqual(input3);
     });
   });
 
