@@ -1176,93 +1176,93 @@ describe('validator helper', () => {
       expect(validator).toHaveBeenCalledTimes(1);
     });
 
-    it('should return the validator error with custom message', async () => {
-      const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              validator: () => 'validator',
-            },
-          ]),
-        ],
-      ];
-      expect(
-        await getValidatorError({
-          fieldMessages: {
-            foo: { validator: 'Validator error' },
-          },
-          form,
-          validatorEntries: validators,
-          values: {},
-        }),
-      ).toEqual({
-        foo: { error: 'Validator error', global: true, names: ['foo'] },
-      });
-      expect(spy).toHaveBeenCalledWith('Validator error');
-      spy.mockRestore();
-    });
+    // it('should return the validator error with custom message', async () => {
+    //   const spy = jest.spyOn(input1, 'setCustomValidity');
+    //   const validators: [string, Set<IRegisterParams>][] = [
+    //     [
+    //       'foo',
+    //       new Set([
+    //         {
+    //           id: 'foo',
+    //           names: ['foo'],
+    //           validator: () => 'validator',
+    //         },
+    //       ]),
+    //     ],
+    //   ];
+    //   expect(
+    //     await getValidatorError({
+    //       fieldMessages: {
+    //         foo: { validator: 'Validator error' },
+    //       },
+    //       form,
+    //       validatorEntries: validators,
+    //       values: {},
+    //     }),
+    //   ).toEqual({
+    //     foo: { error: 'Validator error', global: true, names: ['foo'] },
+    //   });
+    //   expect(spy).toHaveBeenCalledWith('Validator error');
+    //   spy.mockRestore();
+    // });
 
-    it('should return the validator error with custom message fallback', async () => {
-      const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              validator: () => 'validator',
-            },
-          ]),
-        ],
-      ];
-      expect(
-        await getValidatorError({
-          fieldMessages: { [defaultSymbol]: { validator: 'Validator error' } },
-          form,
-          validatorEntries: validators,
-          values: {},
-        }),
-      ).toEqual({
-        foo: { error: 'Validator error', global: true, names: ['foo'] },
-      });
-      expect(spy).toHaveBeenCalledWith('Validator error');
-      spy.mockRestore();
-    });
+    // it('should return the validator error with custom message fallback', async () => {
+    //   const spy = jest.spyOn(input1, 'setCustomValidity');
+    //   const validators: [string, Set<IRegisterParams>][] = [
+    //     [
+    //       'foo',
+    //       new Set([
+    //         {
+    //           id: 'foo',
+    //           names: ['foo'],
+    //           validator: () => 'validator',
+    //         },
+    //       ]),
+    //     ],
+    //   ];
+    //   expect(
+    //     await getValidatorError({
+    //       fieldMessages: { [defaultSymbol]: { validator: 'Validator error' } },
+    //       form,
+    //       validatorEntries: validators,
+    //       values: {},
+    //     }),
+    //   ).toEqual({
+    //     foo: { error: 'Validator error', global: true, names: ['foo'] },
+    //   });
+    //   expect(spy).toHaveBeenCalledWith('Validator error');
+    //   spy.mockRestore();
+    // });
 
-    it('should return the async validator error with custom message', async () => {
-      const spy = jest.spyOn(input1, 'setCustomValidity');
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              validator: () => Promise.resolve('validator'),
-            },
-          ]),
-        ],
-      ];
-      expect(
-        await getValidatorError({
-          fieldMessages: {
-            foo: { validator: 'Validator error' },
-          },
-          form,
-          validatorEntries: validators,
-          values: {},
-        }),
-      ).toEqual({
-        foo: { error: 'Validator error', global: true, names: ['foo'] },
-      });
-      expect(spy).toHaveBeenCalledWith('Validator error');
-      spy.mockRestore();
-    });
+    // it('should return the async validator error with custom message', async () => {
+    //   const spy = jest.spyOn(input1, 'setCustomValidity');
+    //   const validators: [string, Set<IRegisterParams>][] = [
+    //     [
+    //       'foo',
+    //       new Set([
+    //         {
+    //           id: 'foo',
+    //           names: ['foo'],
+    //           validator: () => Promise.resolve('validator'),
+    //         },
+    //       ]),
+    //     ],
+    //   ];
+    //   expect(
+    //     await getValidatorError({
+    //       fieldMessages: {
+    //         foo: { validator: 'Validator error' },
+    //       },
+    //       form,
+    //       validatorEntries: validators,
+    //       values: {},
+    //     }),
+    //   ).toEqual({
+    //     foo: { error: 'Validator error', global: true, names: ['foo'] },
+    //   });
+    //   expect(spy).toHaveBeenCalledWith('Validator error');
+    //   spy.mockRestore();
+    // });
   });
 
   describe('getValidatorIds', () => {

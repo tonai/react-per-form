@@ -8,13 +8,14 @@ import type {
   IOnChangeHandlerParams,
   IRegisterParams,
   IResetHandler,
+  IStateSubscriber,
   IStates,
   ISubmitErrorHandler,
   ISubmitHandler,
-  ISubscriber,
   ITransformers,
   IValidator,
   IValidatorObject,
+  IWatchSubscriber,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
 
@@ -104,27 +105,50 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const prevErrors = useRef<IError>(initialError);
   const [errors, setErrors] = useState<IError>(initialError);
 
-  // Observer
-  const subscribers = useRef<Map<ISubscriber, string[] | undefined>>(new Map());
-  const subscribe = useCallback(
-    (subscriber: ISubscriber, names?: string[] | string) => {
+  // State observer
+  const stateSubscribers = useRef<Set<IStateSubscriber>>(new Set());
+  const stateSubscribe = useCallback((subscriber: IStateSubscriber) => {
+    if (!stateSubscribers.current.has(subscriber)) {
+      stateSubscribers.current.add(subscriber);
+    }
+    return () => stateSubscribers.current.delete(subscriber);
+  }, []);
+  const stateNotify = useCallback(() => {
+    for (const subscriber of stateSubscribers.current.values()) {
+      subscriber(
+        getFormState(
+          states.current,
+          vals.current,
+          defaultVals.current,
+          ref.current,
+        ),
+      );
+    }
+  }, []);
+
+  // Value observer (watch)
+  const watchSubscriber = useRef<Map<IWatchSubscriber, string[] | undefined>>(
+    new Map(),
+  );
+  const watchSubscribe = useCallback(
+    (subscriber: IWatchSubscriber, names?: string[] | string) => {
       const nameArray =
         names === undefined ? names : names instanceof Array ? names : [names];
-      if (!subscribers.current.has(subscriber)) {
-        subscribers.current.set(subscriber, nameArray);
+      if (!watchSubscriber.current.has(subscriber)) {
+        watchSubscriber.current.set(subscriber, nameArray);
       }
-      return () => subscribers.current.delete(subscriber);
+      return () => watchSubscriber.current.delete(subscriber);
     },
     [],
   );
-  const notify = useCallback(() => {
+  const watchNotify = useCallback(() => {
     if (ref.current) {
       const newValues = getData({
         form: ref.current,
         transformers: getTransformers(fields.current, transformers),
         values: vals.current,
       });
-      for (const [subscriber, names] of subscribers.current.entries()) {
+      for (const [subscriber, names] of watchSubscriber.current.entries()) {
         const newFilteredValues = filterObject(
           newValues,
           ([name]) => !names || names.includes(name),
@@ -134,15 +158,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           ([name]) => !names || names.includes(name),
         );
         subscriber({
-          form: ref.current,
           names,
           prevValues: prevFilteredValues,
-          states: getFormState(
-            states.current,
-            vals.current,
-            defaultVals.current,
-            ref.current,
-          ),
           values: newFilteredValues,
         });
       }
@@ -161,7 +178,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         return [false, initialError];
       }
       states.current.isValidating = true;
-      notify();
+      stateNotify();
 
       let errors;
       try {
@@ -188,13 +205,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         });
       } finally {
         states.current.isValidating = false;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        states.current.isValid = Boolean(ref.current?.checkValidity());
+        stateNotify();
       }
 
-      notify();
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return [Boolean(ref.current?.checkValidity()), errors];
+      return [states.current.isValid, errors];
     },
-    [messages, notify, useNativeValidation, transformers, validators],
+    [messages, stateNotify, useNativeValidation, transformers, validators],
   );
 
   const timer = useRef<NodeJS.Timeout>();
@@ -311,6 +329,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       const allTransformers = getTransformers(fields.current, transformers);
       const val = getValue<V>(value, allTransformers?.[fieldName]);
       vals.current[fieldName] = val;
+      watchNotify();
       debouncedValidate(
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
@@ -319,7 +338,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       );
       return [fieldName, val];
     },
-    [debouncedValidate, mode, revalidateMode, transformers],
+    [debouncedValidate, mode, revalidateMode, transformers, watchNotify],
   );
 
   let submitted = false;
@@ -369,7 +388,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       } finally {
         states.current.isSubmitting = false;
         states.current.submitCount++;
-        notify();
+        stateNotify();
       }
     },
     [focusOnError, reset, transformers, validate],
@@ -438,13 +457,18 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       const handleFocusOut = (event: FocusEvent): void => {
         if (event.target && isFormElement(event.target)) {
           states.current.touchedFields.add(event.target.name);
-          if (shouldBlur(fields.current, event.target.name, onBlurOptOut)) {
+          if (
+            (mode === 'all' || mode === 'blur' || revalidateMode === 'blur') &&
+            shouldBlur(fields.current, event.target.name, onBlurOptOut)
+          ) {
             void validate(
               mode === 'all' || mode === 'blur',
               revalidateMode === 'blur',
               false,
               event.target.name,
             );
+          } else {
+            stateNotify();
           }
         }
       };
@@ -452,7 +476,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       return () => form.removeEventListener('focusout', handleFocusOut);
     }
     return undefined;
-  }, [mode, onBlurOptOut, revalidateMode, validate]);
+  }, [mode, onBlurOptOut, revalidateMode, stateNotify, validate]);
 
   const onErrorHandler = useCallback(
     (name: string) => {
@@ -524,13 +548,13 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       callback: (values: V) => void,
       names?: string[] | string,
     ) => {
-      return subscribe(({ prevValues, values }) => {
+      return watchSubscribe(({ prevValues, values }) => {
         if (!areObjectEquals(values, prevValues)) {
           callback(values as V);
         }
       }, names);
     },
-    [subscribe],
+    [watchSubscribe],
   );
 
   const formProps = useMemo(
@@ -564,7 +588,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         defaultVals.current,
         ref.current,
       ),
-      subscribe,
+      subscribe: stateSubscribe,
       unregister,
       useNativeValidation,
       validate,
@@ -582,7 +606,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
-      subscribe,
+      stateSubscribe,
       unregister,
       useNativeValidation,
       validate,

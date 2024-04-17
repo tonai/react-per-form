@@ -344,7 +344,6 @@ export function getManualError(
 }
 
 interface IGetValidatorErrorParams {
-  fieldMessages?: IFieldMessages;
   form: HTMLFormElement;
   transformers?: ITransformers;
   validatorEntries?: [string, Set<IFormValidator>][];
@@ -357,9 +356,11 @@ interface IValidatorParams extends IFormValidator {
 
 export async function getValidatorError(
   params: IGetValidatorErrorParams,
-): Promise<Record<string, IValidatorError>> {
+): Promise<{
+  validatorParams: IValidatorParams[];
+  validatorResults: string[];
+}> {
   const {
-    fieldMessages = {},
     form,
     transformers = {},
     validatorEntries = [],
@@ -382,8 +383,31 @@ export async function getValidatorError(
     }
   }
 
+  return {
+    validatorParams,
+    validatorResults: await Promise.all(Object.values(validatorResults)),
+  };
+}
+
+interface ISetValidatorErrorParams {
+  fieldMessages?: IFieldMessages;
+  form: HTMLFormElement;
+  validatorParams: IValidatorParams[];
+  validatorResults: string[];
+}
+
+export function setValidatorError(
+  params: ISetValidatorErrorParams,
+): Record<string, IValidatorError> {
+  const {
+    fieldMessages = {},
+    form,
+    validatorParams,
+    validatorResults,
+  } = params;
+
   const validatorErrors: Record<string, IValidatorError> = {};
-  (await Promise.all(Object.values(validatorResults))).forEach((result, i) => {
+  validatorResults.forEach((result, i) => {
     const { id, names, name, setErrors } = validatorParams[i];
     const error = getCustomMessage(
       result,
@@ -551,23 +575,30 @@ export async function validateForm(
   );
   fieldMessages[defaultSymbol] = messages ?? {};
 
-  // 1. native errors.
+  // 1. run validator.
+  const { validatorParams, validatorResults } = await getValidatorError({
+    form,
+    transformers,
+    validatorEntries,
+    values,
+  });
+
+  // 2. native errors.
   const nativeErrors = getNativeErrors({ fieldMessages, form });
 
-  // 2. manual errors.
+  // 3. manual errors.
   const manualErrors = getManualError({
     errors,
     fieldMessages,
     form,
   });
 
-  // 3. validator errors.
-  const validatorErrors = await getValidatorError({
+  // 4. validator errors.
+  const validatorErrors = setValidatorError({
     fieldMessages,
     form,
-    transformers,
-    validatorEntries,
-    values,
+    validatorParams,
+    validatorResults,
   });
 
   // IError object

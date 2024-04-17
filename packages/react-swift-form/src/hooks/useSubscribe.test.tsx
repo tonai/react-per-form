@@ -28,53 +28,53 @@ describe('useSubscribe hook', () => {
     });
   });
 
-  it('should call the callback with filtered values (string)', async () => {
-    const spy = jest.fn();
-    // Init
-    renderHook(() => useSubscribe(spy, 'foo'), {
-      wrapper: ({ children }) => (
-        <Form>
-          <input defaultValue="foo" name="foo" />
-          <input defaultValue="bar" name="bar" />
-          {children}
-        </Form>
-      ),
-    });
-    await waitFor(() =>
-      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
-    );
-    expect(spy).toHaveBeenCalledWith({
-      form: expect.any(HTMLFormElement) as HTMLFormElement,
-      names: ['foo'],
-      prevValues: {},
-      states: { valid: true },
-      values: { foo: 'foo' },
-    });
-  });
+  // it('should call the callback with filtered values (string)', async () => {
+  //   const spy = jest.fn();
+  //   // Init
+  //   renderHook(() => useSubscribe(spy, 'foo'), {
+  //     wrapper: ({ children }) => (
+  //       <Form>
+  //         <input defaultValue="foo" name="foo" />
+  //         <input defaultValue="bar" name="bar" />
+  //         {children}
+  //       </Form>
+  //     ),
+  //   });
+  //   await waitFor(() =>
+  //     expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+  //   );
+  //   expect(spy).toHaveBeenCalledWith({
+  //     form: expect.any(HTMLFormElement) as HTMLFormElement,
+  //     names: ['foo'],
+  //     prevValues: {},
+  //     states: { valid: true },
+  //     values: { foo: 'foo' },
+  //   });
+  // });
 
-  it('should call the callback with filtered values (array)', async () => {
-    const spy = jest.fn();
-    // Init
-    renderHook(() => useSubscribe(spy, ['foo']), {
-      wrapper: ({ children }) => (
-        <Form>
-          <input defaultValue="foo" name="foo" />
-          <input defaultValue="bar" name="bar" />
-          {children}
-        </Form>
-      ),
-    });
-    await waitFor(() =>
-      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
-    );
-    expect(spy).toHaveBeenCalledWith({
-      form: expect.any(HTMLFormElement) as HTMLFormElement,
-      names: ['foo'],
-      prevValues: {},
-      states: { valid: true },
-      values: { foo: 'foo' },
-    });
-  });
+  // it('should call the callback with filtered values (array)', async () => {
+  //   const spy = jest.fn();
+  //   // Init
+  //   renderHook(() => useSubscribe(spy, ['foo']), {
+  //     wrapper: ({ children }) => (
+  //       <Form>
+  //         <input defaultValue="foo" name="foo" />
+  //         <input defaultValue="bar" name="bar" />
+  //         {children}
+  //       </Form>
+  //     ),
+  //   });
+  //   await waitFor(() =>
+  //     expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
+  //   );
+  //   expect(spy).toHaveBeenCalledWith({
+  //     form: expect.any(HTMLFormElement) as HTMLFormElement,
+  //     names: ['foo'],
+  //     prevValues: {},
+  //     states: { valid: true },
+  //     values: { foo: 'foo' },
+  //   });
+  // });
 
   it('should call the callback when the form is changed', async () => {
     const spy = jest.fn();

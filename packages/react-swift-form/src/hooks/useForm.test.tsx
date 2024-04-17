@@ -51,6 +51,7 @@ describe('useForm hook', () => {
     expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(true);
     expect(result.current.validate).toBeDefined();
+    expect(result.current.states).toEqual({ valid: false });
   });
 
   it('should initialize data with props', () => {

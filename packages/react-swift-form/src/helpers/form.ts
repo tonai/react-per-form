@@ -305,7 +305,6 @@ export function getFormState(
     isDirty: dirtyFields.length > 0,
     isPristine: dirtyFields.length === 0,
     isSubmitted: states.submitCount > 0,
-    isValid: Boolean(form?.checkValidity()),
     touchedFields,
   };
 }
