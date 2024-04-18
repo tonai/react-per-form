@@ -13,7 +13,7 @@ import { handleSubmit } from '../../helpers/form';
 import { globalFooValidator } from '../../helpers/validators';
 import { useFilters } from '../../hooks/useFilters';
 
-const initialState = {
+const initialStates = {
   message: '',
 };
 
@@ -22,7 +22,7 @@ const messages = {
 };
 
 export default function ComponentSimpleForm(): ReactElement {
-  const [state, formAction] = useFormState(serverAction, initialState);
+  const [state, formAction] = useFormState(serverAction, initialStates);
   const { filtersProps, formData } = useFilters();
 
   return (

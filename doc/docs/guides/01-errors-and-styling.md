@@ -48,7 +48,7 @@ import SimpleHookCssPseudoClassSource from '!!raw-loader!@site/src/demo/SimpleHo
 import SimpleComponentCssPseudoClass from '@site/src/demo/SimpleComponentCssPseudoClass';
 import SimpleComponentCssPseudoClassSource from '!!raw-loader!@site/src/demo/SimpleComponentCssPseudoClass';
 
-<DemoTabs Component={SimpleComponentCssPseudoClass} Hook={SimpleHookCssPseudoClass} componentCode={SimpleComponentCssPseudoClassSource} componentMetastring="{7-16,26}" hookCode={SimpleHookCssPseudoClassSource} hookMetastring="{7-16,29}" />
+<DemoTabs Component={SimpleComponentCssPseudoClass} Hook={SimpleHookCssPseudoClass} componentCode={SimpleComponentCssPseudoClassSource} componentMetastring="{8-17,31}" hookCode={SimpleHookCssPseudoClassSource} hookMetastring="{8-17,30}" />
 
 :::info
 
@@ -67,7 +67,7 @@ import SimpleHookClassNameSource from '!!raw-loader!@site/src/demo/SimpleHookCla
 import SimpleComponentClassName from '@site/src/demo/SimpleComponentClassName';
 import SimpleComponentClassNameSource from '!!raw-loader!@site/src/demo/SimpleComponentClassName';
 
-<DemoTabs Component={SimpleComponentClassName} Hook={SimpleHookClassName} componentCode={SimpleComponentClassNameSource} componentMetastring="{15}" hookCode={SimpleHookClassNameSource} hookMetastring="{18}" />
+<DemoTabs Component={SimpleComponentClassName} Hook={SimpleHookClassName} componentCode={SimpleComponentClassNameSource} componentMetastring="{15}" hookCode={SimpleHookClassNameSource} hookMetastring="{18}" withUseNativeValidation={false} />
 
 :::tip
 

@@ -12,9 +12,9 @@ export default function Demo(props: IProps) {
     onSubmit: handleSubmit,
   });
 
-  const [isValid, setIsValid] = useState(states.valid);
+  const [isValid, setIsValid] = useState(states.isValid);
   useEffect(() => {
-    return subscribe(({ states }) => setIsValid(states.valid));
+    return subscribe(({ isValid }) => setIsValid(isValid));
   }, [subscribe]);
 
   return (

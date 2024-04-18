@@ -12,7 +12,7 @@ describe('useFormValid hook', () => {
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
-          <input />
+          <input name="foo" />
           {children}
         </Form>
       ),
@@ -28,7 +28,7 @@ describe('useFormValid hook', () => {
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
-          <input required />
+          <input name="foo" required />
           {children}
         </Form>
       ),
@@ -44,7 +44,7 @@ describe('useFormValid hook', () => {
     const { result } = renderHook(() => useFormValid(), {
       wrapper: ({ children }) => (
         <Form>
-          <input data-testid="rsf-input" name="foo" required />
+          <input data-testid="foo" name="foo" required />
           {children}
         </Form>
       ),
@@ -54,7 +54,7 @@ describe('useFormValid hook', () => {
     );
     expect(result.current).toEqual(false);
     // Change
-    fireEvent.change(screen.getByTestId('rsf-input'), {
+    fireEvent.change(screen.getByTestId('foo'), {
       target: { value: 'foo' },
     });
     await waitFor(() => expect(result.current).toEqual(true));

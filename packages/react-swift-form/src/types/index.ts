@@ -92,19 +92,35 @@ export interface IError {
   validator: Record<string, IValidatorError>;
 }
 
-export interface IFormStates {
-  valid: boolean;
+export interface IStates {
+  changedFields: Set<string>;
+  isReady: boolean;
+  isSubmitting: boolean;
+  isValid: boolean;
+  isValidating: boolean;
+  submitCount: number;
+  touchedFields: Set<string>;
 }
 
-export interface ISubscriberParams {
-  form: HTMLFormElement | null;
+export interface IFormStates
+  extends Omit<IStates, 'changedFields' | 'touchedFields'> {
+  changedFields: string[];
+  dirtyFields: string[];
+  isDirty: boolean;
+  isPristine: boolean;
+  isSubmitted: boolean;
+  touchedFields: string[];
+}
+
+export type IStateSubscriber = (states: IFormStates) => void;
+
+export interface IWatchSubscriberParams {
   names?: string[];
   prevValues: IFormValues;
-  states: IFormStates;
   values: IFormValues;
 }
 
-export type ISubscriber = (params: ISubscriberParams) => void;
+export type IWatchSubscriber = (params: IWatchSubscriberParams) => void;
 
 export type IUnSubscribe = () => void;
 
@@ -133,17 +149,17 @@ export type IOnResetHandler = (
   callback?: IResetHandler,
 ) => (event: FormEvent<HTMLFormElement>) => void;
 
-export type ISubmitHandler = (
+export type ISubmitHandler<T = unknown> = (
   event: FormEvent<HTMLFormElement>,
   values: IFormValues,
   reset: IFormReset,
-) => void;
+) => Promise<T> | T;
 
-export type ISubmitErrorHandler = (
+export type ISubmitErrorHandler<T = unknown> = (
   event: FormEvent<HTMLFormElement>,
   error: IError,
   reset: IFormReset,
-) => void;
+) => Promise<T> | T;
 
 export type IOnSubmitHandler = (
   validCallback?: ISubmitHandler,
@@ -155,6 +171,13 @@ export type IWatch = <V extends IFormValues>(
   names?: string[] | string,
 ) => IUnSubscribe;
 
+export type IWatchSubscribe = (
+  subscriber: IWatchSubscriber,
+  names?: string[] | string,
+) => IUnSubscribe;
+
+export type IStateSubscribe = (subscriber: IStateSubscriber) => IUnSubscribe;
+
 export interface IFormHandlers {
   onChange: IOnChangeHandler;
   onError: IOnErrorHandler;
@@ -162,11 +185,6 @@ export interface IFormHandlers {
   onSubmit: IOnSubmitHandler;
   watch: IWatch;
 }
-
-export type ISubscribe = (
-  subscriber: ISubscriber,
-  names?: string[] | string,
-) => IUnSubscribe;
 
 export interface IFormContext extends IFormHandlers {
   errors: IError;
@@ -177,7 +195,7 @@ export interface IFormContext extends IFormHandlers {
   reset: IFormReset;
   revalidateMode: IFormRevalidateMode;
   states: IFormStates;
-  subscribe: ISubscribe;
+  subscribe: IStateSubscribe;
   unregister: IUnregister;
   useNativeValidation: boolean;
   validate: IFormValidate;

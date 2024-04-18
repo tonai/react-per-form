@@ -15,7 +15,7 @@ import LocalValidationHookSource from '!!raw-loader!@site/src/demo/LocalValidati
 import LocalValidationComponent from '@site/src/demo/LocalValidationComponent';
 import LocalValidationComponentSource from '!!raw-loader!@site/src/demo/LocalValidationComponent';
 
-<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{5-6,9}" hookCode={LocalValidationHookSource} hookMetastring="{6-7,10,24,30,35}" />
+<DemoTabs Component={LocalValidationComponent} Hook={LocalValidationHook} componentCode={LocalValidationComponentSource} componentMetastring="{5-6,9}" hookCode={LocalValidationHookSource} hookMetastring="{6-7,10,24,30,35}" withModes withRevalidateModes />
 
 :::warning
 
@@ -38,7 +38,7 @@ import LocalCrossValidationHookSource from '!!raw-loader!@site/src/demo/LocalCro
 import LocalCrossValidationComponent from '@site/src/demo/LocalCrossValidationComponent';
 import LocalCrossValidationComponentSource from '!!raw-loader!@site/src/demo/LocalCrossValidationComponent';
 
-<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{5-9,12}" hookCode={LocalCrossValidationHookSource} hookMetastring="{6-10,13,30,36,41}" />
+<DemoTabs Component={LocalCrossValidationComponent} Hook={LocalCrossValidationHook} componentCode={LocalCrossValidationComponentSource} componentMetastring="{5-9,12}" hookCode={LocalCrossValidationHookSource} hookMetastring="{6-10,13,30,36,41}" withModes withRevalidateModes />
 
 :::tip
 
@@ -63,4 +63,4 @@ import LocalValidationHookDefaultValueSource from '!!raw-loader!@site/src/demo/L
 import LocalValidationComponentDefaultValue from '@site/src/demo/LocalValidationComponentDefaultValue';
 import LocalValidationComponentDefaultValueSource from '!!raw-loader!@site/src/demo/LocalValidationComponentDefaultValue';
 
-<DemoTabs Component={LocalValidationComponentDefaultValue} Hook={LocalValidationHookDefaultValue} componentCode={LocalValidationComponentDefaultValueSource} componentMetastring="{8,10}" hookCode={LocalValidationHookDefaultValueSource} hookMetastring="{8,10}" />
+<DemoTabs Component={LocalValidationComponentDefaultValue} Hook={LocalValidationHookDefaultValue} componentCode={LocalValidationComponentDefaultValueSource} componentMetastring="{7,9}" hookCode={LocalValidationHookDefaultValueSource} hookMetastring="{8,10}" withModes withRevalidateModes />

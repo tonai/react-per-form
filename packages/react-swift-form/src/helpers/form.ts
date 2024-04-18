@@ -1,9 +1,11 @@
 import type {
   IFormElement,
+  IFormStates,
   IFormValidator,
   IFormValues,
   IMessages,
   IRegisterParams,
+  IStates,
   ITransformers,
   IValidator,
   IValidatorObject,
@@ -33,6 +35,15 @@ export function isFormElement(
     input instanceof HTMLTextAreaElement ||
     input instanceof RadioNodeList
   );
+}
+
+export function getFormInput(
+  input: IFormElement,
+): Exclude<IFormElement, RadioNodeList> {
+  if (input instanceof RadioNodeList) {
+    return input[0] as HTMLInputElement;
+  }
+  return input;
 }
 
 const disallowedInputTypes = ['submit', 'reset'];
@@ -260,4 +271,40 @@ export function getDefaultValues(
     return { ...acc, ...defaultValues };
   }, defaultValues);
   return { ...defaultVals, ...paramValues, ...resetValues };
+}
+
+export function getFormStates(
+  states: IStates,
+  values: IFormValues,
+  defaultValues: IFormValues,
+  form?: HTMLFormElement | null,
+): IFormStates {
+  let defaultValueAttributes: Record<string, string | null> = {};
+  if (form) {
+    defaultValueAttributes = Object.fromEntries(
+      getFormInputs(form).map((input) => [
+        getFormInput(input).name,
+        getFormInput(input).getAttribute('value'),
+      ]),
+    );
+  }
+  const changedFields = Array.from(states.changedFields);
+  const dirtyFields = changedFields.filter((name) => {
+    if (defaultValues[name] !== undefined) {
+      return values[name] !== defaultValues[name];
+    } else if (defaultValueAttributes[name] != null) {
+      return values[name] !== defaultValueAttributes[name];
+    }
+    return values[name] !== '';
+  });
+  const touchedFields = Array.from(states.touchedFields);
+  return {
+    ...states,
+    changedFields,
+    dirtyFields,
+    isDirty: dirtyFields.length > 0,
+    isPristine: dirtyFields.length === 0,
+    isSubmitted: states.submitCount > 0,
+    touchedFields,
+  };
 }

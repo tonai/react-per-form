@@ -3,7 +3,7 @@ import type { IFormContext } from '../types';
 
 import { createContext } from 'react';
 
-import { initialError } from '../constants';
+import { initialError, initialStates } from '../constants';
 
 export const formContext = createContext<IFormContext>({
   errors: initialError,
@@ -17,7 +17,15 @@ export const formContext = createContext<IFormContext>({
   reset: () => null,
   revalidateMode: 'submit',
   states: {
-    valid: true,
+    ...initialStates,
+    changedFields: [],
+    dirtyFields: [],
+    isDirty: false,
+    isPristine: true,
+    isReady: false,
+    isSubmitted: false,
+    isValid: true,
+    touchedFields: [],
   },
   subscribe() {
     return () => {};

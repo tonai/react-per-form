@@ -10,9 +10,9 @@ import {
 function Submit() {
   const { states, subscribe } = useFormContext();
 
-  const [isValid, setIsValid] = useState(states.valid);
+  const [isValid, setIsValid] = useState(states.isValid);
   useEffect(() => {
-    return subscribe(({ states }) => setIsValid(states.valid));
+    return subscribe(({ isValid }) => setIsValid(isValid));
   }, [subscribe]);
 
   return (

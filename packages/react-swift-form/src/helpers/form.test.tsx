@@ -1,8 +1,12 @@
+import type { IFormElement } from '../types';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
   getDefaultValues,
+  getFormInput,
   getFormInputs,
+  getFormStates,
   getInputValue,
   getName,
   getTransformers,
@@ -17,6 +21,34 @@ import {
 } from './form';
 
 describe('form helper', () => {
+  let form: HTMLFormElement;
+  let input1: HTMLInputElement;
+  let input2: HTMLInputElement;
+  let input3: HTMLInputElement;
+  let input4: HTMLInputElement;
+
+  beforeEach(() => {
+    form = document.createElement('form');
+    input1 = document.createElement('input');
+    input1.setAttribute('name', 'foo');
+    input1.setAttribute('value', '');
+    form.appendChild(input1);
+    input2 = document.createElement('input');
+    input2.setAttribute('name', 'bar');
+    input2.setAttribute('value', '');
+    form.appendChild(input2);
+    input3 = document.createElement('input');
+    input3.setAttribute('name', 'radio');
+    input3.setAttribute('type', 'checkbox');
+    input3.setAttribute('value', '1');
+    form.appendChild(input3);
+    input4 = document.createElement('input');
+    input4.setAttribute('name', 'radio');
+    input4.setAttribute('type', 'checkbox');
+    input4.setAttribute('value', '2');
+    form.appendChild(input4);
+  });
+
   describe('getDefaultValues', () => {
     it('should return the merged default values', () => {
       expect(getDefaultValues(new Set(), {})).toEqual({});
@@ -58,6 +90,17 @@ describe('form helper', () => {
     });
   });
 
+  describe('getFormInput', () => {
+    it('should return the form input', () => {
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.foo as IFormElement)).toEqual(input1);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.bar as IFormElement)).toEqual(input2);
+      // @ts-expect-error access HTMLFormControlsCollection with input name
+      expect(getFormInput(form.elements.radio as IFormElement)).toEqual(input3);
+    });
+  });
+
   describe('getFormInputs', () => {
     it('should get the form inputs', () => {
       const form = document.createElement('form');
@@ -73,6 +116,151 @@ describe('form helper', () => {
       input3.setAttribute('type', 'submit');
       form.appendChild(input2);
       expect(getFormInputs(form)).toEqual([input1]);
+    });
+  });
+
+  describe('getFormStates', () => {
+    it('should return the form states', () => {
+      expect(
+        getFormStates(
+          {
+            changedFields: new Set(),
+            isReady: true,
+            isSubmitting: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: new Set(),
+          },
+          {},
+          {},
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isDirty: false,
+        isPristine: true,
+        isReady: true,
+        isSubmitted: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+    });
+
+    it('should return the form states with the right dirty calculation', () => {
+      expect(
+        getFormStates(
+          {
+            changedFields: new Set(),
+            isReady: true,
+            isSubmitting: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: new Set(),
+          },
+          { foo: 'bar' },
+          {},
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isDirty: false,
+        isPristine: true,
+        isReady: true,
+        isSubmitted: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+      expect(
+        getFormStates(
+          {
+            changedFields: new Set(['foo']),
+            isReady: true,
+            isSubmitting: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: new Set(),
+          },
+          { foo: 'bar' },
+          {},
+        ),
+      ).toEqual({
+        changedFields: ['foo'],
+        dirtyFields: ['foo'],
+        isDirty: true,
+        isPristine: false,
+        isReady: true,
+        isSubmitted: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+      expect(
+        getFormStates(
+          {
+            changedFields: new Set(['foo']),
+            isReady: true,
+            isSubmitting: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: new Set(),
+          },
+          { foo: 'bar' },
+          { foo: 'bar' },
+        ),
+      ).toEqual({
+        changedFields: ['foo'],
+        dirtyFields: [],
+        isDirty: false,
+        isPristine: true,
+        isReady: true,
+        isSubmitted: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+      input1.setAttribute('value', 'bar');
+      expect(
+        getFormStates(
+          {
+            changedFields: new Set(['foo']),
+            isReady: true,
+            isSubmitting: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: new Set(),
+          },
+          { foo: 'bar' },
+          {},
+          form,
+        ),
+      ).toEqual({
+        changedFields: ['foo'],
+        dirtyFields: [],
+        isDirty: false,
+        isPristine: true,
+        isReady: true,
+        isSubmitted: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
     });
   });
 
@@ -159,6 +347,10 @@ describe('form helper', () => {
       expect(getName({ target: textarea })).toEqual('');
       textarea.name = 'foo';
       expect(getName({ target: textarea })).toEqual('foo');
+    });
+
+    it('should return null in other cases', () => {
+      expect(getName(42)).toEqual(null);
     });
   });
 

@@ -8,18 +8,20 @@ import type {
   IOnChangeHandlerParams,
   IRegisterParams,
   IResetHandler,
+  IStateSubscriber,
+  IStates,
   ISubmitErrorHandler,
   ISubmitHandler,
-  ISubscriber,
   ITransformers,
   IValidator,
   IValidatorObject,
+  IWatchSubscriber,
 } from '../types';
 import type { FormEvent, RefObject } from 'react';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { initialError } from '../constants';
+import { initialError, initialStates } from '../constants';
 import {
   areObjectEquals,
   filterObject,
@@ -27,6 +29,7 @@ import {
   getDefaultValues,
   getFormInput,
   getFormInputs,
+  getFormStates,
   getName,
   getTransformers,
   getValidatorMap,
@@ -40,6 +43,7 @@ import {
 
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
+  errorCallback?: (error: Error) => void;
   focusOnError?: boolean;
   form?: HTMLFormElement;
   messages?: IMessages;
@@ -70,6 +74,7 @@ export interface IUseFormResult extends IFormContext {
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     defaultValues,
+    errorCallback = console.error,
     focusOnError = true,
     form = null,
     messages,
@@ -93,30 +98,57 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const manualErrors = useRef<Record<string, string | null>>({});
   const changeNames = useRef<Record<string, boolean>>({});
   const changeHandlerInitializers = useRef<Record<string, () => void>>({});
+  const states = useRef<IStates>({
+    ...initialStates,
+    changedFields: new Set<string>(),
+    isReady: false,
+    touchedFields: new Set<string>(),
+  });
   const prevErrors = useRef<IError>(initialError);
   const [errors, setErrors] = useState<IError>(initialError);
 
-  // Observer
-  const subscribers = useRef<Map<ISubscriber, string[] | undefined>>(new Map());
-  const subscribe = useCallback(
-    (subscriber: ISubscriber, names?: string[] | string) => {
+  // State observer
+  const stateSubscribers = useRef<Set<IStateSubscriber>>(new Set());
+  const stateSubscribe = useCallback((subscriber: IStateSubscriber) => {
+    if (!stateSubscribers.current.has(subscriber)) {
+      stateSubscribers.current.add(subscriber);
+    }
+    return () => stateSubscribers.current.delete(subscriber);
+  }, []);
+  const stateNotify = useCallback(() => {
+    for (const subscriber of stateSubscribers.current.values()) {
+      subscriber(
+        getFormStates(
+          states.current,
+          vals.current,
+          defaultVals.current,
+          ref.current,
+        ),
+      );
+    }
+  }, []);
+
+  // Value observer (watch)
+  const watchSubscriber = useRef<Map<IWatchSubscriber, string[] | undefined>>(
+    new Map(),
+  );
+  const watchSubscribe = useCallback(
+    (subscriber: IWatchSubscriber, names?: string[] | string) => {
       const nameArray =
         names === undefined ? names : names instanceof Array ? names : [names];
-      if (!subscribers.current.has(subscriber)) {
-        subscribers.current.set(subscriber, nameArray);
-      }
-      return () => subscribers.current.delete(subscriber);
+      watchSubscriber.current.set(subscriber, nameArray);
+      return () => watchSubscriber.current.delete(subscriber);
     },
     [],
   );
-  const notify = useCallback(() => {
+  const watchNotify = useCallback(() => {
     if (ref.current) {
       const newValues = getData({
         form: ref.current,
         transformers: getTransformers(fields.current, transformers),
         values: vals.current,
       });
-      for (const [subscriber, names] of subscribers.current.entries()) {
+      for (const [subscriber, names] of watchSubscriber.current.entries()) {
         const newFilteredValues = filterObject(
           newValues,
           ([name]) => !names || names.includes(name),
@@ -126,12 +158,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           ([name]) => !names || names.includes(name),
         );
         subscriber({
-          form: ref.current,
           names,
           prevValues: prevFilteredValues,
-          states: {
-            valid: Boolean(ref.current.checkValidity()),
-          },
           values: newFilteredValues,
         });
       }
@@ -149,34 +177,42 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       if (!ref.current) {
         return [false, initialError];
       }
+      states.current.isValidating = true;
+      stateNotify();
 
-      const validatorMap = getValidatorMap(
-        fields.current,
-        validators,
-        messages,
-      );
+      let errors;
+      try {
+        const validatorMap = getValidatorMap(
+          fields.current,
+          validators,
+          messages,
+        );
 
-      // Validate
-      const errors = await validateForm({
-        display,
-        errors: manualErrors.current,
-        focusOnError,
-        form: ref.current,
-        messages,
-        names: names instanceof Array ? names : names ? [names] : undefined,
-        revalidate,
-        setErrors,
-        transformers: getTransformers(fields.current, transformers),
-        useNativeValidation,
-        validatorMap,
-        values: vals.current,
-      });
+        // Validate
+        errors = await validateForm({
+          display,
+          errors: manualErrors.current,
+          focusOnError,
+          form: ref.current,
+          messages,
+          names: names instanceof Array ? names : names ? [names] : undefined,
+          revalidate,
+          setErrors,
+          transformers: getTransformers(fields.current, transformers),
+          useNativeValidation,
+          validatorMap,
+          values: vals.current,
+        });
+      } finally {
+        states.current.isValidating = false;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        states.current.isValid = Boolean(ref.current?.checkValidity());
+        stateNotify();
+      }
 
-      notify();
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return [Boolean(ref.current?.checkValidity()), errors];
+      return [states.current.isValid, errors];
     },
-    [messages, notify, useNativeValidation, transformers, validators],
+    [messages, stateNotify, useNativeValidation, transformers, validators],
   );
 
   const timer = useRef<NodeJS.Timeout>();
@@ -196,21 +232,25 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [validate],
   );
 
-  const setValues = useCallback((values: IFormValues) => {
-    if (ref.current) {
-      for (const input of getFormInputs(ref.current)) {
-        const formField = getFormInput(input);
-        const { name } = formField;
-        if (name && values[name] !== undefined && values[name] !== null) {
-          if (isCheckbox(formField)) {
-            formField.checked = Boolean(values[name]);
-          } else {
-            formField.value = String(values[name]);
+  const setValues = useCallback(
+    (values: IFormValues) => {
+      if (ref.current) {
+        for (const input of getFormInputs(ref.current)) {
+          const formField = getFormInput(input);
+          const { name } = formField;
+          if (name && values[name] !== undefined && values[name] !== null) {
+            if (isCheckbox(formField)) {
+              formField.checked = Boolean(values[name]);
+            } else {
+              formField.value = String(values[name]);
+            }
           }
         }
+        watchNotify();
       }
-    }
-  }, []);
+    },
+    [watchNotify],
+  );
 
   const register = useCallback(
     (params: IRegisterParams) => {
@@ -237,6 +277,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   const resetForm = useCallback(
     (paramValues?: IFormValues | null | void) => {
+      // Reset errors.
       setErrors(initialError);
       const validatorMap = getValidatorMap(
         fields.current,
@@ -248,6 +289,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           params.setErrors?.(initialError);
         }
       }
+      // Reset states
+      states.current = {
+        ...initialStates,
+        changedFields: new Set<string>(),
+        isReady: states.current.isReady,
+        touchedFields: new Set<string>(),
+      };
+      // Reset values
       vals.current = {};
       defaultVals.current = getDefaultValues(
         fields.current,
@@ -280,9 +329,11 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           'react-swift-form was unable to retrieve the field name',
         );
       }
+      states.current.changedFields.add(fieldName);
       const allTransformers = getTransformers(fields.current, transformers);
       const val = getValue<V>(value, allTransformers?.[fieldName]);
       vals.current[fieldName] = val;
+      watchNotify();
       debouncedValidate(
         mode === 'all' || mode === 'change',
         revalidateMode === 'change',
@@ -291,7 +342,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       );
       return [fieldName, val];
     },
-    [debouncedValidate, mode, revalidateMode, transformers],
+    [debouncedValidate, mode, revalidateMode, transformers, watchNotify],
   );
 
   let submitted = false;
@@ -301,35 +352,47 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       validCallback?: ISubmitHandler,
       invalidCallback?: ISubmitErrorHandler,
     ) => {
-      // Prevent submit infinite loop
+      // Flag top prevent submit infinite loop
       if (submitted) {
         return;
       }
       // We have to prevent the event (even for server actions) because we need to await the validation
       event.preventDefault();
-      const [isValid, errors] = await validate(true, false, focusOnError);
-      if (isValid && ref.current) {
-        // If the form action is not null then it should a server action
-        // In that case re-submit the form (set flag to true before to avoid infinite loop)
-        if (ref.current.getAttribute('action') !== null) {
-          // eslint-disable-next-line require-atomic-updates, react-hooks/exhaustive-deps
-          submitted = true;
-          setTimeout(() => {
-            ref.current?.requestSubmit();
-            submitted = false;
-          });
+      try {
+        states.current.isSubmitting = true;
+        const [isValid, errors] = await validate(true, false, focusOnError);
+        if (isValid && ref.current) {
+          // If the form action is not null then it should be a server action
+          // In that case re-submit the form (set flag to true before to avoid infinite loop)
+          if (ref.current.getAttribute('action') !== null) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            submitted = true;
+            setTimeout(() => {
+              // We need to call requestSubmit in setTimeout for it to work as expected
+              ref.current?.requestSubmit();
+              submitted = false;
+            });
+          }
+          if (validCallback) {
+            await validCallback(
+              event,
+              getData({
+                form: ref.current,
+                transformers: getTransformers(fields.current, transformers),
+                values: vals.current,
+              }),
+              reset,
+            );
+          }
+        } else if (invalidCallback) {
+          await invalidCallback(event, errors, reset);
         }
-        validCallback?.(
-          event,
-          getData({
-            form: ref.current,
-            transformers: getTransformers(fields.current, transformers),
-            values: vals.current,
-          }),
-          reset,
-        );
-      } else {
-        invalidCallback?.(event, errors, reset);
+      } catch (error) {
+        errorCallback(error);
+      } finally {
+        states.current.isSubmitting = false;
+        states.current.submitCount++;
+        stateNotify();
       }
     },
     [focusOnError, reset, transformers, validate],
@@ -385,6 +448,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     validate().then(() => {
       if (ref.current) {
+        states.current.isReady = true;
+        stateNotify();
         ref.current.dataset.rsf = 'init';
       }
     });
@@ -392,30 +457,31 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
   // Manage blur event listeners
   useEffect(() => {
-    if (
-      ref.current &&
-      (mode === 'all' || mode === 'blur' || revalidateMode === 'blur')
-    ) {
+    if (ref.current) {
       const form = ref.current;
       const handleFocusOut = (event: FocusEvent): void => {
-        if (
-          event.target &&
-          isFormElement(event.target) &&
-          shouldBlur(fields.current, event.target.name, onBlurOptOut)
-        ) {
-          void validate(
-            mode === 'all' || mode === 'blur',
-            revalidateMode === 'blur',
-            false,
-            event.target.name,
-          );
+        if (event.target && isFormElement(event.target)) {
+          states.current.touchedFields.add(event.target.name);
+          if (
+            (mode === 'all' || mode === 'blur' || revalidateMode === 'blur') &&
+            shouldBlur(fields.current, event.target.name, onBlurOptOut)
+          ) {
+            void validate(
+              mode === 'all' || mode === 'blur',
+              revalidateMode === 'blur',
+              false,
+              event.target.name,
+            );
+          } else {
+            stateNotify();
+          }
         }
       };
       form.addEventListener('focusout', handleFocusOut);
       return () => form.removeEventListener('focusout', handleFocusOut);
     }
     return undefined;
-  }, [mode, onBlurOptOut, revalidateMode, validate]);
+  }, [mode, onBlurOptOut, revalidateMode, stateNotify, validate]);
 
   const onErrorHandler = useCallback(
     (name: string) => {
@@ -487,13 +553,13 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       callback: (values: V) => void,
       names?: string[] | string,
     ) => {
-      return subscribe(({ prevValues, values }) => {
+      return watchSubscribe(({ prevValues, values }) => {
         if (!areObjectEquals(values, prevValues)) {
           callback(values as V);
         }
       }, names);
     },
-    [subscribe],
+    [watchSubscribe],
   );
 
   const formProps = useMemo(
@@ -521,10 +587,13 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
-      states: {
-        valid: Boolean(ref.current?.checkValidity()),
-      },
-      subscribe,
+      states: getFormStates(
+        states.current,
+        vals.current,
+        defaultVals.current,
+        ref.current,
+      ),
+      subscribe: stateSubscribe,
       unregister,
       useNativeValidation,
       validate,
@@ -542,7 +611,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
-      subscribe,
+      stateSubscribe,
       unregister,
       useNativeValidation,
       validate,

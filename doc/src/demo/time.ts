@@ -1,5 +1,5 @@
-export function delay<T>(value: T): Promise<T> {
+export function delay<T>(value?: T): Promise<T> {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(value), 1000);
+    setTimeout(() => resolve(value as T), 1000);
   });
 }

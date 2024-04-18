@@ -368,13 +368,11 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    // Here we have muiValidatorError and not missError because when the field is focused
-    // the value is set to MM/DD/YYYY by mui, that's why it trigger the validation error
-    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
@@ -386,7 +384,7 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // submit
     await page.getByTestId('rsf-submit').click();
@@ -541,9 +539,7 @@ test.describe('Component Lib Non Native', () => {
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    // Here we have muiValidatorError and not missError because when the field is focused
-    // the value is set to MM/DD/YYYY by mui, that's why it trigger the validation error
-    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').fill('01/01/2024');
     await expect(page.getByTestId('number-error')).not.toBeVisible();
@@ -559,7 +555,7 @@ test.describe('Component Lib Non Native', () => {
     await expect(page.getByTestId('watch')).toHaveText('');
     await page.getByTestId('mui').blur();
     await expect(page.getByTestId('number-error')).not.toBeVisible();
-    await expect(page.getByTestId('mui-error')).toHaveText(muiValidatorError);
+    await expect(page.getByTestId('mui-error')).toHaveText(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // submit
     await page.getByTestId('rsf-submit').click();

@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { fireEvent, renderHook, waitFor } from '@testing-library/react';
 
 import { useForm } from './useForm';
 
@@ -46,7 +46,19 @@ describe('useForm hook', () => {
     expect(result.current.mode).toEqual('submit');
     expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('submit');
-    expect(result.current.states).toEqual({ valid: false });
+    expect(result.current.states).toEqual({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
     expect(result.current.subscribe).toBeDefined();
     expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(true);
@@ -80,7 +92,19 @@ describe('useForm hook', () => {
     expect(result.current.mode).toEqual('all');
     expect(result.current.register).toBeDefined();
     expect(result.current.revalidateMode).toEqual('change');
-    expect(result.current.states).toEqual({ valid: false });
+    expect(result.current.states).toEqual({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
     expect(result.current.subscribe).toBeDefined();
     expect(result.current.unregister).toBeDefined();
     expect(result.current.useNativeValidation).toEqual(false);
@@ -276,6 +300,63 @@ describe('useForm hook', () => {
     expect(preventDefault).toHaveBeenCalled();
   });
 
+  it('should call requestSubmit with server action (props)', async () => {
+    const preventDefault = jest.fn();
+    const requestSubmit = jest.fn(() => {
+      // Manually trigger the second submit
+      result.current.formProps.onSubmit({
+        preventDefault,
+      } as unknown as FormEvent<HTMLFormElement>);
+    });
+    const onSubmit = jest.fn();
+    form.setAttribute('action', '');
+    form.requestSubmit = requestSubmit;
+    // Init
+    const { result } = renderHook(() =>
+      useForm({
+        form,
+        onSubmit,
+      }),
+    );
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    // Submit
+    const submitCallback = result.current.onSubmit(onSubmit);
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    expect(requestSubmit).toHaveBeenCalledTimes(1);
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call requestSubmit with server action (return)', async () => {
+    const preventDefault = jest.fn();
+    const requestSubmit = jest.fn(() => {
+      // Manually trigger the second submit
+      result.current.formProps.onSubmit({
+        preventDefault,
+      } as unknown as FormEvent<HTMLFormElement>);
+    });
+    const onSubmit = jest.fn();
+    form.setAttribute('action', '');
+    form.requestSubmit = requestSubmit;
+    // Init
+    const { result } = renderHook(() =>
+      useForm({
+        form,
+        onSubmit,
+      }),
+    );
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    // Submit
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    expect(requestSubmit).toHaveBeenCalledTimes(1);
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+  });
+
   it('should call the validator on submit', async () => {
     const preventDefault = jest.fn();
     const validator = jest.fn();
@@ -291,6 +372,9 @@ describe('useForm hook', () => {
       }),
     );
     await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(validator).toHaveBeenCalledWith({ foo: '42' }, ['foo']);
+    expect(validator).toHaveBeenCalledTimes(1);
+    validator.mockClear();
     // Submit
     result.current.formProps.onSubmit({
       preventDefault,
@@ -298,7 +382,7 @@ describe('useForm hook', () => {
     await waitFor(() =>
       expect(validator).toHaveBeenCalledWith({ foo: '42' }, ['foo']),
     );
-    expect(validator).toHaveBeenCalledTimes(2); // init + submit
+    expect(validator).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalled();
   });
 
@@ -316,6 +400,9 @@ describe('useForm hook', () => {
       }),
     );
     await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(validator).toHaveBeenCalledWith({ foo: '42' }, ['foo']);
+    expect(validator).toHaveBeenCalledTimes(1);
+    validator.mockClear();
     // Change
     result.current.formProps.onChange({
       target: { name: 'foo', tagName: 'INPUT', value: '12' },
@@ -323,7 +410,7 @@ describe('useForm hook', () => {
     await waitFor(() =>
       expect(validator).toHaveBeenCalledWith({ foo: '12' }, ['foo']),
     );
-    expect(validator).toHaveBeenCalledTimes(2); // init + change
+    expect(validator).toHaveBeenCalledTimes(1);
   });
 
   it('should not call the validator twice when using the onChange handler', async () => {
@@ -340,6 +427,9 @@ describe('useForm hook', () => {
       }),
     );
     await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(validator).toHaveBeenCalledWith({ foo: '42' }, ['foo']);
+    expect(validator).toHaveBeenCalledTimes(1);
+    validator.mockClear();
     // Change
     result.current.onChange(() => null, { name: 'foo' })(12);
     result.current.formProps.onChange({
@@ -348,7 +438,7 @@ describe('useForm hook', () => {
     await waitFor(() =>
       expect(validator).toHaveBeenCalledWith({ foo: 12 }, ['foo']),
     );
-    expect(validator).toHaveBeenCalledTimes(2); // init + change
+    expect(validator).toHaveBeenCalledTimes(1);
   });
 
   it('should initialize the default value when using the onChange handler', async () => {
@@ -985,6 +1075,32 @@ describe('useForm hook', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
+  it('should call the watch on value change (using string filter)', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.watch(spy, 'foo');
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Change
+    result.current.onChange(() => null, { name: 'foo' })(12);
+    await waitFor(() => expect(spy).toHaveBeenCalledWith({ foo: 12 }));
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call the watch on value change (using array filter)', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.watch(spy, ['foo']);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Change
+    result.current.onChange(() => null, { name: 'foo' })(12);
+    await waitFor(() => expect(spy).toHaveBeenCalledWith({ foo: 12 }));
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
   it('should call the watch on reset', async () => {
     const spy = jest.fn();
     // Init
@@ -1153,7 +1269,7 @@ describe('useForm hook', () => {
     });
     // Submit
     const submitCallback = result.current.onSubmit(
-      () => null,
+      () => undefined,
       (_a, _b, reset) => reset(),
     );
     expect(input1.value).toEqual('bar');
@@ -1163,5 +1279,617 @@ describe('useForm hook', () => {
     await waitFor(() => expect(preventDefault).toHaveBeenCalled());
     expect(input1.value).toEqual('');
     expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when form is valid (props)', async () => {
+    const preventDefault = jest.fn();
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    spy.mockClear();
+    // Submit
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when form is valid (return)', async () => {
+    const preventDefault = jest.fn();
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    spy.mockClear();
+    // Submit
+    const submitCallback = result.current.onSubmit();
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when form is invalid (props)', async () => {
+    const preventDefault = jest.fn();
+    const spy = jest.fn();
+    input1.setAttribute('required', '');
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    spy.mockClear();
+    // Submit
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when form is invalid (return)', async () => {
+    const preventDefault = jest.fn();
+    const spy = jest.fn();
+    input1.setAttribute('required', '');
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    spy.mockClear();
+    // Submit
+    const submitCallback = result.current.onSubmit();
+    submitCallback({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when an error is thrown from onSubmit handler (props)', async () => {
+    const preventDefault = jest.fn();
+    const errorCallback = jest.fn();
+    const onSubmit = jest.fn(() => {
+      throw new Error('error');
+    });
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() =>
+      useForm({ errorCallback, form, onSubmit }),
+    );
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Submit
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(errorCallback).toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states when an error is thrown from onSubmitError handler (props)', async () => {
+    const preventDefault = jest.fn();
+    const errorCallback = jest.fn();
+    const onSubmitError = jest.fn(() => {
+      throw new Error('error');
+    });
+    const spy = jest.fn();
+    input1.setAttribute('required', '');
+    // Init
+    const { result } = renderHook(() =>
+      useForm({ errorCallback, form, onSubmitError }),
+    );
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Submit
+    result.current.formProps.onSubmit({
+      preventDefault,
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: false,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: false,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
+    expect(errorCallback).toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
+  it('should notify states on change', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Change
+    result.current.formProps.onChange({
+      target: { name: 'foo', tagName: 'INPUT', value: '12' },
+    } as unknown as FormEvent<HTMLFormElement>);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+  });
+
+  it('should notify states using the onChange handler', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Change
+    result.current.onChange(() => null, { name: 'foo' })('12');
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+  });
+
+  it('should notify states on blur (mode=submit)', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Blur
+    fireEvent.blur(input1);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: ['foo'],
+    });
+  });
+
+  it('should notify states on blur (mode=blur)', async () => {
+    const spy = jest.fn();
+    // Init
+    const { result } = renderHook(() => useForm({ form, mode: 'blur' }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Blur
+    fireEvent.blur(input1);
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: ['foo'],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: ['foo'],
+    });
+  });
+
+  it('should not notify states if blur target is not a form element', async () => {
+    const spy = jest.fn();
+    // Init
+    const button = document.createElement('button');
+    form.appendChild(button);
+    const { result } = renderHook(() => useForm({ form }));
+    result.current.subscribe(spy);
+    await waitFor(() => expect(form.dataset.rsf).toEqual('init'));
+    spy.mockClear();
+    // Blur
+    fireEvent.blur(button);
+    await waitFor(() => expect(spy).not.toHaveBeenCalled());
   });
 });

@@ -19,60 +19,45 @@ describe('useSubscribe hook', () => {
     await waitFor(() =>
       expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
     );
+    expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenCalledWith({
-      form: expect.any(HTMLFormElement) as HTMLFormElement,
-      names: undefined,
-      prevValues: {},
-      states: { valid: true },
-      values: { foo: 'bar' },
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
     });
-  });
-
-  it('should call the callback with filtered values (string)', async () => {
-    const spy = jest.fn();
-    // Init
-    renderHook(() => useSubscribe(spy, 'foo'), {
-      wrapper: ({ children }) => (
-        <Form>
-          <input defaultValue="foo" name="foo" />
-          <input defaultValue="bar" name="bar" />
-          {children}
-        </Form>
-      ),
-    });
-    await waitFor(() =>
-      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
-    );
     expect(spy).toHaveBeenCalledWith({
-      form: expect.any(HTMLFormElement) as HTMLFormElement,
-      names: ['foo'],
-      prevValues: {},
-      states: { valid: true },
-      values: { foo: 'foo' },
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: false,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
     });
-  });
-
-  it('should call the callback with filtered values (array)', async () => {
-    const spy = jest.fn();
-    // Init
-    renderHook(() => useSubscribe(spy, ['foo']), {
-      wrapper: ({ children }) => (
-        <Form>
-          <input defaultValue="foo" name="foo" />
-          <input defaultValue="bar" name="bar" />
-          {children}
-        </Form>
-      ),
-    });
-    await waitFor(() =>
-      expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
-    );
     expect(spy).toHaveBeenCalledWith({
-      form: expect.any(HTMLFormElement) as HTMLFormElement,
-      names: ['foo'],
-      prevValues: {},
-      states: { valid: true },
-      values: { foo: 'foo' },
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
     });
   });
 
@@ -93,15 +78,33 @@ describe('useSubscribe hook', () => {
     spy.mockClear();
     // Change
     fireEvent.change(screen.getByTestId('foo'), { target: { value: 'baz' } });
-    await waitFor(() =>
-      expect(spy).toHaveBeenCalledWith({
-        form: expect.any(HTMLFormElement) as HTMLFormElement,
-        names: undefined,
-        prevValues: { foo: 'bar' },
-        states: { valid: true },
-        values: { foo: 'baz' },
-      }),
-    );
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: ['foo'],
+      dirtyFields: ['foo'],
+      isDirty: true,
+      isPristine: false,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
   });
 
   it('should call the callback when the form is submitted', async () => {
@@ -121,15 +124,46 @@ describe('useSubscribe hook', () => {
     spy.mockClear();
     // Submit
     fireEvent.submit(screen.getByTestId('rsf-form'));
-    await waitFor(() =>
-      expect(spy).toHaveBeenCalledWith({
-        form: expect.any(HTMLFormElement) as HTMLFormElement,
-        names: undefined,
-        prevValues: { foo: 'bar' },
-        states: { valid: true },
-        values: { foo: 'bar' },
-      }),
-    );
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(3));
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: true,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: false,
+      isSubmitting: true,
+      isValid: true,
+      isValidating: false,
+      submitCount: 0,
+      touchedFields: [],
+    });
+    expect(spy).toHaveBeenCalledWith({
+      changedFields: [],
+      dirtyFields: [],
+      isDirty: false,
+      isPristine: true,
+      isReady: true,
+      isSubmitted: true,
+      isSubmitting: false,
+      isValid: true,
+      isValidating: false,
+      submitCount: 1,
+      touchedFields: [],
+    });
   });
 
   it('should not register the same callback twice', async () => {
@@ -150,6 +184,6 @@ describe('useSubscribe hook', () => {
     await waitFor(() =>
       expect(screen.queryByTestId('rsf-form')?.dataset.rsf).toEqual('init'),
     );
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(3);
   });
 });
