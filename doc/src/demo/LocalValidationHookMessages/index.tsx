@@ -23,15 +23,15 @@ function Input() {
   );
 }
 
-export default function Demo({ useNativeValidation }: IProps) {
+export default function Demo(props: IProps) {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {
     console.log(values);
   }
 
   const { formProps, ...context } = useForm({
+    ...props,
     messages: globalMessages,
     onSubmit: handleSubmit,
-    useNativeValidation,
   });
 
   return (

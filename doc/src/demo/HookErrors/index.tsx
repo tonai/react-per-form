@@ -12,7 +12,7 @@ const validators = {
   },
 };
 
-export default function Demo(props: IProps) {
+export default function Demo({ useNativeValidation }: IProps) {
   const [value, setValue] = useState<Dayjs | null>(null);
 
   function handleReset() {
@@ -24,11 +24,11 @@ export default function Demo(props: IProps) {
   }
 
   const { errors, formProps, onChange, onError } = useForm({
-    ...props,
     defaultValues,
     onChangeOptOut: 'mui',
     onReset: handleReset,
     onSubmit: handleSubmit,
+    useNativeValidation,
     validators,
   });
 

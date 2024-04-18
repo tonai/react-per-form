@@ -13,7 +13,7 @@ export default function Demo(props: IProps) {
         <>
           <input name="text" required />
           {errors.all.text && <div className="error">{errors.all.text}</div>}
-          <button disabled={!states.valid} type="submit">
+          <button disabled={!states.isValid} type="submit">
             Submit
           </button>
         </>

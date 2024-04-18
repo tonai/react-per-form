@@ -54,7 +54,7 @@ import LocalValidationHookMessagesSource from '!!raw-loader!@site/src/demo/Local
 import LocalValidationComponentMessages from '@site/src/demo/LocalValidationComponentMessages';
 import LocalValidationComponentMessagesSource from '!!raw-loader!@site/src/demo/LocalValidationComponentMessages';
 
-<DemoTabs Component={LocalValidationComponentMessages} Hook={LocalValidationHookMessages} componentCode={LocalValidationComponentMessagesSource} componentMetastring="{8,9,13,32}" hookCode={LocalValidationHookMessagesSource} hookMetastring="{9,10,14,32}" withModes withRevalidateModes />
+<DemoTabs Component={LocalValidationComponentMessages} Hook={LocalValidationHookMessages} componentCode={LocalValidationComponentMessagesSource} componentMetastring="{8,9,13,31}" hookCode={LocalValidationHookMessagesSource} hookMetastring="{9,10,14,33}" withModes withRevalidateModes />
 
 :::tip
 

@@ -1,7 +1,8 @@
+import type { IProps } from '../types';
 import { type FormEvent, useId } from 'react';
 import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
 
-export default function Demo() {
+export default function Demo({ useNativeValidation }: IProps) {
   const id = useId();
   const safeId = id.replace(/:/g, '\\:');
   const css = `#${safeId} input:valid {
@@ -20,7 +21,11 @@ export default function Demo() {
   }
 
   return (
-    <Form id={id} onSubmit={handleSubmit} useNativeValidation={false}>
+    <Form
+      id={id}
+      onSubmit={handleSubmit}
+      useNativeValidation={useNativeValidation}
+    >
       {({ errors }: IFormContext) => (
         <>
           <style>{css}</style>

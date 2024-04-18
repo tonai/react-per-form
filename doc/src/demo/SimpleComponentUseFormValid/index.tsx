@@ -17,7 +17,7 @@ export default function Demo(props: IProps) {
   }
 
   return (
-    <Form {...props} onSubmit={handleSubmit} useNativeValidation={false}>
+    <Form {...props} onSubmit={handleSubmit}>
       {({ errors }) => (
         <>
           <input name="text" required />

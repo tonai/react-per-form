@@ -9,7 +9,7 @@ import {
 
 function Submit() {
   const [isValid, setIsValid] = useState(false);
-  useSubscribe(({ states }) => setIsValid(states.valid));
+  useSubscribe(({ isValid }) => setIsValid(isValid));
 
   return (
     <button disabled={!isValid} type="submit">

@@ -18,7 +18,7 @@ export default function Demo(props: IProps) {
   }
 
   return (
-    <Form {...props} onSubmit={handleSubmit} useNativeValidation={false}>
+    <Form {...props} onSubmit={handleSubmit}>
       <Input />
       <button type="submit">Submit</button>
     </Form>

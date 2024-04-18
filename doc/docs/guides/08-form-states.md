@@ -2,7 +2,19 @@
 
 ## react-swift-form `states` values
 
-react-swift-form expose a `states` object that contains some form information (like a `valid` property...etc.).
+react-swift-form expose a `states` object that contains form states:
+
+- changedFields (`string[]`): List of fields the user has changed
+- dirtyFields (`string[]`): List of fields the user has changed and values are different to default ones
+- isDirty (`boolean`): Whether the form is dirty or not (at least one field is dirty)
+- isPristine (`boolean`): Inverse of `isDirty`
+- isReady (`boolean`): Indicates when the form is ready
+- isSubmitted (`boolean`): `true` when the form has been submitted at least once
+- isSubmitting (`boolean`): Indicates when the form is being submitted
+- isValid (`boolean`): Whether the form is valid or not
+- isValidating (`boolean`): Indicates when the form is being validated
+- submitCount (`number`): Count the number of time the form has been submitted
+- touchedFields (`string[]`): List of fields the user has interacted with (focus + blur)
 
 :::warning
 
@@ -52,6 +64,23 @@ import SimpleComponentUseFormValidSource from '!!raw-loader!@site/src/demo/Simpl
 :::warning
 
 With the hook version you will have to add yourself the react-swift-form `<FormProvider>` component !
+
+:::
+
+## With the `useFormStates` hook
+
+The `useFormStates` hook will return you all form state as a real React state:
+
+import SimpleHookUseFormStates from '@site/src/demo/SimpleHookUseFormStates';
+import SimpleHookUseFormStatesSource from '!!raw-loader!@site/src/demo/SimpleHookUseFormStates';
+import SimpleComponentUseFormStates from '@site/src/demo/SimpleComponentUseFormStates';
+import SimpleComponentUseFormStatesSource from '!!raw-loader!@site/src/demo/SimpleComponentUseFormStates';
+
+<DemoTabs Component={SimpleComponentUseFormStates} Hook={SimpleHookUseFormStates} componentCode={SimpleComponentUseFormStatesSource} componentMetastring="{6,20,24,29,43,47}" hookCode={SimpleHookUseFormStatesSource} hookMetastring="{7,21,25,30,43,54}" withModes withRevalidateModes />
+
+:::info
+
+`isDirty`, `isPristine` and `dirtyFields` compare field values to `defaultValues` (`a` field) or `defaultValue` (`b` field) or to empty string `""` (`c` field) to define their states.
 
 :::
 
