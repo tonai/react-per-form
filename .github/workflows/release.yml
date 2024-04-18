@@ -1,11 +1,12 @@
-name: Build doc
+name: Release
 on:
-  pull_request:
+  push:
     branches:
       - 'main'
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  build:
-    name: Build
+  release:
+    name: Release
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -35,5 +36,13 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build doc
-        run: ${{ steps.detect-package-manager.outputs.manager }} run build:doc
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: ${{ steps.detect-package-manager.outputs.manager }} run publish
+          version: ${{ steps.detect-package-manager.outputs.manager }} run version
+          commit: 'ci: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
