@@ -16,6 +16,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/react-swift-form)](https://www.npmjs.com/package/react-swift-form)
 [![GitHub License](https://img.shields.io/github/license/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-swift-form)](https://bundlephobia.com/package/react-swift-form)
 
 <!-- [![GitHub Repo stars](https://img.shields.io/github/stars/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE) -->
 
