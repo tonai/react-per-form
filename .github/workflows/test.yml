@@ -2,6 +2,7 @@ name: Tests
 on: push
 jobs:
   test:
+    name: Test
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:

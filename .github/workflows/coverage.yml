@@ -8,6 +8,7 @@ permissions:
   pull-requests: write
 jobs:
   coverage:
+    name: Coverage
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
