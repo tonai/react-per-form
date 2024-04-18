@@ -41,5 +41,6 @@ module.exports = {
   root: true,
   rules: {
     'no-void': 'off',
+    'require-atomic-updates': 'off',
   },
 };
