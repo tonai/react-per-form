@@ -273,7 +273,7 @@ export function getDefaultValues(
   return { ...defaultVals, ...paramValues, ...resetValues };
 }
 
-export function getFormState(
+export function getFormStates(
   states: IStates,
   values: IFormValues,
   defaultValues: IFormValues,

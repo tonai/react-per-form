@@ -12,7 +12,7 @@ import { handleSubmit } from '../helpers/form';
 import { fooValidator, globalFooValidator } from '../helpers/validators';
 import { useFilters } from '../hooks/useFilters';
 
-const initialState = {
+const initialStates = {
   message: '',
 };
 
@@ -26,7 +26,7 @@ const validators = {
 };
 
 export default function HookSimpleForm(): ReactElement {
-  const [state, formAction] = useFormState(serverAction, initialState);
+  const [state, formAction] = useFormState(serverAction, initialStates);
   const { filtersProps, formData } = useFilters();
   const { formProps, ...context } = useForm({
     ...formData,

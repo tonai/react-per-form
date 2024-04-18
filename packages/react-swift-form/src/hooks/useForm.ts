@@ -29,7 +29,7 @@ import {
   getDefaultValues,
   getFormInput,
   getFormInputs,
-  getFormState,
+  getFormStates,
   getName,
   getTransformers,
   getValidatorMap,
@@ -43,6 +43,7 @@ import {
 
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
+  errorCallback?: (error: Error) => void;
   focusOnError?: boolean;
   form?: HTMLFormElement;
   messages?: IMessages;
@@ -73,6 +74,7 @@ export interface IUseFormResult extends IFormContext {
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     defaultValues,
+    errorCallback = console.error,
     focusOnError = true,
     form = null,
     messages,
@@ -116,7 +118,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const stateNotify = useCallback(() => {
     for (const subscriber of stateSubscribers.current.values()) {
       subscriber(
-        getFormState(
+        getFormStates(
           states.current,
           vals.current,
           defaultVals.current,
@@ -134,9 +136,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (subscriber: IWatchSubscriber, names?: string[] | string) => {
       const nameArray =
         names === undefined ? names : names instanceof Array ? names : [names];
-      if (!watchSubscriber.current.has(subscriber)) {
-        watchSubscriber.current.set(subscriber, nameArray);
-      }
+      watchSubscriber.current.set(subscriber, nameArray);
       return () => watchSubscriber.current.delete(subscriber);
     },
     [],
@@ -232,21 +232,25 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     [validate],
   );
 
-  const setValues = useCallback((values: IFormValues) => {
-    if (ref.current) {
-      for (const input of getFormInputs(ref.current)) {
-        const formField = getFormInput(input);
-        const { name } = formField;
-        if (name && values[name] !== undefined && values[name] !== null) {
-          if (isCheckbox(formField)) {
-            formField.checked = Boolean(values[name]);
-          } else {
-            formField.value = String(values[name]);
+  const setValues = useCallback(
+    (values: IFormValues) => {
+      if (ref.current) {
+        for (const input of getFormInputs(ref.current)) {
+          const formField = getFormInput(input);
+          const { name } = formField;
+          if (name && values[name] !== undefined && values[name] !== null) {
+            if (isCheckbox(formField)) {
+              formField.checked = Boolean(values[name]);
+            } else {
+              formField.value = String(values[name]);
+            }
           }
         }
+        watchNotify();
       }
-    }
-  }, []);
+    },
+    [watchNotify],
+  );
 
   const register = useCallback(
     (params: IRegisterParams) => {
@@ -384,7 +388,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           await invalidCallback(event, errors, reset);
         }
       } catch (error) {
-        console.error(error);
+        errorCallback(error);
       } finally {
         states.current.isSubmitting = false;
         states.current.submitCount++;
@@ -445,6 +449,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     validate().then(() => {
       if (ref.current) {
         states.current.isReady = true;
+        stateNotify();
         ref.current.dataset.rsf = 'init';
       }
     });
@@ -582,7 +587,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
       register,
       reset,
       revalidateMode,
-      states: getFormState(
+      states: getFormStates(
         states.current,
         vals.current,
         defaultVals.current,
