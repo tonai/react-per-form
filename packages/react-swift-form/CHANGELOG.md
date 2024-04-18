@@ -1,5 +1,11 @@
 # react-swift-form
 
+## 0.1.1
+
+### Patch Changes
+
+- [#26](https://github.com/tonai/react-swift-form/pull/26) [`e657729`](https://github.com/tonai/react-swift-form/commit/e65772935f959d4e3061f911c308560dbea7eda0) Thanks [@tonai](https://github.com/tonai)! - Update README
+
 ## 0.1.0
 
 ### Minor Changes
