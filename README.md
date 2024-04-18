@@ -10,6 +10,16 @@
 <p align="center">
   <a href="https://tonai.github.io/react-swift-form/" target="_blank">Documentation</a>
 </p>
+<div align="center">
+
+<!-- [![NPM Downloads](https://img.shields.io/npm/dm/react-swift-form?style=flat)](https://www.npmjs.com/package/react-swift-form) -->
+
+[![NPM Version](https://img.shields.io/npm/v/react-swift-form)](https://www.npmjs.com/package/react-swift-form)
+[![GitHub License](https://img.shields.io/github/license/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE)
+
+<!-- [![GitHub Repo stars](https://img.shields.io/github/stars/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE) -->
+
+</div>
 
 ## Features
 
