@@ -455,10 +455,10 @@ describe('useInputs hook', () => {
     });
     await waitFor(() => expect(result.current.error).toEqual(undefined));
     expect(result.current.errors).toEqual({
-      all: { bar: '', foo: '' },
+      all: {},
       global: {},
       manual: {},
-      native: { bar: '', foo: '' },
+      native: {},
       validator: {},
     });
   });
@@ -510,10 +510,10 @@ describe('useInputs hook', () => {
     });
     await waitFor(() => expect(result.current.error).toEqual(undefined));
     expect(result.current.errors).toEqual({
-      all: { bar: '' },
+      all: {},
       global: {},
       manual: {},
-      native: { bar: '' },
+      native: {},
       validator: {},
     });
   });
@@ -567,10 +567,10 @@ describe('useInputs hook', () => {
     });
     await waitFor(() => expect(result.current.error).toEqual(undefined));
     expect(result.current.errors).toEqual({
-      all: { bar: '', foo: '' },
+      all: {},
       global: {},
       manual: {},
-      native: { bar: '', foo: '' },
+      native: {},
       validator: {},
     });
   });
@@ -651,10 +651,10 @@ describe('useInputs hook', () => {
     fireEvent.blur(screen.getByTestId('rsf-input'));
     await waitFor(() => expect(result.current.error).toEqual(undefined));
     expect(result.current.errors).toEqual({
-      all: { bar: '', foo: '' },
+      all: {},
       global: {},
       manual: {},
-      native: { bar: '', foo: '' },
+      native: {},
       validator: {},
     });
   });

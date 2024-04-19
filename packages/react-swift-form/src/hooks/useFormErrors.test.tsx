@@ -22,10 +22,10 @@ describe('useFormErrors hook', () => {
     fireEvent.submit(screen.getByTestId('rsf-form'));
     await waitFor(() =>
       expect(result.current).toEqual({
-        all: { foo: '' },
+        all: {},
         global: {},
         manual: {},
-        native: { foo: '' },
+        native: {},
         validator: {},
       }),
     );

@@ -17,6 +17,7 @@ export function Form(props: IFormProps): ReactElement {
   const {
     children,
     defaultValues,
+    filterLocalErrors,
     messages,
     mode,
     onBlurOptOut,
@@ -32,6 +33,7 @@ export function Form(props: IFormProps): ReactElement {
   } = props;
   const { formProps, ...context } = useForm({
     defaultValues,
+    filterLocalErrors,
     messages,
     mode,
     onBlurOptOut,

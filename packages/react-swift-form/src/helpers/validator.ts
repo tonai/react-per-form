@@ -14,7 +14,7 @@ import type {
 } from '../types';
 import type { Dispatch, SetStateAction } from 'react';
 
-import { defaultSymbol } from '../constants';
+import { defaultSymbol, initialError } from '../constants';
 
 import { intersection } from './array';
 import { getFormInput, getFormInputs, getInputValue } from './form';
@@ -446,6 +446,7 @@ export function focusError(inputs: IFormElement[], main?: IMainError): boolean {
 interface IDisplayErrorParams {
   display: boolean;
   errors: IError;
+  filterLocalErrors?: boolean;
   focusOnError?: boolean;
   form: HTMLFormElement;
   names?: string[];
@@ -459,6 +460,7 @@ export function displayErrors(params: IDisplayErrorParams): void {
   const {
     display,
     errors,
+    filterLocalErrors,
     focusOnError,
     form,
     names,
@@ -467,7 +469,13 @@ export function displayErrors(params: IDisplayErrorParams): void {
     useNativeValidation,
     validatorEntries,
   } = params;
-  const { native, validator, manual } = errors;
+
+  // Return quickly if there is no need to update the display
+  if (!display && !revalidate) {
+    return;
+  }
+
+  const { all, global, manual, native, validator } = errors;
   const inputs = getFormInputs(form);
 
   // Focus management
@@ -495,7 +503,9 @@ export function displayErrors(params: IDisplayErrorParams): void {
   }
 
   // Field errors
+  const localNames = new Set<string>();
   for (const [name, set] of validatorEntries) {
+    localNames.add(name);
     for (const params of set.values()) {
       if (names && !names.includes(name)) {
         continue;
@@ -514,7 +524,8 @@ export function displayErrors(params: IDisplayErrorParams): void {
             if (focusOnError && !getFocus()) {
               setFocus(focusError(inputs, fieldErrors.main));
             }
-            return mergeErrors(prevErrors, fieldErrors);
+            const mergedErrors = mergeErrors(prevErrors, fieldErrors);
+            return mergedErrors.main ? mergedErrors : initialError;
           }
           return prevErrors;
         });
@@ -525,10 +536,31 @@ export function displayErrors(params: IDisplayErrorParams): void {
   // Form errors
   setErrors((prevErrors) => {
     if (display || (revalidate && hasError(prevErrors))) {
-      if (focusOnError && !getFocus()) {
-        setFocus(focusError(inputs, errors.main));
+      let globalErrors = errors;
+      if (filterLocalErrors) {
+        const filterNames = Array.from(localNames);
+        globalErrors = {
+          all: filterObject(all, ([key]) => !filterNames.includes(key)),
+          global: filterObject(
+            global,
+            ([, { names }]) =>
+              intersection(filterNames, names).length !== names.length,
+          ),
+          manual: filterObject(manual, ([key]) => !filterNames.includes(key)),
+          native: filterObject(native, ([key]) => !filterNames.includes(key)),
+          validator: filterObject(
+            validator,
+            ([, { names }]) =>
+              intersection(filterNames, names).length !== names.length,
+          ),
+        };
+        setMainError(globalErrors);
       }
-      return mergeErrors(prevErrors, errors);
+      if (focusOnError && !getFocus()) {
+        setFocus(focusError(inputs, globalErrors.main));
+      }
+      const mergedErrors = mergeErrors(prevErrors, globalErrors);
+      return mergedErrors.main ? mergedErrors : initialError;
     }
     return prevErrors;
   });
@@ -537,6 +569,7 @@ export function displayErrors(params: IDisplayErrorParams): void {
 interface IValidateFormParams {
   display: boolean;
   errors?: Record<string, string | null>;
+  filterLocalErrors?: boolean;
   focusOnError?: boolean;
   form: HTMLFormElement;
   messages?: IMessages;
@@ -555,6 +588,7 @@ export async function validateForm(
   const {
     display,
     errors = {},
+    filterLocalErrors,
     focusOnError,
     form,
     messages,
@@ -614,6 +648,7 @@ export async function validateForm(
   displayErrors({
     display,
     errors: errorObject,
+    filterLocalErrors,
     focusOnError,
     form,
     names,

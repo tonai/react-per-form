@@ -44,6 +44,7 @@ import {
 export interface IUseFormProps {
   defaultValues?: Record<string, unknown>;
   errorCallback?: (error: Error) => void;
+  filterLocalErrors?: boolean;
   focusOnError?: boolean;
   form?: HTMLFormElement;
   messages?: IMessages;
@@ -75,6 +76,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const {
     defaultValues,
     errorCallback = console.error,
+    filterLocalErrors = true,
     focusOnError = true,
     form = null,
     messages,
@@ -192,6 +194,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
         errors = await validateForm({
           display,
           errors: manualErrors.current,
+          filterLocalErrors,
           focusOnError,
           form: ref.current,
           messages,
@@ -212,7 +215,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
       return [states.current.isValid, errors];
     },
-    [messages, stateNotify, useNativeValidation, transformers, validators],
+    [
+      filterLocalErrors,
+      messages,
+      stateNotify,
+      useNativeValidation,
+      transformers,
+      validators,
+    ],
   );
 
   const timer = useRef<NodeJS.Timeout>();
@@ -231,6 +241,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     },
     [validate],
   );
+  useEffect(() => () => clearTimeout(timer.current), []); // Unmount timer clear
 
   const setValues = useCallback(
     (values: IFormValues) => {
@@ -430,6 +441,7 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
   );
 
   useEffect(() => {
+    // Init default values
     defaultVals.current = { ...defaultVals.current, ...defaultValues };
     for (const init of Object.values(changeHandlerInitializers.current)) {
       init();
