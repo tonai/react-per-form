@@ -1,4 +1,5 @@
-import type { ElementType, ReactElement } from 'react';
+import type { IProps } from '@site/src/demo/types';
+import type { ComponentType, ReactElement } from 'react';
 
 import { Tabs } from '@mantine/core';
 import { memo } from 'react';
@@ -8,8 +9,8 @@ import Demo from '../Demo';
 import styles from './styles.module.css';
 
 interface IDemoProps {
-  Component: ElementType;
-  Hook: ElementType;
+  Component: ComponentType<IProps>;
+  Hook: ComponentType<IProps>;
   componentCode: string;
   componentMetastring?: string;
   hookCode: string;

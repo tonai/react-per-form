@@ -1,4 +1,4 @@
-import type { IDemoProps } from './DemoContent';
+import type { IDemoProps } from '../DemoContent';
 import type { ReactElement } from 'react';
 import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import DemoContent from './DemoContent';
+import DemoContent from '../DemoContent';
 
 const manager = localStorageColorSchemeManager({
   key: 'theme',

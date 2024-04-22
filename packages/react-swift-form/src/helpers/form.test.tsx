@@ -4,15 +4,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
   getDefaultValues,
+  getFieldStates,
   getFormInput,
   getFormInputs,
   getFormStates,
   getInputValue,
+  getLocalFields,
   getName,
   getTransformers,
-  getValidatorMap,
+  getValidators,
   getValue,
-  insertInMapSet,
   isCheckbox,
   isEvent,
   isFormElement,
@@ -53,21 +54,37 @@ describe('form helper', () => {
     it('should return the merged default values', () => {
       expect(getDefaultValues(new Set(), {})).toEqual({});
       expect(
-        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {}),
+        getDefaultValues(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {},
+        ),
       ).toEqual({});
       expect(getDefaultValues(new Set(), { foo: 42 })).toEqual({
         foo: 42,
       });
       expect(
-        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {
-          foo: 42,
-        }),
+        getDefaultValues(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {
+            foo: 42,
+          },
+        ),
       ).toEqual({ foo: 42 });
       expect(
         getDefaultValues(
           new Set([
-            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
-            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+            {
+              defaultValues: { foo: '42' },
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+            },
+            {
+              defaultValues: { bar: 12 },
+              id: 'bar',
+              names: ['bar'],
+              setErrors: () => null,
+            },
           ]),
           {
             foo: 42,
@@ -77,8 +94,18 @@ describe('form helper', () => {
       expect(
         getDefaultValues(
           new Set([
-            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
-            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+            {
+              defaultValues: { foo: '42' },
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+            },
+            {
+              defaultValues: { bar: 12 },
+              id: 'bar',
+              names: ['bar'],
+              setErrors: () => null,
+            },
           ]),
           {
             foo: 42,
@@ -87,6 +114,113 @@ describe('form helper', () => {
           { bar: 'bar' },
         ),
       ).toEqual({ bar: 'bar', foo: 'foo' });
+    });
+  });
+
+  describe('getFieldStates', () => {
+    it('should return the field states', () => {
+      expect(
+        getFieldStates(
+          {
+            changedFields: [],
+            dirtyFields: [],
+            isChanged: false,
+            isDirty: false,
+            isPristine: true,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: [],
+          },
+          'foo',
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isChanged: false,
+        isDirty: false,
+        isPristine: true,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+      expect(
+        getFieldStates(
+          {
+            changedFields: ['foo', 'bar', 'baz'],
+            dirtyFields: ['foo', 'bar', 'baz'],
+            isChanged: true,
+            isDirty: true,
+            isPristine: false,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: true,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: ['foo', 'bar', 'baz'],
+          },
+          'foo',
+        ),
+      ).toEqual({
+        changedFields: ['foo'],
+        dirtyFields: ['foo'],
+        isChanged: true,
+        isDirty: true,
+        isPristine: false,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: true,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: ['foo'],
+      });
+      expect(
+        getFieldStates(
+          {
+            changedFields: ['bar'],
+            dirtyFields: ['bar'],
+            isChanged: true,
+            isDirty: true,
+            isPristine: false,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: true,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: ['bar'],
+          },
+          ['foo'],
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isChanged: false,
+        isDirty: false,
+        isPristine: true,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
     });
   });
 
@@ -138,11 +272,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: [],
         dirtyFields: [],
+        isChanged: false,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -168,11 +304,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: [],
         dirtyFields: [],
+        isChanged: false,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -195,11 +333,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: ['foo'],
+        isChanged: true,
         isDirty: true,
         isPristine: false,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -222,11 +362,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: [],
+        isChanged: true,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -251,11 +393,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: [],
+        isChanged: true,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -327,6 +471,22 @@ describe('form helper', () => {
     });
   });
 
+  describe('getLocalFields', () => {
+    it('should return local fields', () => {
+      const setErrors1 = (): null => null;
+      const setErrors2 = (): null => null;
+      const validatorMap = new Set([
+        { id: 'foobar', names: ['foo', 'bar'], setErrors: setErrors1 },
+        { id: 'baz', names: ['baz'], setErrors: setErrors2 },
+      ]);
+      expect(getLocalFields(validatorMap)).toEqual({
+        bar: setErrors1,
+        baz: setErrors2,
+        foo: setErrors1,
+      });
+    });
+  });
+
   describe('getName', () => {
     it('should return the input name', () => {
       const input = document.createElement('input');
@@ -357,21 +517,31 @@ describe('form helper', () => {
   describe('getTransformers', () => {
     it('should return the merged transformers', () => {
       expect(getTransformers(new Set())).toEqual(undefined);
-      expect(getTransformers(new Set([{ id: 'foo', names: ['foo'] }]))).toEqual(
-        {},
-      );
+      expect(
+        getTransformers(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+        ),
+      ).toEqual({});
       expect(getTransformers(new Set(), { foo: Number })).toEqual({
         foo: Number,
       });
       expect(
-        getTransformers(new Set([{ id: 'foo', names: ['foo'] }]), {
-          foo: Number,
-        }),
+        getTransformers(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {
+            foo: Number,
+          },
+        ),
       ).toEqual({ foo: Number });
       expect(
         getTransformers(
           new Set([
-            { id: 'foo', names: ['foo'], transformers: { foo: String } },
+            {
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+              transformers: { foo: String },
+            },
           ]),
           {
             foo: Number,
@@ -381,76 +551,79 @@ describe('form helper', () => {
     });
   });
 
-  describe('getValidatorMap', () => {
+  describe('getValidators', () => {
     it('should add field without validator', () => {
-      const validatorMap = getValidatorMap(
-        new Set([{ id: 'foo', names: ['foo'] }]),
+      const validatorMap = getValidators(
+        new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
       );
-      expect(validatorMap).toEqual(
-        new Map([['foo', new Set([{ id: 'foo', names: ['foo'] }])]]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add field with validator function', () => {
-      const validatorMap = getValidatorMap(
-        new Set([{ id: 'foo', names: ['foo'], validators: () => '' }]),
-      );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
-    });
-
-    it('should add field with validator object', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foo',
             names: ['foo'],
+            setErrors: () => null,
+            validators: () => '',
+          },
+        ]),
+      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
+    });
+
+    it('should add field with validator object', () => {
+      const validatorMap = getValidators(
+        new Set([
+          {
+            id: 'foo',
+            names: ['foo'],
+            setErrors: () => null,
             validators: { names: ['foo'], validator: () => '' },
           },
         ]),
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add field with validator map object', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foobar',
             names: ['foo', 'bar'],
+            setErrors: () => null,
             validators: {
               bar: { names: ['bar'], validator: () => '' },
               foo: () => '',
@@ -458,117 +631,83 @@ describe('form helper', () => {
           },
         ]),
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'bar',
-            new Set([
-              {
-                id: 'foobar',
-                names: ['foo', 'bar'],
-              },
-              {
-                id: 'bar',
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foobar',
-                names: ['foo', 'bar'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foobar',
+          names: ['foo', 'bar'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'bar',
+          names: ['bar'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add simple form validator', () => {
-      const validatorMap = getValidatorMap(new Set(), {
+      const validatorMap = getValidators(new Set(), {
         bar: () => '',
         foo: { names: ['foo'], validator: () => '' },
       });
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                messages: undefined,
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'bar',
-            new Set([
-              {
-                id: 'bar',
-                messages: undefined,
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'bar',
+          messages: undefined,
+          names: ['bar'],
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          messages: undefined,
+          names: ['foo'],
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should validators with messages', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foo',
             messages: { valueMissing: 'Input' },
             names: ['foo'],
+            setErrors: () => null,
             validators: () => '',
           },
         ]),
         { bar: () => '' },
         { valueMissing: 'Form' },
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                messages: { valueMissing: 'Input' },
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                messages: { valueMissing: 'Input' },
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'bar',
-            new Set([
-              {
-                id: 'bar',
-                messages: { valueMissing: 'Form' },
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          messages: { valueMissing: 'Input' },
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          messages: { valueMissing: 'Input' },
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'bar',
+          messages: { valueMissing: 'Form' },
+          names: ['bar'],
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
   });
 
@@ -625,20 +764,6 @@ describe('form helper', () => {
     });
   });
 
-  describe('insertInMapSet', () => {
-    it('should create a new set in map', () => {
-      const map = new Map<string, Set<unknown>>();
-      insertInMapSet(map, 'foo', 'bar');
-      expect(map).toEqual(new Map([['foo', new Set(['bar'])]]));
-    });
-
-    it('should append in existing set in map', () => {
-      const map = new Map<string, Set<unknown>>([['foo', new Set(['bar'])]]);
-      insertInMapSet(map, 'foo', 'baz');
-      expect(map).toEqual(new Map([['foo', new Set(['bar', 'baz'])]]));
-    });
-  });
-
   describe('isFormElement', () => {
     it('should test if param is formElement or not', () => {
       expect(isFormElement(document.createElement('div'))).toEqual(false);
@@ -671,19 +796,37 @@ describe('form helper', () => {
       expect(shouldBlur(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
       expect(
         shouldBlur(
-          new Set([{ id: 'bar', names: ['bar'], onBlurOptOut: 'bar' }]),
+          new Set([
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(true);
       expect(
         shouldBlur(
           new Set([
-            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onBlurOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'bar;baz',
               names: ['bar', 'baz'],
               onBlurOptOut: ['bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -698,19 +841,37 @@ describe('form helper', () => {
       );
       expect(
         shouldBlur(
-          new Set([{ id: 'foo', names: ['foo'], onBlurOptOut: 'foo' }]),
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              onBlurOptOut: 'foo',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(false);
       expect(
         shouldBlur(
           new Set([
-            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onBlurOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'foo;bar;baz',
               names: ['foo', 'bar', 'baz'],
               onBlurOptOut: ['foo', 'bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -725,19 +886,37 @@ describe('form helper', () => {
       expect(shouldChange(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
       expect(
         shouldChange(
-          new Set([{ id: 'bar', names: ['bar'], onChangeOptOut: 'bar' }]),
+          new Set([
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(true);
       expect(
         shouldChange(
           new Set([
-            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onChangeOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'bar;baz',
               names: ['bar', 'baz'],
               onChangeOptOut: ['bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -752,19 +931,37 @@ describe('form helper', () => {
       );
       expect(
         shouldChange(
-          new Set([{ id: 'foo', names: ['foo'], onChangeOptOut: 'foo' }]),
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              onChangeOptOut: 'foo',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(false);
       expect(
         shouldChange(
           new Set([
-            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onChangeOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'foo;bar;baz',
               names: ['foo', 'bar', 'baz'],
               onChangeOptOut: ['foo', 'bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',

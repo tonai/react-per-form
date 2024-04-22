@@ -7,8 +7,8 @@ describe('object helper', () => {
       expect(areObjectEquals({ foo: 'bar' }, { foo: 'bar' })).toEqual(true);
       expect(
         areObjectEquals(
-          { bar: 42, baz: ref, foo: 'bar' },
-          { bar: 42, baz: ref, foo: 'bar' },
+          { bar: 42, baz: ref, foo: null },
+          { bar: 42, baz: ref, foo: null },
         ),
       ).toEqual(true);
       expect(
@@ -33,6 +33,33 @@ describe('object helper', () => {
       expect(areObjectEquals({ foo: 'bar' }, { baz: '', foo: 'bar' })).toEqual(
         false,
       );
+    });
+
+    it('should check that objects are equals (deep)', () => {
+      expect(
+        areObjectEquals(
+          { bar: [42, 12], baz: { bar: undefined, foo: 'bar' }, foo: null },
+          { bar: [42, 12], baz: { baz: undefined, foo: 'bar' }, foo: null },
+          true,
+        ),
+      ).toEqual(true);
+    });
+
+    it('should check that objects are not equals (deep)', () => {
+      expect(
+        areObjectEquals(
+          { bar: [42], baz: { bar: undefined, foo: 'bar' }, foo: null },
+          { bar: [42, 12], baz: { baz: undefined, foo: 'bar' }, foo: null },
+          true,
+        ),
+      ).toEqual(false);
+      expect(
+        areObjectEquals(
+          { bar: [42, 12], baz: { bar: undefined, foo: '' }, foo: null },
+          { bar: [42, 12], baz: { baz: undefined, foo: 'bar' }, foo: null },
+          true,
+        ),
+      ).toEqual(false);
     });
   });
 

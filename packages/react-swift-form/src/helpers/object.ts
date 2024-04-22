@@ -12,14 +12,22 @@ export function getProperty<T>(object: object, path: string): T | undefined {
 export function areObjectEquals(
   a: Record<string, unknown>,
   b: Record<string, unknown>,
+  deep = false,
 ): boolean {
   const allKeys = Array.from(new Set(Object.keys(a).concat(Object.keys(b))));
-  for (const key of allKeys) {
-    if (a[key] !== b[key]) {
-      return false;
+  return !allKeys.some((key) => {
+    if (typeof a[key] !== typeof b[key]) {
+      return true;
     }
-  }
-  return true;
+    if (!deep || a[key] === null || typeof a[key] !== 'object') {
+      return a[key] !== b[key];
+    }
+    return !areObjectEquals(
+      a[key] as Record<string, unknown>,
+      b[key] as Record<string, unknown>,
+      deep,
+    );
+  });
 }
 
 export function filterObject<T>(

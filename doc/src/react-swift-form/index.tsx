@@ -40,8 +40,13 @@ export {
 
 export function useForm(props: IUseFormProps = {}): IUseFormResult {
   const { onReset, onSubmit, ...rest } = props;
-  const { setDisplay, setErrors, setValues } = useContext(demoContext);
+  const { renderCount, setDisplay, setErrors, setRenderCount, setValues } =
+    useContext(demoContext);
   const { useNativeValidation = true } = rest;
+
+  useEffect(() => {
+    setRenderCount(renderCount.current + 1);
+  });
 
   function handleReset(
     event: FormEvent<HTMLFormElement>,
@@ -118,9 +123,14 @@ export function DemoForm(
   props: Pick<IFormProps, 'children'>,
 ): ReactElement | null {
   const { children } = props;
-  const { setDisplay, setErrors } = useContext(demoContext);
+  const { renderCount, setDisplay, setErrors, setRenderCount } =
+    useContext(demoContext);
   const context = useFormContext();
   const { errors, useNativeValidation = true } = context;
+
+  useEffect(() => {
+    setRenderCount(renderCount.current + 1);
+  });
 
   useEffect(() => {
     if (!useNativeValidation) {

@@ -8,7 +8,7 @@ There is no parameters for `useFormValid`.
 
 ## Returns
 
-`useFormValid` directly return the valid boolean React state.
+`useFormValid` directly returns the valid boolean React state.
 
 ## Usage
 

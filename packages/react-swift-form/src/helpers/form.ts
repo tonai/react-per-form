@@ -1,8 +1,10 @@
 import type {
+  IError,
   IFormElement,
   IFormStates,
   IFormValidator,
   IFormValues,
+  ILocalFields,
   IMessages,
   IRegisterParams,
   IStates,
@@ -10,21 +12,9 @@ import type {
   IValidator,
   IValidatorObject,
 } from '../types';
+import type { Dispatch, SetStateAction } from 'react';
 
 import { isValidator, isValidatorObject } from './validator';
-
-export function insertInMapSet<T>(
-  map: Map<string, Set<T>>,
-  name: string,
-  x: T,
-): void {
-  if (!map.has(name)) {
-    map.set(name, new Set([x]));
-  } else {
-    const set = map.get(name);
-    set?.add(x);
-  }
-}
 
 export function isFormElement(
   input: Element | EventTarget | RadioNodeList,
@@ -56,57 +46,71 @@ export function getFormInputs(form: HTMLFormElement): IFormElement[] {
   ) as IFormElement[];
 }
 
-export function getValidatorMap(
+export function getLocalFields(
+  fieldValidators: Set<IRegisterParams>,
+): ILocalFields {
+  const localFields: Record<string, Dispatch<SetStateAction<IError>>> = {};
+  for (const params of fieldValidators.values()) {
+    const { setErrors } = params;
+    for (const name of params.names) {
+      localFields[name] = setErrors;
+    }
+  }
+  return localFields;
+}
+
+export function getValidators(
   fieldValidators: Set<IRegisterParams>,
   formValidators?: Record<string, IValidator | IValidatorObject>,
   messages?: IMessages,
-): Map<string, Set<IFormValidator>> {
-  const validatorMap = new Map<string, Set<IFormValidator>>();
+): IFormValidator[] {
+  const validatorArray: IFormValidator[] = [];
 
   // Field validators
   for (const params of fieldValidators.values()) {
-    const { validators, ...validatorParams } = params;
-    for (const name of params.names) {
-      insertInMapSet(validatorMap, name, validatorParams);
-    }
-
-    if (!validators) {
-      continue;
-    } else if (isValidator(validators)) {
-      for (const name of params.names) {
-        insertInMapSet(validatorMap, name, {
-          ...validatorParams,
-          validator: validators,
-        });
-      }
+    const {
+      defaultValues,
+      onBlurOptOut,
+      onChangeOptOut,
+      setErrors,
+      transformers,
+      validators,
+      ...validatorParams
+    } = params;
+    validatorArray.push({ ...validatorParams, setErrors });
+    if (isValidator(validators)) {
+      validatorArray.push({
+        ...validatorParams,
+        setErrors,
+        validator: validators,
+      });
     } else if (isValidatorObject(validators)) {
       const { names: validatorNames, validator } = validators;
-      for (const name of validatorNames) {
-        insertInMapSet(validatorMap, name, {
-          ...validatorParams,
-          names: validatorNames,
-          validator,
-        });
-      }
-    } else {
+      validatorArray.push({
+        ...validatorParams,
+        names: validatorNames,
+        setErrors,
+        validator,
+      });
+    } else if (typeof validators === 'object') {
       for (const [id, value] of Object.entries(validators)) {
         if (isValidator(value)) {
-          insertInMapSet(validatorMap, id, {
+          validatorArray.push({
             ...validatorParams,
             id,
             names: [id],
+            setErrors,
             validator: value,
           });
         } else {
           const { names: validatorNames, validator } = value;
-          for (const name of validatorNames) {
-            insertInMapSet(validatorMap, name, {
-              ...validatorParams,
-              id,
-              names: validatorNames,
-              validator,
-            });
-          }
+          validatorArray.push({
+            ...validatorParams,
+            id,
+            names: validatorNames,
+            setErrors,
+            validator,
+          });
         }
       }
     }
@@ -116,7 +120,7 @@ export function getValidatorMap(
   if (formValidators) {
     for (const [id, value] of Object.entries(formValidators)) {
       if (isValidator(value)) {
-        insertInMapSet(validatorMap, id, {
+        validatorArray.push({
           id,
           messages,
           names: [id],
@@ -124,19 +128,17 @@ export function getValidatorMap(
         });
       } else {
         const { names: validatorNames, validator } = value;
-        for (const name of validatorNames) {
-          insertInMapSet(validatorMap, name, {
-            id,
-            messages,
-            names: validatorNames,
-            validator,
-          });
-        }
+        validatorArray.push({
+          id,
+          messages,
+          names: validatorNames,
+          validator,
+        });
       }
     }
   }
 
-  return validatorMap;
+  return validatorArray;
 }
 
 export function isEvent(event: unknown): event is Event {
@@ -302,9 +304,38 @@ export function getFormStates(
     ...states,
     changedFields,
     dirtyFields,
+    isChanged: changedFields.length > 0,
     isDirty: dirtyFields.length > 0,
     isPristine: dirtyFields.length === 0,
     isSubmitted: states.submitCount > 0,
+    isTouched: touchedFields.length > 0,
+    touchedFields,
+  };
+}
+
+export function getFieldStates(
+  states: IFormStates,
+  names: string[] | string,
+): IFormStates {
+  const nameArray = names instanceof Array ? names : [names];
+  const changedFields = states.changedFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  const dirtyFields = states.dirtyFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  const touchedFields = states.touchedFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  return {
+    ...states,
+    changedFields,
+    dirtyFields,
+    isChanged: changedFields.length > 0,
+    isDirty: dirtyFields.length > 0,
+    isPristine: dirtyFields.length === 0,
+    isSubmitted: states.submitCount > 0,
+    isTouched: touchedFields.length > 0,
     touchedFields,
   };
 }

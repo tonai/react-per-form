@@ -4,7 +4,7 @@ import { Form } from '../Form/Form';
 
 import { Error } from './Error';
 
-describe('Reset component', () => {
+describe('Error component', () => {
   it('should not render the component (native validation)', async () => {
     // Init
     render(
@@ -113,7 +113,11 @@ describe('Reset component', () => {
   it('should display the validator error (errorPath=validator)', async () => {
     // Init
     render(
-      <Form useNativeValidation={false} validators={{ foo: () => 'error' }}>
+      <Form
+        filterLocalErrors={false}
+        useNativeValidation={false}
+        validators={{ foo: () => 'error' }}
+      >
         <input name="foo" />
         <Error errorPath="validator" />
       </Form>,
@@ -132,7 +136,11 @@ describe('Reset component', () => {
   it('should display the validator error (global)', async () => {
     // Init
     render(
-      <Form useNativeValidation={false} validators={{ foo: () => 'error' }}>
+      <Form
+        filterLocalErrors={false}
+        useNativeValidation={false}
+        validators={{ foo: () => 'error' }}
+      >
         <input name="foo" />
         <Error global />
       </Form>,
@@ -151,7 +159,11 @@ describe('Reset component', () => {
   it('should display the validator error (errorPath=validator and global)', async () => {
     // Init
     render(
-      <Form useNativeValidation={false} validators={{ foo: () => 'error' }}>
+      <Form
+        filterLocalErrors={false}
+        useNativeValidation={false}
+        validators={{ foo: () => 'error' }}
+      >
         <input name="foo" />
         <Error errorPath="validator" global />
       </Form>,
