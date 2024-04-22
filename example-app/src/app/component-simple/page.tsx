@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 
 import { useFormState } from 'react-dom';
-import { Error, Form, Reset, Submit } from 'react-swift-form';
+import { Form, Reset, Submit } from 'react-swift-form';
 
 import { serverAction } from '../../actions';
 import Filters from '../../components/Filters/Filters';
@@ -40,7 +40,6 @@ export default function ComponentSimpleForm(): ReactElement {
         }}
       >
         <Simple name="foo" required />
-        <Error className="error" global />
         <div className="form__actions">
           <Reset />
           <Submit />
