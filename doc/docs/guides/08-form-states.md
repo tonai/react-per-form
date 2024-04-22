@@ -84,6 +84,12 @@ import SimpleComponentUseFormStatesSource from '!!raw-loader!@site/src/demo/Simp
 
 :::
 
+:::note
+
+You can pass a field name to `useFormStates` to get the field state instead of the whole form state.
+
+:::
+
 ## With the `useSubscribe` hook
 
 You can use the `useSubscribe` hook to listen to state changes.

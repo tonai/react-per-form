@@ -4,7 +4,7 @@
 
 ## Parameters
 
-`useWatch` takes the name of the fields to watch:
+`useWatch` takes an optional parameter representing the name of the fields to watch:
 
 - it can be a string for a single field
 - it can be an array a string for multiple fields
