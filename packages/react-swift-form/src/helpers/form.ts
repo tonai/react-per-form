@@ -52,9 +52,6 @@ export function getLocalFields(
   const localFields: Record<string, Dispatch<SetStateAction<IError>>> = {};
   for (const params of fieldValidators.values()) {
     const { setErrors } = params;
-    if (!setErrors) {
-      continue;
-    }
     for (const name of params.names) {
       localFields[name] = setErrors;
     }
@@ -80,42 +77,40 @@ export function getValidators(
       validators,
       ...validatorParams
     } = params;
-    if (setErrors) {
-      validatorArray.push({ ...validatorParams, setErrors });
-      if (isValidator(validators)) {
-        validatorArray.push({
-          ...validatorParams,
-          setErrors,
-          validator: validators,
-        });
-      } else if (isValidatorObject(validators)) {
-        const { names: validatorNames, validator } = validators;
-        validatorArray.push({
-          ...validatorParams,
-          names: validatorNames,
-          setErrors,
-          validator,
-        });
-      } else if (typeof validators === 'object') {
-        for (const [id, value] of Object.entries(validators)) {
-          if (isValidator(value)) {
-            validatorArray.push({
-              ...validatorParams,
-              id,
-              names: [id],
-              setErrors,
-              validator: value,
-            });
-          } else {
-            const { names: validatorNames, validator } = value;
-            validatorArray.push({
-              ...validatorParams,
-              id,
-              names: validatorNames,
-              setErrors,
-              validator,
-            });
-          }
+    validatorArray.push({ ...validatorParams, setErrors });
+    if (isValidator(validators)) {
+      validatorArray.push({
+        ...validatorParams,
+        setErrors,
+        validator: validators,
+      });
+    } else if (isValidatorObject(validators)) {
+      const { names: validatorNames, validator } = validators;
+      validatorArray.push({
+        ...validatorParams,
+        names: validatorNames,
+        setErrors,
+        validator,
+      });
+    } else if (typeof validators === 'object') {
+      for (const [id, value] of Object.entries(validators)) {
+        if (isValidator(value)) {
+          validatorArray.push({
+            ...validatorParams,
+            id,
+            names: [id],
+            setErrors,
+            validator: value,
+          });
+        } else {
+          const { names: validatorNames, validator } = value;
+          validatorArray.push({
+            ...validatorParams,
+            id,
+            names: validatorNames,
+            setErrors,
+            validator,
+          });
         }
       }
     }

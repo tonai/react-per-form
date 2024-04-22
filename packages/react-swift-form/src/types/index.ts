@@ -50,7 +50,7 @@ export interface IRegisterParams {
   names: string[];
   onBlurOptOut?: string[] | string;
   onChangeOptOut?: string[] | string;
-  setErrors?: Dispatch<SetStateAction<IError>>;
+  setErrors: Dispatch<SetStateAction<IError>>;
   transformers?: ITransformers;
   validators?:
     | IValidator

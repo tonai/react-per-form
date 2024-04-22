@@ -54,21 +54,37 @@ describe('form helper', () => {
     it('should return the merged default values', () => {
       expect(getDefaultValues(new Set(), {})).toEqual({});
       expect(
-        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {}),
+        getDefaultValues(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {},
+        ),
       ).toEqual({});
       expect(getDefaultValues(new Set(), { foo: 42 })).toEqual({
         foo: 42,
       });
       expect(
-        getDefaultValues(new Set([{ id: 'foo', names: ['foo'] }]), {
-          foo: 42,
-        }),
+        getDefaultValues(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {
+            foo: 42,
+          },
+        ),
       ).toEqual({ foo: 42 });
       expect(
         getDefaultValues(
           new Set([
-            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
-            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+            {
+              defaultValues: { foo: '42' },
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+            },
+            {
+              defaultValues: { bar: 12 },
+              id: 'bar',
+              names: ['bar'],
+              setErrors: () => null,
+            },
           ]),
           {
             foo: 42,
@@ -78,8 +94,18 @@ describe('form helper', () => {
       expect(
         getDefaultValues(
           new Set([
-            { defaultValues: { foo: '42' }, id: 'foo', names: ['foo'] },
-            { defaultValues: { bar: 12 }, id: 'bar', names: ['bar'] },
+            {
+              defaultValues: { foo: '42' },
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+            },
+            {
+              defaultValues: { bar: 12 },
+              id: 'bar',
+              names: ['bar'],
+              setErrors: () => null,
+            },
           ]),
           {
             foo: 42,
@@ -447,14 +473,16 @@ describe('form helper', () => {
 
   describe('getLocalFields', () => {
     it('should return local fields', () => {
-      const setErrors = (): null => null;
+      const setErrors1 = (): null => null;
+      const setErrors2 = (): null => null;
       const validatorMap = new Set([
-        { id: 'foobar', names: ['foo', 'bar'], setErrors },
-        { id: 'baz', names: ['baz'] },
+        { id: 'foobar', names: ['foo', 'bar'], setErrors: setErrors1 },
+        { id: 'baz', names: ['baz'], setErrors: setErrors2 },
       ]);
       expect(getLocalFields(validatorMap)).toEqual({
-        bar: setErrors,
-        foo: setErrors,
+        bar: setErrors1,
+        baz: setErrors2,
+        foo: setErrors1,
       });
     });
   });
@@ -489,21 +517,31 @@ describe('form helper', () => {
   describe('getTransformers', () => {
     it('should return the merged transformers', () => {
       expect(getTransformers(new Set())).toEqual(undefined);
-      expect(getTransformers(new Set([{ id: 'foo', names: ['foo'] }]))).toEqual(
-        {},
-      );
+      expect(
+        getTransformers(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+        ),
+      ).toEqual({});
       expect(getTransformers(new Set(), { foo: Number })).toEqual({
         foo: Number,
       });
       expect(
-        getTransformers(new Set([{ id: 'foo', names: ['foo'] }]), {
-          foo: Number,
-        }),
+        getTransformers(
+          new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
+          {
+            foo: Number,
+          },
+        ),
       ).toEqual({ foo: Number });
       expect(
         getTransformers(
           new Set([
-            { id: 'foo', names: ['foo'], transformers: { foo: String } },
+            {
+              id: 'foo',
+              names: ['foo'],
+              setErrors: () => null,
+              transformers: { foo: String },
+            },
           ]),
           {
             foo: Number,
@@ -758,19 +796,37 @@ describe('form helper', () => {
       expect(shouldBlur(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
       expect(
         shouldBlur(
-          new Set([{ id: 'bar', names: ['bar'], onBlurOptOut: 'bar' }]),
+          new Set([
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(true);
       expect(
         shouldBlur(
           new Set([
-            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onBlurOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'bar;baz',
               names: ['bar', 'baz'],
               onBlurOptOut: ['bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -785,19 +841,37 @@ describe('form helper', () => {
       );
       expect(
         shouldBlur(
-          new Set([{ id: 'foo', names: ['foo'], onBlurOptOut: 'foo' }]),
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              onBlurOptOut: 'foo',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(false);
       expect(
         shouldBlur(
           new Set([
-            { id: 'bar', names: ['bar'], onBlurOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onBlurOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onBlurOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onBlurOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'foo;bar;baz',
               names: ['foo', 'bar', 'baz'],
               onBlurOptOut: ['foo', 'bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -812,19 +886,37 @@ describe('form helper', () => {
       expect(shouldChange(new Set(), 'foo', ['bar', 'baz'])).toEqual(true);
       expect(
         shouldChange(
-          new Set([{ id: 'bar', names: ['bar'], onChangeOptOut: 'bar' }]),
+          new Set([
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(true);
       expect(
         shouldChange(
           new Set([
-            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onChangeOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'bar;baz',
               names: ['bar', 'baz'],
               onChangeOptOut: ['bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
@@ -839,19 +931,37 @@ describe('form helper', () => {
       );
       expect(
         shouldChange(
-          new Set([{ id: 'foo', names: ['foo'], onChangeOptOut: 'foo' }]),
+          new Set([
+            {
+              id: 'foo',
+              names: ['foo'],
+              onChangeOptOut: 'foo',
+              setErrors: () => null,
+            },
+          ]),
           'foo',
         ),
       ).toEqual(false);
       expect(
         shouldChange(
           new Set([
-            { id: 'bar', names: ['bar'], onChangeOptOut: 'bar' },
-            { id: 'baz', names: ['baz'], onChangeOptOut: 'baz' },
+            {
+              id: 'bar',
+              names: ['bar'],
+              onChangeOptOut: 'bar',
+              setErrors: () => null,
+            },
+            {
+              id: 'baz',
+              names: ['baz'],
+              onChangeOptOut: 'baz',
+              setErrors: () => null,
+            },
             {
               id: 'foo;bar;baz',
               names: ['foo', 'bar', 'baz'],
               onChangeOptOut: ['foo', 'bar', 'baz'],
+              setErrors: () => null,
             },
           ]),
           'foo',
