@@ -8,11 +8,11 @@ import {
   getFormInputs,
   getFormStates,
   getInputValue,
+  getLocalFields,
   getName,
   getTransformers,
-  getValidatorMap,
+  getValidators,
   getValue,
-  insertInMapSet,
   isCheckbox,
   isEvent,
   isFormElement,
@@ -327,6 +327,20 @@ describe('form helper', () => {
     });
   });
 
+  describe('getLocalFields', () => {
+    it('should return local fields', () => {
+      const setErrors = (): null => null;
+      const validatorMap = new Set([
+        { id: 'foobar', names: ['foo', 'bar'], setErrors },
+        { id: 'baz', names: ['baz'] },
+      ]);
+      expect(getLocalFields(validatorMap)).toEqual({
+        bar: setErrors,
+        foo: setErrors,
+      });
+    });
+  });
+
   describe('getName', () => {
     it('should return the input name', () => {
       const input = document.createElement('input');
@@ -381,76 +395,79 @@ describe('form helper', () => {
     });
   });
 
-  describe('getValidatorMap', () => {
+  describe('getValidators', () => {
     it('should add field without validator', () => {
-      const validatorMap = getValidatorMap(
-        new Set([{ id: 'foo', names: ['foo'] }]),
+      const validatorMap = getValidators(
+        new Set([{ id: 'foo', names: ['foo'], setErrors: () => null }]),
       );
-      expect(validatorMap).toEqual(
-        new Map([['foo', new Set([{ id: 'foo', names: ['foo'] }])]]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add field with validator function', () => {
-      const validatorMap = getValidatorMap(
-        new Set([{ id: 'foo', names: ['foo'], validators: () => '' }]),
-      );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
-    });
-
-    it('should add field with validator object', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foo',
             names: ['foo'],
+            setErrors: () => null,
+            validators: () => '',
+          },
+        ]),
+      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
+    });
+
+    it('should add field with validator object', () => {
+      const validatorMap = getValidators(
+        new Set([
+          {
+            id: 'foo',
+            names: ['foo'],
+            setErrors: () => null,
             validators: { names: ['foo'], validator: () => '' },
           },
         ]),
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add field with validator map object', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foobar',
             names: ['foo', 'bar'],
+            setErrors: () => null,
             validators: {
               bar: { names: ['bar'], validator: () => '' },
               foo: () => '',
@@ -458,117 +475,83 @@ describe('form helper', () => {
           },
         ]),
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'bar',
-            new Set([
-              {
-                id: 'foobar',
-                names: ['foo', 'bar'],
-              },
-              {
-                id: 'bar',
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foobar',
-                names: ['foo', 'bar'],
-              },
-              {
-                id: 'foo',
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foobar',
+          names: ['foo', 'bar'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'bar',
+          names: ['bar'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should add simple form validator', () => {
-      const validatorMap = getValidatorMap(new Set(), {
+      const validatorMap = getValidators(new Set(), {
         bar: () => '',
         foo: { names: ['foo'], validator: () => '' },
       });
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                messages: undefined,
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'bar',
-            new Set([
-              {
-                id: 'bar',
-                messages: undefined,
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'bar',
+          messages: undefined,
+          names: ['bar'],
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          messages: undefined,
+          names: ['foo'],
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
 
     it('should validators with messages', () => {
-      const validatorMap = getValidatorMap(
+      const validatorMap = getValidators(
         new Set([
           {
             id: 'foo',
             messages: { valueMissing: 'Input' },
             names: ['foo'],
+            setErrors: () => null,
             validators: () => '',
           },
         ]),
         { bar: () => '' },
         { valueMissing: 'Form' },
       );
-      expect(validatorMap).toEqual(
-        new Map([
-          [
-            'foo',
-            new Set([
-              {
-                id: 'foo',
-                messages: { valueMissing: 'Input' },
-                names: ['foo'],
-              },
-              {
-                id: 'foo',
-                messages: { valueMissing: 'Input' },
-                names: ['foo'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-          [
-            'bar',
-            new Set([
-              {
-                id: 'bar',
-                messages: { valueMissing: 'Form' },
-                names: ['bar'],
-                validator: expect.any(Function) as () => void,
-              },
-            ]),
-          ],
-        ]),
-      );
+      expect(validatorMap).toEqual([
+        {
+          id: 'foo',
+          messages: { valueMissing: 'Input' },
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+        },
+        {
+          id: 'foo',
+          messages: { valueMissing: 'Input' },
+          names: ['foo'],
+          setErrors: expect.any(Function) as () => void,
+          validator: expect.any(Function) as () => void,
+        },
+        {
+          id: 'bar',
+          messages: { valueMissing: 'Form' },
+          names: ['bar'],
+          validator: expect.any(Function) as () => void,
+        },
+      ]);
     });
   });
 
@@ -622,20 +605,6 @@ describe('form helper', () => {
 
     it('should return the transformed value', () => {
       expect(getValue('42', Number)).toEqual(42);
-    });
-  });
-
-  describe('insertInMapSet', () => {
-    it('should create a new set in map', () => {
-      const map = new Map<string, Set<unknown>>();
-      insertInMapSet(map, 'foo', 'bar');
-      expect(map).toEqual(new Map([['foo', new Set(['bar'])]]));
-    });
-
-    it('should append in existing set in map', () => {
-      const map = new Map<string, Set<unknown>>([['foo', new Set(['bar'])]]);
-      insertInMapSet(map, 'foo', 'baz');
-      expect(map).toEqual(new Map([['foo', new Set(['bar', 'baz'])]]));
     });
   });
 

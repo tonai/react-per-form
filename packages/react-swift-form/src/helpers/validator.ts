@@ -5,6 +5,8 @@ import type {
   IFormElement,
   IFormValidator,
   IFormValues,
+  ILocalFields,
+  ILocalFormValidator,
   IMainError,
   IMessages,
   ITransformers,
@@ -42,6 +44,12 @@ export function isValidatorObject(
       'validator' in validator &&
       typeof validator.validator === 'function',
   );
+}
+
+export function isLocalValidator(
+  validator: IFormValidator,
+): validator is ILocalFormValidator {
+  return 'setErrors' in validator;
 }
 
 export function getNativeErrorKey(
@@ -99,13 +107,21 @@ export function getData<V extends IFormValues>(params: IGetDataParams): V {
 }
 
 export function getFieldMessages(
-  set: Set<IFormValidator>,
+  validators: IFormValidator[],
   messages: IMessages = {},
-): IMessages {
-  return Array.from(set).reduce<IMessages>(
-    (acc, params) => ({ ...acc, ...params.messages }),
-    messages,
+): IFieldMessages {
+  const fieldMessages: IFieldMessages = Object.fromEntries(
+    validators.reduce<[string, IMessages][]>((acc, params) => {
+      if (params.messages) {
+        for (const name of params.names) {
+          acc.push([name, params.messages]);
+        }
+      }
+      return acc;
+    }, []),
   );
+  fieldMessages[defaultSymbol] = messages;
+  return fieldMessages;
 }
 
 export function getFilteredErrors<T>(
@@ -149,6 +165,18 @@ export function setMainError(
           id: validator[0],
           names: validator[1].names,
         };
+      } else {
+        const global = Object.entries(errors.global).find(
+          ([, { error }]) => error,
+        );
+        if (global) {
+          errors.main = {
+            error: global[1].error,
+            global: global[1].global,
+            id: global[0],
+            names: global[1].names,
+          };
+        }
       }
     }
   }
@@ -156,16 +184,14 @@ export function setMainError(
 }
 
 export function getValidatorIds(
-  validatorEntries: [string, Set<IFormValidator>][],
+  validators: IFormValidator[],
   names?: string[],
 ): string[] {
   const ids = new Set<string>();
-  for (const [, set] of validatorEntries) {
-    for (const params of set.values()) {
-      const { id, names: fieldNames } = params;
-      if (!names || intersection(names, fieldNames).length > 0) {
-        ids.add(id);
-      }
+  for (const params of validators) {
+    const { id, names: fieldNames } = params;
+    if (!names || intersection(names, fieldNames).length > 0) {
+      ids.add(id);
     }
   }
   return [...ids];
@@ -200,6 +226,7 @@ export function getAllError(
 }
 
 interface IGetErrorObjectParams {
+  global?: boolean;
   ids?: string[];
   manualErrors?: Record<string, string | null>;
   names?: string[];
@@ -209,6 +236,7 @@ interface IGetErrorObjectParams {
 
 export function getErrorObject(params: IGetErrorObjectParams): IError {
   const {
+    global = true,
     ids,
     manualErrors = {},
     names,
@@ -218,11 +246,9 @@ export function getErrorObject(params: IGetErrorObjectParams): IError {
   const native = getFilteredErrors(nativeErrors, names);
   const validator = getFilteredErrors(validatorErrors, ids);
   const manual = getFilteredErrors(manualErrors, names);
-  const global = filterObject(validator, ([, { global }]) => global);
-  const all = getAllError(native, validator, manual);
   const errors: IError = {
-    all,
-    global,
+    all: getAllError(native, validator, manual),
+    global: global ? filterObject(validator, ([, { global }]) => global) : {},
     manual,
     native,
     validator,
@@ -232,13 +258,10 @@ export function getErrorObject(params: IGetErrorObjectParams): IError {
 }
 
 export function mergeErrors(prevErrors: IError, errors: IError): IError {
+  const { global, validator } = errors;
   const native = {
     ...prevErrors.native,
     ...errors.native,
-  };
-  const validator = {
-    ...prevErrors.validator,
-    ...errors.validator,
   };
   const manual = {
     ...prevErrors.manual,
@@ -247,10 +270,7 @@ export function mergeErrors(prevErrors: IError, errors: IError): IError {
   const all = getAllError(native, validator, manual);
   const newErrors = {
     all,
-    global: {
-      ...prevErrors.global,
-      ...errors.global,
-    },
+    global,
     manual,
     native,
     validator,
@@ -266,26 +286,31 @@ export function hasError(errors: IError): boolean {
 export function getCustomMessage(
   error: string | null,
   messages: IMessages = {},
+  defaultMessages: IMessages = {},
 ): string {
   if (!error) {
     return '';
   }
-  return messages[error] ?? error;
+  if (messages[error]) {
+    return messages[error];
+  }
+  return defaultMessages[error] ?? error;
 }
 
 interface IGetNativeErrorParams {
+  defaultMessages?: IMessages;
   input: IFormElement;
   messages?: IMessages;
 }
 
 export function getNativeError(params: IGetNativeErrorParams): string {
-  const { input, messages = {} } = params;
+  const { defaultMessages = {}, input, messages = {} } = params;
   const formInput = getFormInput(input);
   formInput.setCustomValidity('');
   const { validity } = formInput;
   const validityKey = getNativeErrorKey(validity);
   if (validityKey) {
-    const customMessage = messages[validityKey];
+    const customMessage = messages[validityKey] ?? defaultMessages[validityKey];
     if (customMessage) {
       formInput.setCustomValidity(customMessage);
     }
@@ -307,8 +332,9 @@ export function getNativeErrors(
   return inputs.reduce<Record<string, string>>((acc, input) => {
     const inputName = getFormInput(input).name ?? '';
     acc[inputName] = getNativeError({
+      defaultMessages: fieldMessages[defaultSymbol],
       input,
-      messages: fieldMessages[inputName] ?? fieldMessages[defaultSymbol],
+      messages: fieldMessages[inputName],
     });
     return acc;
   }, {});
@@ -346,85 +372,56 @@ export function getManualError(
 interface IGetValidatorErrorParams {
   form: HTMLFormElement;
   transformers?: ITransformers;
-  validatorEntries?: [string, Set<IFormValidator>][];
+  validators?: IFormValidator[];
   values?: IFormValues;
 }
 
-interface IValidatorParams extends IFormValidator {
-  name: string;
-}
-
-export async function getValidatorError(
+export function getValidatorError(
   params: IGetValidatorErrorParams,
-): Promise<{
-  validatorParams: IValidatorParams[];
-  validatorResults: string[];
-}> {
-  const {
-    form,
-    transformers = {},
-    validatorEntries = [],
-    values = {},
-  } = params;
+): Promise<string[]> {
+  const { form, transformers = {}, validators = [], values = {} } = params;
 
-  const validatorParams: IValidatorParams[] = [];
-  const validatorResults: Record<string, Promise<string> | string> = {};
-  for (const [name, set] of validatorEntries) {
-    for (const params of set.values()) {
-      const { id, names, validator } = params;
-      if (!validator || id in validatorResults) {
-        continue;
-      }
-      validatorParams.push({ ...params, name });
-      validatorResults[id] = validator(
-        getData({ form, names, transformers, values }),
-        names,
-      );
+  const validatorResults = validators.map((params) => {
+    const { names, validator } = params;
+    if (!validator) {
+      return '';
     }
-  }
+    return validator(getData({ form, names, transformers, values }), names);
+  });
 
-  return {
-    validatorParams,
-    validatorResults: await Promise.all(Object.values(validatorResults)),
-  };
+  return Promise.all(Object.values(validatorResults));
 }
 
 interface ISetValidatorErrorParams {
-  fieldMessages?: IFieldMessages;
+  defaultMessages?: IMessages;
   form: HTMLFormElement;
-  validatorParams: IValidatorParams[];
   validatorResults: string[];
+  validators: IFormValidator[];
 }
 
 export function setValidatorError(
   params: ISetValidatorErrorParams,
 ): Record<string, IValidatorError> {
-  const {
-    fieldMessages = {},
-    form,
-    validatorParams,
-    validatorResults,
-  } = params;
+  const { defaultMessages = {}, form, validatorResults, validators } = params;
 
   const validatorErrors: Record<string, IValidatorError> = {};
   validatorResults.forEach((result, i) => {
-    const { id, names, name, setErrors } = validatorParams[i];
-    const error = getCustomMessage(
-      result,
-      fieldMessages[name] ?? fieldMessages[defaultSymbol],
-    );
-    for (const fieldName of names) {
-      // @ts-expect-error access HTMLFormControlsCollection with input name
-      const input = getFormInput(form.elements[fieldName] as IFormElement);
-      if (input && error && !input.validationMessage) {
-        input.setCustomValidity(error);
+    const { id, messages, names } = validators[i];
+    if (result) {
+      const error = getCustomMessage(result, messages, defaultMessages);
+      for (const fieldName of names) {
+        // @ts-expect-error access HTMLFormControlsCollection with input name
+        const input = getFormInput(form.elements[fieldName] as IFormElement);
+        if (input && error && !input.validationMessage) {
+          input.setCustomValidity(error);
+        }
       }
+      validatorErrors[id] = {
+        error,
+        global: !isLocalValidator(validators[i]),
+        names,
+      };
     }
-    validatorErrors[id] = {
-      error,
-      global: !setErrors,
-      names,
-    };
   });
 
   return validatorErrors;
@@ -449,11 +446,12 @@ interface IDisplayErrorParams {
   filterLocalErrors?: boolean;
   focusOnError?: boolean;
   form: HTMLFormElement;
+  localFields?: ILocalFields;
   names?: string[];
   revalidate: boolean;
   setErrors: Dispatch<SetStateAction<IError>>;
   useNativeValidation: boolean;
-  validatorEntries: [string, Set<IFormValidator>][];
+  validators: IFormValidator[];
 }
 
 export function displayErrors(params: IDisplayErrorParams): void {
@@ -463,11 +461,12 @@ export function displayErrors(params: IDisplayErrorParams): void {
     filterLocalErrors,
     focusOnError,
     form,
+    localFields = {},
     names,
     revalidate,
     setErrors,
     useNativeValidation,
-    validatorEntries,
+    validators,
   } = params;
 
   // Return quickly if there is no need to update the display
@@ -502,35 +501,74 @@ export function displayErrors(params: IDisplayErrorParams): void {
     return;
   }
 
-  // Field errors
+  // Local fields
   const localNames = new Set<string>();
-  for (const [name, set] of validatorEntries) {
+  for (const name of Object.keys(localFields)) {
     localNames.add(name);
-    for (const params of set.values()) {
-      if (names && !names.includes(name)) {
-        continue;
+  }
+  const filterNames = Array.from(localNames);
+
+  // Field errors
+  const localErrors = new Map<Dispatch<SetStateAction<IError>>, IError>();
+  // Local validators (native errors)
+  for (const params of validators) {
+    if (names && intersection(names, params.names).length === 0) {
+      continue;
+    }
+    if (isLocalValidator(params)) {
+      const {
+        id,
+        names: fieldNames,
+        setErrors,
+        validator: localValidator,
+      } = params;
+      if (!localValidator) {
+        // 1. create error object for local fields with native errors
+        localErrors.set(
+          setErrors,
+          getErrorObject({
+            global: false,
+            ids: [id],
+            manualErrors: manual,
+            names: fieldNames,
+            nativeErrors: native,
+            validatorErrors: validator,
+          }),
+        );
+      } else if (validator[id]) {
+        // 2. add local validator and manual error to local error
+        const errors = localErrors.get(setErrors);
+        if (errors) {
+          errors.validator = { ...errors?.validator, [id]: validator[id] };
+        }
       }
-      const { id, names: fieldNames, setErrors } = params;
-      if (setErrors) {
-        setErrors((prevErrors) => {
-          if (display || (revalidate && hasError(prevErrors))) {
-            const fieldErrors = getErrorObject({
-              ids: [id],
-              manualErrors: manual,
-              names: fieldNames,
-              nativeErrors: native,
-              validatorErrors: validator,
-            });
-            if (focusOnError && !getFocus()) {
-              setFocus(focusError(inputs, fieldErrors.main));
-            }
-            const mergedErrors = mergeErrors(prevErrors, fieldErrors);
-            return mergedErrors.main ? mergedErrors : initialError;
+    } else {
+      // Global validator
+      const { id, names: fieldNames } = params;
+      for (const name of fieldNames) {
+        const localSetErrors = localFields[name];
+        if (localSetErrors) {
+          // 3. add global validator and manual errors to local error
+          const errors = localErrors.get(localSetErrors);
+          if (errors && validator[id]) {
+            errors.validator = { ...errors?.validator, [id]: validator[id] };
           }
-          return prevErrors;
-        });
+        }
       }
     }
+  }
+  for (const [setErrors, fieldErrors] of localErrors) {
+    setMainError(fieldErrors);
+    setErrors((prevErrors) => {
+      if (display || (revalidate && hasError(prevErrors))) {
+        if (focusOnError && !getFocus()) {
+          setFocus(focusError(inputs, fieldErrors.main));
+        }
+        const mergedErrors = mergeErrors(prevErrors, fieldErrors);
+        return mergedErrors.main ? mergedErrors : initialError;
+      }
+      return prevErrors;
+    });
   }
 
   // Form errors
@@ -538,14 +576,9 @@ export function displayErrors(params: IDisplayErrorParams): void {
     if (display || (revalidate && hasError(prevErrors))) {
       let globalErrors = errors;
       if (filterLocalErrors) {
-        const filterNames = Array.from(localNames);
         globalErrors = {
           all: filterObject(all, ([key]) => !filterNames.includes(key)),
-          global: filterObject(
-            global,
-            ([, { names }]) =>
-              intersection(filterNames, names).length !== names.length,
-          ),
+          global,
           manual: filterObject(manual, ([key]) => !filterNames.includes(key)),
           native: filterObject(native, ([key]) => !filterNames.includes(key)),
           validator: filterObject(
@@ -572,13 +605,14 @@ interface IValidateFormParams {
   filterLocalErrors?: boolean;
   focusOnError?: boolean;
   form: HTMLFormElement;
+  localFields?: ILocalFields;
   messages?: IMessages;
   names?: string[];
   revalidate: boolean;
   setErrors: Dispatch<SetStateAction<IError>>;
   transformers?: ITransformers;
   useNativeValidation: boolean;
-  validatorMap: Map<string, Set<IFormValidator>>;
+  validators: IFormValidator[];
   values?: IFormValues;
 }
 
@@ -591,29 +625,23 @@ export async function validateForm(
     filterLocalErrors,
     focusOnError,
     form,
+    localFields,
     messages,
     names,
     revalidate,
     setErrors,
     transformers = {},
     useNativeValidation,
-    validatorMap,
+    validators,
     values = {},
   } = params;
-  const validatorEntries = Array.from(validatorMap.entries());
-  const fieldMessages: IFieldMessages = Object.fromEntries(
-    validatorEntries.map(([name, set]) => [
-      name,
-      getFieldMessages(set, messages),
-    ]),
-  );
-  fieldMessages[defaultSymbol] = messages ?? {};
+  const fieldMessages: IFieldMessages = getFieldMessages(validators, messages);
 
   // 1. run validator.
-  const { validatorParams, validatorResults } = await getValidatorError({
+  const validatorResults = await getValidatorError({
     form,
     transformers,
-    validatorEntries,
+    validators,
     values,
   });
 
@@ -629,14 +657,14 @@ export async function validateForm(
 
   // 4. validator errors.
   const validatorErrors = setValidatorError({
-    fieldMessages,
+    defaultMessages: messages,
     form,
-    validatorParams,
     validatorResults,
+    validators,
   });
 
   // IError object
-  const ids = getValidatorIds(validatorEntries, names);
+  const ids = getValidatorIds(validators, names);
   const errorObject = getErrorObject({
     ids,
     manualErrors,
@@ -651,11 +679,12 @@ export async function validateForm(
     filterLocalErrors,
     focusOnError,
     form,
+    localFields,
     names,
     revalidate,
     setErrors,
     useNativeValidation,
-    validatorEntries,
+    validators,
   });
 
   return errorObject;

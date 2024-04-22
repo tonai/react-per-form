@@ -1,4 +1,4 @@
-import type { IError, IRegisterParams } from '../types';
+import type { IError } from '../types';
 
 import { defaultSymbol, initialError } from '../constants';
 
@@ -18,6 +18,7 @@ import {
   getValidatorError,
   getValidatorIds,
   hasError,
+  isLocalValidator,
   isValidator,
   isValidatorObject,
   mergeErrors,
@@ -68,7 +69,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
       formErrors.mockClear();
@@ -79,7 +80,7 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
       formErrors.mockClear();
@@ -90,7 +91,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
       formErrors.mockClear();
@@ -101,90 +102,34 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
-    });
-
-    it('should display the form errors (non native form validation)', () => {
-      const errors: IError = {
-        all: { foo: 'error' },
-        global: {},
-        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: { foo: 'error' },
-        validator: {},
-      };
-      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
-        typeof d === 'function' ? d(initialError) : d,
-      );
       displayErrors({
         display: true,
         errors,
         form,
+        names: ['foo'],
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
-      });
-      expect(formErrors.mock.results[0].value).toEqual({
-        all: { foo: 'error' },
-        global: {},
-        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: { foo: 'error' },
-        validator: {},
-      });
-      formErrors.mockClear();
-      displayErrors({
-        display: true,
-        errors,
-        form,
-        revalidate: false,
-        setErrors: formErrors,
-        useNativeValidation: false,
-        validatorEntries: [],
-      });
-      expect(formErrors.mock.results[0].value).toEqual({
-        all: { foo: 'error' },
-        global: {},
-        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: { foo: 'error' },
-        validator: {},
-      });
-      formErrors.mockClear();
-      displayErrors({
-        display: false,
-        errors,
-        form,
-        revalidate: true,
-        setErrors: formErrors,
-        useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
-      formErrors.mockClear();
-      displayErrors({
-        display: false,
-        errors,
-        form,
-        revalidate: false,
-        setErrors: formErrors,
-        useNativeValidation: false,
-        validatorEntries: [],
-      });
-      expect(formErrors).not.toHaveBeenCalled();
     });
 
     it('should focus the error field (non native form validation)', () => {
       const errors: IError = {
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
@@ -198,7 +143,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
@@ -210,7 +155,7 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
@@ -222,7 +167,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(spy).not.toHaveBeenCalled();
       spy.mockClear();
@@ -234,7 +179,7 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
@@ -243,101 +188,125 @@ describe('validator helper', () => {
     it('should display the input errors (non native input validation)', () => {
       const errors: IError = {
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+      const fooErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              setErrors: inputErrors,
-              validator: () => '',
-            },
-          ]),
-        ],
+      const barErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const validators = [
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: fooErrors,
+        },
+        {
+          id: 'bar',
+          names: ['bar'],
+          setErrors: barErrors,
+        },
       ];
+      const localFields = { foo: fooErrors };
       displayErrors({
         display: true,
         errors,
         focusOnError: false,
         form,
+        localFields,
         names: ['foo'],
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
-      expect(inputErrors.mock.results[0].value).toEqual({
+      expect(fooErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       });
+      expect(barErrors).not.toHaveBeenCalled();
       formErrors.mockClear();
-      inputErrors.mockClear();
+      fooErrors.mockClear();
       displayErrors({
         display: true,
         errors,
         focusOnError: false,
         form,
+        localFields,
         names: ['foo'],
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
-      expect(inputErrors.mock.results[0].value).toEqual({
+      expect(fooErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       });
+      expect(barErrors).not.toHaveBeenCalled();
       formErrors.mockClear();
-      inputErrors.mockClear();
+      fooErrors.mockClear();
       displayErrors({
         display: false,
         errors,
         focusOnError: false,
         form,
+        localFields,
         names: ['foo'],
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
-      expect(inputErrors.mock.results[0].value).toEqual({
+      expect(fooErrors.mock.results[0].value).toEqual({
         all: {},
         global: {},
         manual: {},
@@ -351,62 +320,88 @@ describe('validator helper', () => {
         native: {},
         validator: {},
       });
+      expect(barErrors).not.toHaveBeenCalled();
       formErrors.mockClear();
-      inputErrors.mockClear();
+      fooErrors.mockClear();
       displayErrors({
         display: false,
         errors,
         focusOnError: false,
         form,
+        localFields,
         names: ['foo'],
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(formErrors).not.toHaveBeenCalled();
+      expect(fooErrors).not.toHaveBeenCalled();
+      expect(barErrors).not.toHaveBeenCalled();
     });
 
     it('should focus the error field (non native input validation)', () => {
       const errors: IError = {
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+      const fooErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              setErrors: inputErrors,
-              validator: () => '',
-            },
-          ]),
-        ],
+      const barErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const validators = [
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: fooErrors,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: fooErrors,
+          validator: () => 'validator',
+        },
+        {
+          id: 'bar',
+          names: ['bar'],
+          setErrors: barErrors,
+        },
+        {
+          id: 'bar',
+          names: ['bar'],
+          setErrors: barErrors,
+          validator: () => '',
+        },
       ];
+      const localFields = { foo: fooErrors };
       const spy = jest.spyOn(input1, 'focus');
       displayErrors({
         display: true,
         errors,
         focusOnError: true,
         form,
-        names: ['foo'],
+        localFields,
+        names: ['foo', 'bar'],
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
+      expect(fooErrors).toHaveBeenCalled();
+      expect(barErrors).toHaveBeenCalled();
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -414,11 +409,12 @@ describe('validator helper', () => {
         errors,
         focusOnError: true,
         form,
-        names: ['foo'],
+        localFields,
+        names: ['foo', 'bar'],
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
@@ -427,11 +423,12 @@ describe('validator helper', () => {
         errors,
         focusOnError: true,
         form,
-        names: ['foo'],
+        localFields,
+        names: ['foo', 'bar'],
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(spy).not.toHaveBeenCalled();
       spy.mockClear();
@@ -440,11 +437,12 @@ describe('validator helper', () => {
         errors,
         focusOnError: true,
         form,
-        names: ['foo'],
+        localFields,
+        names: ['foo', 'bar'],
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
@@ -452,7 +450,8 @@ describe('validator helper', () => {
 
     it('should trigger form reportValidity function (native form validation)', () => {
       const errors = initialError;
-      const spy = jest.spyOn(form, 'reportValidity');
+      const formSpy = jest.spyOn(form, 'reportValidity');
+      const inputSpy = jest.spyOn(input1, 'reportValidity');
       displayErrors({
         display: true,
         errors,
@@ -460,10 +459,12 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
       displayErrors({
         display: true,
         errors,
@@ -471,10 +472,12 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
       displayErrors({
         display: false,
         errors,
@@ -482,10 +485,12 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
       displayErrors({
         display: false,
         errors,
@@ -493,23 +498,86 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockRestore();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockClear();
     });
 
     it('should trigger input reportValidity function (native input validation)', () => {
       input1.setAttribute('required', '');
+      const formSpy = jest.spyOn(form, 'reportValidity');
+      const inputSpy = jest.spyOn(input1, 'reportValidity');
+      displayErrors({
+        display: true,
+        errors: initialError,
+        form,
+        names: ['foo'],
+        revalidate: true,
+        setErrors: () => '',
+        useNativeValidation: true,
+        validators: [],
+      });
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
+      displayErrors({
+        display: true,
+        errors: initialError,
+        form,
+        names: ['foo'],
+        revalidate: false,
+        setErrors: () => '',
+        useNativeValidation: true,
+        validators: [],
+      });
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
+      displayErrors({
+        display: false,
+        errors: initialError,
+        form,
+        names: ['foo'],
+        revalidate: true,
+        setErrors: () => '',
+        useNativeValidation: true,
+        validators: [],
+      });
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockClear();
+      inputSpy.mockClear();
+      displayErrors({
+        display: false,
+        errors: initialError,
+        form,
+        names: ['foo'],
+        revalidate: false,
+        setErrors: () => '',
+        useNativeValidation: true,
+        validators: [],
+      });
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockClear();
       const errors: IError = {
         all: { foo: 'error' },
-        global: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
+        manual: { foo: 'manual' },
         native: { foo: 'error' },
-        validator: {},
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
       };
-      const spy = jest.spyOn(input1, 'reportValidity');
       displayErrors({
         display: true,
         errors,
@@ -519,10 +587,12 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockClear();
       displayErrors({
         display: true,
         errors,
@@ -532,10 +602,12 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockClear();
       displayErrors({
         display: false,
         errors,
@@ -545,10 +617,12 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).toHaveBeenCalled();
-      spy.mockClear();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockClear();
       displayErrors({
         display: false,
         errors,
@@ -558,21 +632,23 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: () => '',
         useNativeValidation: true,
-        validatorEntries: [],
+        validators: [],
       });
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockRestore();
+      expect(formSpy).not.toHaveBeenCalled();
+      expect(inputSpy).not.toHaveBeenCalled();
+      formSpy.mockRestore();
+      inputSpy.mockRestore();
     });
 
-    it('should not display the local errors on the the form (filterLocalErrors=true)', () => {
+    it('should not display the local errors on the form (filterLocalErrors=true)', () => {
       const errors: IError = {
         all: { foo: 'error' },
         global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: {},
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
         validator: {
-          foo: { error: 'error', global: false, names: ['foo'] },
+          foo: { error: 'validator', global: false, names: ['foo'] },
         },
       };
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
@@ -581,37 +657,39 @@ describe('validator helper', () => {
       const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              setErrors: inputErrors,
-              validator: () => 'error',
-            },
-          ]),
-        ],
+      const validators = [
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: inputErrors,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          setErrors: inputErrors,
+          validator: () => 'validator',
+        },
       ];
+      const localFields = { foo: inputErrors };
       displayErrors({
         display: true,
         errors,
         filterLocalErrors: true,
         form,
+        localFields,
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: {},
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
         validator: {
-          foo: { error: 'error', global: false, names: ['foo'] },
+          foo: { error: 'validator', global: false, names: ['foo'] },
         },
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
@@ -622,19 +700,20 @@ describe('validator helper', () => {
         errors,
         filterLocalErrors: true,
         form,
+        localFields,
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(inputErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
         global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
-        manual: {},
-        native: {},
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
         validator: {
-          foo: { error: 'error', global: false, names: ['foo'] },
+          foo: { error: 'validator', global: false, names: ['foo'] },
         },
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
@@ -645,10 +724,11 @@ describe('validator helper', () => {
         errors,
         filterLocalErrors: true,
         form,
+        localFields,
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
       });
       expect(inputErrors.mock.results[0].value).toEqual(initialError);
       expect(formErrors.mock.results[0].value).toEqual(initialError);
@@ -659,10 +739,212 @@ describe('validator helper', () => {
         errors,
         filterLocalErrors: true,
         form,
+        localFields,
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: validators,
+        validators,
+      });
+      expect(inputErrors).not.toHaveBeenCalled();
+      expect(formErrors).not.toHaveBeenCalled();
+    });
+
+    it('should display the form errors (non native form validation)', () => {
+      const errors: IError = {
+        all: { foo: 'error' },
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      };
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      displayErrors({
+        display: true,
+        errors,
+        form,
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators: [],
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      });
+      formErrors.mockClear();
+      displayErrors({
+        display: true,
+        errors,
+        form,
+        revalidate: false,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators: [],
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      });
+      formErrors.mockClear();
+      displayErrors({
+        display: false,
+        errors,
+        form,
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators: [],
+      });
+      expect(formErrors.mock.results[0].value).toEqual(initialError);
+      formErrors.mockClear();
+    });
+
+    it('should display the global error on the local field (filterLocalErrors=true)', () => {
+      const errors: IError = {
+        all: { foo: 'error' },
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      };
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(initialError) : d,
+      );
+      const validators = [
+        {
+          id: 'fooo',
+          names: ['foo'],
+          setErrors: inputErrors,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          validator: () => 'validator',
+        },
+      ];
+      const localFields = { foo: inputErrors };
+      displayErrors({
+        display: true,
+        errors,
+        filterLocalErrors: true,
+        form,
+        localFields,
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators,
+      });
+      expect(inputErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'validator', global: true, id: 'foo', names: ['foo'] },
+        manual: {},
+        native: {},
+        validator: {},
+      });
+      inputErrors.mockClear();
+      formErrors.mockClear();
+      displayErrors({
+        display: true,
+        errors,
+        filterLocalErrors: true,
+        form,
+        localFields,
+        revalidate: false,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators,
+      });
+      expect(inputErrors.mock.results[0].value).toEqual({
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: { foo: 'manual' },
+        native: { foo: 'error' },
+        validator: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+      });
+      expect(formErrors.mock.results[0].value).toEqual({
+        all: {},
+        global: {
+          foo: { error: 'validator', global: true, names: ['foo'] },
+        },
+        main: { error: 'validator', global: true, id: 'foo', names: ['foo'] },
+        manual: {},
+        native: {},
+        validator: {},
+      });
+      inputErrors.mockClear();
+      formErrors.mockClear();
+      displayErrors({
+        display: false,
+        errors,
+        filterLocalErrors: true,
+        form,
+        localFields,
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators,
+      });
+      expect(inputErrors.mock.results[0].value).toEqual(initialError);
+      expect(formErrors.mock.results[0].value).toEqual(initialError);
+      inputErrors.mockClear();
+      formErrors.mockClear();
+      displayErrors({
+        display: false,
+        errors,
+        filterLocalErrors: true,
+        form,
+        localFields,
+        revalidate: false,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators,
       });
       expect(inputErrors).not.toHaveBeenCalled();
       expect(formErrors).not.toHaveBeenCalled();
@@ -692,7 +974,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
@@ -715,7 +997,7 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual({
         all: { foo: 'error' },
@@ -738,7 +1020,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors.mock.results[0].value).toEqual(initialError);
       formErrors.mockClear();
@@ -750,7 +1032,7 @@ describe('validator helper', () => {
         revalidate: false,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorEntries: [],
+        validators: [],
       });
       expect(formErrors).not.toHaveBeenCalled();
     });
@@ -1071,31 +1353,33 @@ describe('validator helper', () => {
 
   describe('getFieldMessages', () => {
     it('should merge custom messages', () => {
-      const validators = new Set([
+      const validators = [
         {
           id: 'foo',
           messages: { valueMissing: 'Did you miss something ?' },
           names: ['foo'],
           validator: () => '',
         },
-      ]);
+      ];
       expect(getFieldMessages(validators)).toEqual({
-        valueMissing: 'Did you miss something ?',
+        [defaultSymbol]: {},
+        foo: { valueMissing: 'Did you miss something ?' },
       });
       expect(
         getFieldMessages(validators, {
           badInput: 'badInput',
         }),
       ).toEqual({
-        badInput: 'badInput',
-        valueMissing: 'Did you miss something ?',
+        [defaultSymbol]: { badInput: 'badInput' },
+        foo: { valueMissing: 'Did you miss something ?' },
       });
       expect(
         getFieldMessages(validators, {
           valueMissing: 'valueMissing',
         }),
       ).toEqual({
-        valueMissing: 'Did you miss something ?',
+        [defaultSymbol]: { valueMissing: 'valueMissing' },
+        foo: { valueMissing: 'Did you miss something ?' },
       });
     });
   });
@@ -1239,105 +1523,39 @@ describe('validator helper', () => {
   });
 
   describe('getValidatorError', () => {
+    it('should not return any error (empty array)', async () => {
+      expect(await getValidatorError({ form })).toEqual([]);
+    });
+
     it('should not return any error (no validators)', async () => {
-      const spy = jest.spyOn(input1, 'setCustomValidity');
-      expect(await getValidatorError({ form })).toEqual({
-        validatorParams: [],
-        validatorResults: [],
-      });
-      expect(spy).not.toHaveBeenCalled();
-      spy.mockRestore();
+      const validators = [{ id: 'foo', names: ['foo'], setErrors: () => null }];
+      expect(await getValidatorError({ form, validators })).toEqual(['']);
     });
 
     it('should return the validator error', async () => {
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              validator: () => 'validator',
-            },
-          ]),
-        ],
+      const validators = [
+        {
+          id: 'foo',
+          names: ['foo'],
+          validator: () => 'validator',
+        },
       ];
-      expect(
-        await getValidatorError({ form, validatorEntries: validators }),
-      ).toEqual({
-        validatorParams: [
-          {
-            id: 'foo',
-            name: 'foo',
-            names: ['foo'],
-            validator: expect.any(Function) as () => void,
-          },
-        ],
-        validatorResults: ['validator'],
-      });
+      expect(await getValidatorError({ form, validators })).toEqual([
+        'validator',
+      ]);
     });
 
     it('should return the async validator error', async () => {
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foo',
-              names: ['foo'],
-              validator: () => Promise.resolve('validator'),
-            },
-          ]),
-        ],
+      const validators = [
+        {
+          id: 'foo',
+          names: ['foo'],
+          validator: () => Promise.resolve('validator'),
+        },
       ];
-      expect(
-        await getValidatorError({ form, validatorEntries: validators }),
-      ).toEqual({
-        validatorParams: [
-          {
-            id: 'foo',
-            name: 'foo',
-            names: ['foo'],
-            validator: expect.any(Function) as () => void,
-          },
-        ],
-        validatorResults: ['validator'],
-      });
-    });
-
-    it('should not run the validator twice', async () => {
-      const validator = jest.fn(() => 'validator');
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foobar',
-              names: ['foo', 'bar'],
-              validator,
-            },
-            {
-              id: 'foobar',
-              names: ['foo', 'bar'],
-              validator,
-            },
-          ]),
-        ],
-      ];
-      expect(
-        await getValidatorError({ form, validatorEntries: validators }),
-      ).toEqual({
-        validatorParams: [
-          {
-            id: 'foobar',
-            name: 'foo',
-            names: ['foo', 'bar'],
-            validator: expect.any(Function) as () => void,
-          },
-        ],
-        validatorResults: ['validator'],
-      });
-      expect(validator).toHaveBeenCalledTimes(1);
+      expect(await getValidatorError({ form, validators })).toEqual([
+        'validator',
+      ]);
     });
   });
 
@@ -1345,7 +1563,26 @@ describe('validator helper', () => {
     it('should not return any error (no validators)', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
       expect(
-        setValidatorError({ form, validatorParams: [], validatorResults: [] }),
+        setValidatorError({ form, validatorResults: [], validators: [] }),
+      ).toEqual({});
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('should not return any error (no error)', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      expect(
+        setValidatorError({
+          form,
+          validatorResults: [''],
+          validators: [
+            {
+              id: 'foo',
+              names: ['foo'],
+              validator: () => 'validator',
+            },
+          ],
+        }),
       ).toEqual({});
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
@@ -1356,15 +1593,14 @@ describe('validator helper', () => {
       expect(
         setValidatorError({
           form,
-          validatorParams: [
+          validatorResults: ['validator'],
+          validators: [
             {
               id: 'foo',
-              name: 'foo',
               names: ['foo'],
               validator: () => 'validator',
             },
           ],
-          validatorResults: ['validator'],
         }),
       ).toEqual({
         foo: { error: 'validator', global: true, names: ['foo'] },
@@ -1373,20 +1609,41 @@ describe('validator helper', () => {
       spy.mockRestore();
     });
 
+    it('should return the validator error but not call setCustomValidity because of existing native error', () => {
+      const spy = jest.spyOn(input1, 'setCustomValidity');
+      input1.setAttribute('required', '');
+      expect(
+        setValidatorError({
+          form,
+          validatorResults: ['validator'],
+          validators: [
+            {
+              id: 'foo',
+              names: ['foo'],
+              validator: () => 'validator',
+            },
+          ],
+        }),
+      ).toEqual({
+        foo: { error: 'validator', global: true, names: ['foo'] },
+      });
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
     it('should return the async validator error', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
       expect(
         setValidatorError({
           form,
-          validatorParams: [
+          validatorResults: ['validator'],
+          validators: [
             {
               id: 'foo',
-              name: 'foo',
               names: ['foo'],
               validator: () => 'validator',
             },
           ],
-          validatorResults: ['validator'],
         }),
       ).toEqual({
         foo: { error: 'validator', global: true, names: ['foo'] },
@@ -1399,19 +1656,16 @@ describe('validator helper', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
       expect(
         setValidatorError({
-          fieldMessages: {
-            foo: { validator: 'Validator error' },
-          },
           form,
-          validatorParams: [
+          validatorResults: ['validator'],
+          validators: [
             {
               id: 'foo',
-              name: 'foo',
+              messages: { validator: 'Validator error' },
               names: ['foo'],
               validator: () => 'validator',
             },
           ],
-          validatorResults: ['validator'],
         }),
       ).toEqual({
         foo: { error: 'Validator error', global: true, names: ['foo'] },
@@ -1424,17 +1678,16 @@ describe('validator helper', () => {
       const spy = jest.spyOn(input1, 'setCustomValidity');
       expect(
         setValidatorError({
-          fieldMessages: { [defaultSymbol]: { validator: 'Validator error' } },
+          defaultMessages: { validator: 'Validator error' },
           form,
-          validatorParams: [
+          validatorResults: ['validator'],
+          validators: [
             {
               id: 'foo',
-              name: 'foo',
               names: ['foo'],
               validator: () => 'validator',
             },
           ],
-          validatorResults: ['validator'],
         }),
       ).toEqual({
         foo: { error: 'Validator error', global: true, names: ['foo'] },
@@ -1446,27 +1699,22 @@ describe('validator helper', () => {
 
   describe('getValidatorIds', () => {
     it('should return the id list of validators', () => {
-      const validators: [string, Set<IRegisterParams>][] = [
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foobar',
-              names: ['foo', 'bar'],
-              validator: () => '',
-            },
-            {
-              id: 'foobaz',
-              names: ['foo', 'baz'],
-              validator: () => '',
-            },
-            {
-              id: 'foobarbaz',
-              names: ['foo', 'bar', 'baz'],
-              validator: () => '',
-            },
-          ]),
-        ],
+      const validators = [
+        {
+          id: 'foobar',
+          names: ['foo', 'bar'],
+          validator: () => '',
+        },
+        {
+          id: 'foobaz',
+          names: ['foo', 'baz'],
+          validator: () => '',
+        },
+        {
+          id: 'foobarbaz',
+          names: ['foo', 'bar', 'baz'],
+          validator: () => '',
+        },
       ];
       expect(getValidatorIds(validators)).toEqual([
         'foobar',
@@ -1493,6 +1741,33 @@ describe('validator helper', () => {
           validator: {},
         }),
       ).toEqual(true);
+    });
+  });
+
+  describe('isLocalValidator', () => {
+    it('should test if param is local validator or not', () => {
+      expect(
+        isLocalValidator({
+          id: 'foo',
+          names: ['foo'],
+          setErrors: () => null,
+        }),
+      ).toEqual(true);
+      expect(
+        isLocalValidator({
+          id: 'foo',
+          names: ['foo'],
+          setErrors: () => null,
+          validator: () => 'validator',
+        }),
+      ).toEqual(true);
+      expect(
+        isLocalValidator({
+          id: 'foo',
+          names: ['foo'],
+          validator: () => 'validator',
+        }),
+      ).toEqual(false);
     });
   });
 
@@ -1561,11 +1836,11 @@ describe('validator helper', () => {
         ),
       ).toEqual({
         all: { foo: 'error' },
-        global: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        global: {},
         main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
         manual: {},
         native: { foo: 'error' },
-        validator: { foobar: { error: 'error', global: true, names: ['foo'] } },
+        validator: {},
       });
       expect(
         mergeErrors(
@@ -1664,6 +1939,29 @@ describe('validator helper', () => {
           },
         }),
       ).toEqual({ error: 'manual', global: false, id: 'foo', names: ['foo'] });
+      expect(
+        setMainError({
+          global: { foo: { error: 'validator', global: true, names: ['foo'] } },
+          manual: {},
+          native: {},
+          validator: {},
+        }),
+      ).toEqual({
+        error: 'validator',
+        global: true,
+        id: 'foo',
+        names: ['foo'],
+      });
+      expect(
+        setMainError({
+          global: { foo: { error: 'fooVal', global: true, names: ['foo'] } },
+          manual: {},
+          native: {},
+          validator: {
+            bar: { error: 'barVal', global: false, names: ['bar'] },
+          },
+        }),
+      ).toEqual({ error: 'barVal', global: false, id: 'bar', names: ['bar'] });
     });
   });
 
@@ -1679,7 +1977,7 @@ describe('validator helper', () => {
           revalidate: true,
           setErrors: formErrors,
           useNativeValidation: false,
-          validatorMap: new Map(),
+          validators: [],
         }),
       ).toEqual({
         all: { bar: '', foo: '', radio: '' },
@@ -1709,7 +2007,7 @@ describe('validator helper', () => {
           revalidate: true,
           setErrors: formErrors,
           useNativeValidation: false,
-          validatorMap: new Map(),
+          validators: [],
         }),
       ).toEqual({
         all: { bar: '', foo: 'Constraints not satisfied', radio: '' },
@@ -1755,7 +2053,7 @@ describe('validator helper', () => {
           revalidate: true,
           setErrors: formErrors,
           useNativeValidation: false,
-          validatorMap: new Map(),
+          validators: [],
           values: {},
         }),
       ).toEqual({
@@ -1791,18 +2089,13 @@ describe('validator helper', () => {
       const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
         typeof d === 'function' ? d(initialError) : d,
       );
-      const validators = new Map([
-        [
-          'foo',
-          new Set([
-            {
-              id: 'foobar',
-              names: ['foo', 'bar'],
-              validator: () => 'Custom error',
-            },
-          ]),
-        ],
-      ]);
+      const validators = [
+        {
+          id: 'foobar',
+          names: ['foo', 'bar'],
+          validator: () => 'Custom error',
+        },
+      ];
       expect(
         await validateForm({
           display: true,
@@ -1810,7 +2103,7 @@ describe('validator helper', () => {
           revalidate: true,
           setErrors: formErrors,
           useNativeValidation: false,
-          validatorMap: validators,
+          validators,
         }),
       ).toEqual({
         all: { bar: 'Custom error', foo: 'Custom error', radio: '' },
@@ -1880,7 +2173,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorMap: new Map(),
+        validators: [],
         values: {},
       }),
     ).toEqual({
@@ -1926,7 +2219,7 @@ describe('validator helper', () => {
         revalidate: true,
         setErrors: formErrors,
         useNativeValidation: false,
-        validatorMap: new Map(),
+        validators: [],
         values: {},
       }),
     ).toEqual({

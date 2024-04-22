@@ -58,13 +58,24 @@ export interface IRegisterParams {
     | Record<string, IValidator | IValidatorObject>;
 }
 
-export interface IFormValidator {
+export type ILocalFields = Record<string, Dispatch<SetStateAction<IError>>>;
+
+export interface ILocalFormValidator {
   id: string;
   messages?: IMessages;
   names: string[];
-  setErrors?: Dispatch<SetStateAction<IError>>;
+  setErrors: Dispatch<SetStateAction<IError>>;
   validator?: IValidator;
 }
+
+export interface IGlobalFormValidator {
+  id: string;
+  messages?: IMessages;
+  names: string[];
+  validator: IValidator;
+}
+
+export type IFormValidator = IGlobalFormValidator | ILocalFormValidator;
 
 export type IRegister = (params: IRegisterParams) => void;
 

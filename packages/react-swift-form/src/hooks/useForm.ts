@@ -30,12 +30,14 @@ import {
   getFormInput,
   getFormInputs,
   getFormStates,
+  getLocalFields,
   getName,
   getTransformers,
-  getValidatorMap,
+  getValidators,
   getValue,
   isCheckbox,
   isFormElement,
+  isLocalValidator,
   shouldBlur,
   shouldChange,
   validateForm,
@@ -184,7 +186,8 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
 
       let errors;
       try {
-        const validatorMap = getValidatorMap(
+        const localFields = getLocalFields(fields.current);
+        const validatorArray = getValidators(
           fields.current,
           validators,
           messages,
@@ -197,13 +200,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
           filterLocalErrors,
           focusOnError,
           form: ref.current,
+          localFields,
           messages,
           names: names instanceof Array ? names : names ? [names] : undefined,
           revalidate,
           setErrors,
           transformers: getTransformers(fields.current, transformers),
           useNativeValidation,
-          validatorMap,
+          validators: validatorArray,
           values: vals.current,
         });
       } finally {
@@ -290,14 +294,14 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     (paramValues?: IFormValues | null | void) => {
       // Reset errors.
       setErrors(initialError);
-      const validatorMap = getValidatorMap(
+      const validatorArray = getValidators(
         fields.current,
         validators,
         messages,
       );
-      for (const [, set] of validatorMap.entries()) {
-        for (const params of set.values()) {
-          params.setErrors?.(initialError);
+      for (const params of validatorArray) {
+        if (isLocalValidator(params)) {
+          params.setErrors(initialError);
         }
       }
       // Reset states
