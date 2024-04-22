@@ -25,7 +25,24 @@ With the hook version you will have to add yourself the react-swift-form `<FormP
 
 :::info
 
-Such local validator won't be present in the global property of the error object.
+By default, for performance reason, local errors won't be present in the `errors` object at the form level.
+
+In the demo we use `filterLocalErrors=false` on `useForm` and `<Form>` to be able to display the error (when you use `filterLocalErrors=false` error will also show up at the form level).
+
+This is also the reason why the render counter still increments on local fields demos.
+
+:::
+
+:::note
+
+The local validator is not present in the global property of the error object at the form level.
+
+Only global validators (validators set up at the form level) will show up in the global object.
+
+With default `filterLocalErrors=true`, if you have a global validator targeting a local field, then the global validator error will be :
+
+- present in the `global` property and not present in the `validator` property at the form level
+- not present in the `global` property but present in the `validator` property at the field level
 
 :::
 

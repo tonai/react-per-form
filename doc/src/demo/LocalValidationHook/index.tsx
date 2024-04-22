@@ -7,7 +7,7 @@ const validator = (values: IFormValues) =>
   String(values.text).includes('foo') ? '' : 'Value does not include "foo"';
 
 function Input() {
-  const { errors } = useInput({ name: 'text', validator });
+  const { errors } = useInput({ id: 'toto', name: 'text', validator });
   return (
     <>
       <input name="text" required />

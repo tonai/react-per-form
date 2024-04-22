@@ -8,7 +8,7 @@ There is no parameters for `useFormContext`.
 
 ## Returns
 
-`useFormContext` return an object with the following shape (it is basically the same as the return from `useForm` without `formProps`):
+`useFormContext` returns an object with the following shape (it is basically the same as the return from `useForm` without `formProps`):
 
 | Property            | Type                                      | Description                                                                                                                                                                         |
 | ------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -4,7 +4,7 @@
 
 ## Parameters
 
-`useInputs` take only one parameter that is an object with the following shape:
+`useInputs` takes only one parameter that is an object with the following shape:
 
 | Property         | Type                                                                               | Default | Description                                                                                                                                                            |
 | ---------------- | ---------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -21,7 +21,7 @@ See [here](/docs/api/types) for the types.
 
 ## Returns
 
-`useInputs` return an object with the following shape:
+`useInputs` returns an object with the following shape:
 
 | Property | Type               | Description                                                                                                                                                                        |
 | -------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -16,7 +16,7 @@ It is not a two way data binding like with controlled components.
 
 You can use the `useWatch` hook to declare a state that will contains the values of the watched fields.
 
-The `useWatch` take only one optional parameter to define the list of field names you want to watch (you can provide a string an array of string or nothing to watch all values).
+The `useWatch` take only one optional parameter to define the list of field names you want to watch (you can provide a string, an array of string or nothing to watch all values).
 
 import SimpleHookUseWatch from '@site/src/demo/SimpleHookUseWatch';
 import SimpleHookUseWatchSource from '!!raw-loader!@site/src/demo/SimpleHookUseWatch';
@@ -24,6 +24,12 @@ import SimpleComponentUseWatch from '@site/src/demo/SimpleComponentUseWatch';
 import SimpleComponentUseWatchSource from '!!raw-loader!@site/src/demo/SimpleComponentUseWatch';
 
 <DemoTabs Component={SimpleComponentUseWatch} Hook={SimpleHookUseWatch} componentCode={SimpleComponentUseWatchSource} componentMetastring="{12,17}" hookCode={SimpleHookUseWatchSource} hookMetastring="{13,18,28,34,42}" withModes withRevalidateModes />
+
+:::info
+
+Changing the field value does not trigger the render counter in the top left corner because the render only happens in the `<Input>` child component.
+
+:::
 
 :::warning
 
@@ -38,7 +44,7 @@ You can get the `watch` function from the useForm hook or with the context.
 The `watch` accept two parameters:
 
 1. The watch callback, fired when the values change.
-2. The list of field names you want tp watch (you can provide a string an array of string or nothing to watch all values).
+2. The list of field names you want tp watch (you can provide a string, an array of string or nothing to watch all values).
 
 import SimpleHookWatch from '@site/src/demo/SimpleHookWatch';
 import SimpleHookWatchSource from '!!raw-loader!@site/src/demo/SimpleHookWatch';
