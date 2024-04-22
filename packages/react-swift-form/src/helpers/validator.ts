@@ -20,7 +20,7 @@ import { defaultSymbol, initialError } from '../constants';
 
 import { intersection } from './array';
 import { getFormInput, getFormInputs, getInputValue } from './form';
-import { filterObject } from './object';
+import { areObjectEquals, filterObject } from './object';
 
 export function isValidator(
   validator?:
@@ -565,7 +565,11 @@ export function displayErrors(params: IDisplayErrorParams): void {
           setFocus(focusError(inputs, fieldErrors.main));
         }
         const mergedErrors = mergeErrors(prevErrors, fieldErrors);
-        return mergedErrors.main ? mergedErrors : initialError;
+        return !mergedErrors.main
+          ? initialError
+          : areObjectEquals(mergedErrors, prevErrors, true)
+            ? prevErrors
+            : mergedErrors;
       }
       return prevErrors;
     });
@@ -593,7 +597,11 @@ export function displayErrors(params: IDisplayErrorParams): void {
         setFocus(focusError(inputs, globalErrors.main));
       }
       const mergedErrors = mergeErrors(prevErrors, globalErrors);
-      return mergedErrors.main ? mergedErrors : initialError;
+      return !mergedErrors.main
+        ? initialError
+        : areObjectEquals(mergedErrors, prevErrors, true)
+          ? prevErrors
+          : mergedErrors;
     }
     return prevErrors;
   });

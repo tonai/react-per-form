@@ -1036,6 +1036,76 @@ describe('validator helper', () => {
       });
       expect(formErrors).not.toHaveBeenCalled();
     });
+
+    it('should return the previous error when the error are the same', () => {
+      const errors: IError = {
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: {},
+        native: {},
+        validator: {
+          foo: { error: 'error', global: false, names: ['foo'] },
+        },
+      };
+      const prevErrors = {
+        all: { foo: 'error' },
+        global: {},
+        main: { error: 'error', global: false, id: 'foo', names: ['foo'] },
+        manual: {},
+        native: {},
+        validator: {
+          foo: { error: 'error', global: false, names: ['foo'] },
+        },
+      };
+      const formErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(prevErrors) : d,
+      );
+      const inputErrors = jest.fn((d: IError | ((error: IError) => IError)) =>
+        typeof d === 'function' ? d(prevErrors) : d,
+      );
+      displayErrors({
+        display: true,
+        errors,
+        filterLocalErrors: true,
+        form,
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators: [],
+      });
+      expect(formErrors.mock.results[0].value === prevErrors).toEqual(true);
+      formErrors.mockClear();
+      inputErrors.mockClear();
+      const validators = [
+        {
+          id: 'fooo',
+          names: ['foo'],
+          setErrors: inputErrors,
+        },
+        {
+          id: 'foo',
+          names: ['foo'],
+          validator: () => 'validator',
+        },
+      ];
+      const localFields = { foo: inputErrors };
+      displayErrors({
+        display: true,
+        errors,
+        filterLocalErrors: true,
+        form,
+        localFields,
+        names: ['foo'],
+        revalidate: true,
+        setErrors: formErrors,
+        useNativeValidation: false,
+        validators,
+      });
+      expect(inputErrors.mock.results[0].value === prevErrors).toEqual(true);
+      formErrors.mockClear();
+      inputErrors.mockClear();
+    });
   });
 
   describe('focusError', () => {
