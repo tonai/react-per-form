@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
   getDefaultValues,
+  getFieldStates,
   getFormInput,
   getFormInputs,
   getFormStates,
@@ -90,6 +91,113 @@ describe('form helper', () => {
     });
   });
 
+  describe('getFieldStates', () => {
+    it('should return the field states', () => {
+      expect(
+        getFieldStates(
+          {
+            changedFields: [],
+            dirtyFields: [],
+            isChanged: false,
+            isDirty: false,
+            isPristine: true,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: false,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: [],
+          },
+          'foo',
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isChanged: false,
+        isDirty: false,
+        isPristine: true,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+      expect(
+        getFieldStates(
+          {
+            changedFields: ['foo', 'bar', 'baz'],
+            dirtyFields: ['foo', 'bar', 'baz'],
+            isChanged: true,
+            isDirty: true,
+            isPristine: false,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: true,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: ['foo', 'bar', 'baz'],
+          },
+          'foo',
+        ),
+      ).toEqual({
+        changedFields: ['foo'],
+        dirtyFields: ['foo'],
+        isChanged: true,
+        isDirty: true,
+        isPristine: false,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: true,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: ['foo'],
+      });
+      expect(
+        getFieldStates(
+          {
+            changedFields: ['bar'],
+            dirtyFields: ['bar'],
+            isChanged: true,
+            isDirty: true,
+            isPristine: false,
+            isReady: false,
+            isSubmitted: false,
+            isSubmitting: false,
+            isTouched: true,
+            isValid: true,
+            isValidating: false,
+            submitCount: 0,
+            touchedFields: ['bar'],
+          },
+          ['foo'],
+        ),
+      ).toEqual({
+        changedFields: [],
+        dirtyFields: [],
+        isChanged: false,
+        isDirty: false,
+        isPristine: true,
+        isReady: false,
+        isSubmitted: false,
+        isSubmitting: false,
+        isTouched: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: [],
+      });
+    });
+  });
+
   describe('getFormInput', () => {
     it('should return the form input', () => {
       // @ts-expect-error access HTMLFormControlsCollection with input name
@@ -138,11 +246,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: [],
         dirtyFields: [],
+        isChanged: false,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -168,11 +278,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: [],
         dirtyFields: [],
+        isChanged: false,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -195,11 +307,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: ['foo'],
+        isChanged: true,
         isDirty: true,
         isPristine: false,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -222,11 +336,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: [],
+        isChanged: true,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,
@@ -251,11 +367,13 @@ describe('form helper', () => {
       ).toEqual({
         changedFields: ['foo'],
         dirtyFields: [],
+        isChanged: true,
         isDirty: false,
         isPristine: true,
         isReady: true,
         isSubmitted: false,
         isSubmitting: false,
+        isTouched: false,
         isValid: true,
         isValidating: false,
         submitCount: 0,

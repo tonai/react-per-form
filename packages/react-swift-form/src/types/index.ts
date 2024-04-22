@@ -94,14 +94,15 @@ export interface IValidatorError {
   names: string[];
 }
 
-export interface IError {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type IError = {
   all: Record<string, string>;
   global: Record<string, IValidatorError>;
   main?: IMainError;
   manual: Record<string, string | null>;
   native: Record<string, string>;
   validator: Record<string, IValidatorError>;
-}
+};
 
 export interface IStates {
   changedFields: Set<string>;
@@ -117,9 +118,11 @@ export interface IFormStates
   extends Omit<IStates, 'changedFields' | 'touchedFields'> {
   changedFields: string[];
   dirtyFields: string[];
+  isChanged: boolean;
   isDirty: boolean;
   isPristine: boolean;
   isSubmitted: boolean;
+  isTouched: boolean;
   touchedFields: string[];
 }
 

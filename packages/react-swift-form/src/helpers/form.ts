@@ -309,9 +309,38 @@ export function getFormStates(
     ...states,
     changedFields,
     dirtyFields,
+    isChanged: changedFields.length > 0,
     isDirty: dirtyFields.length > 0,
     isPristine: dirtyFields.length === 0,
     isSubmitted: states.submitCount > 0,
+    isTouched: touchedFields.length > 0,
+    touchedFields,
+  };
+}
+
+export function getFieldStates(
+  states: IFormStates,
+  names: string[] | string,
+): IFormStates {
+  const nameArray = names instanceof Array ? names : [names];
+  const changedFields = states.changedFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  const dirtyFields = states.dirtyFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  const touchedFields = states.touchedFields.filter((name) =>
+    nameArray.includes(name),
+  );
+  return {
+    ...states,
+    changedFields,
+    dirtyFields,
+    isChanged: changedFields.length > 0,
+    isDirty: dirtyFields.length > 0,
+    isPristine: dirtyFields.length === 0,
+    isSubmitted: states.submitCount > 0,
+    isTouched: touchedFields.length > 0,
     touchedFields,
   };
 }
