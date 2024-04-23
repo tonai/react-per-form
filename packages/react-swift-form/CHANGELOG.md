@@ -1,5 +1,17 @@
 # react-swift-form
 
+## 0.2.0
+
+### Minor Changes
+
+- [#29](https://github.com/tonai/react-swift-form/pull/29) [`9478131`](https://github.com/tonai/react-swift-form/commit/9478131a334a77de21468b7af7132b29af27655f) Thanks [@tonai](https://github.com/tonai)! - Render optimizations
+
+- [#29](https://github.com/tonai/react-swift-form/pull/29) [`9478131`](https://github.com/tonai/react-swift-form/commit/9478131a334a77de21468b7af7132b29af27655f) Thanks [@tonai](https://github.com/tonai)! - Add name filter for `useFormStates`
+
+### Patch Changes
+
+- [#29](https://github.com/tonai/react-swift-form/pull/29) [`9478131`](https://github.com/tonai/react-swift-form/commit/9478131a334a77de21468b7af7132b29af27655f) Thanks [@tonai](https://github.com/tonai)! - Move global validators errors in local fields when they exists
+
 ## 0.1.1
 
 ### Patch Changes
