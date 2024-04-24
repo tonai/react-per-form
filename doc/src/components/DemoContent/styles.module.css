@@ -16,8 +16,10 @@
 }
 
 .example {
+  position: relative;
   padding: var(--ifm-pre-padding);
   flex: 1;
+  overflow: hidden;
 }
 
 .example form {
@@ -41,6 +43,17 @@
 
 .example form input {
   display: block;
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .settings {

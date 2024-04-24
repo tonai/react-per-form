@@ -2,6 +2,7 @@ import type { IProps } from '../../demo/types';
 import type { ChangeEvent, ComponentType, ReactElement } from 'react';
 import type { IError, IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import { Badge, Checkbox, Collapse, Select } from '@mantine/core';
 import CodeBlock from '@theme/CodeBlock';
 import clsx from 'clsx';
@@ -9,7 +10,9 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import { demoContext } from '@site/src/contexts/demo';
 
+import CodeSandbox from '../CodeSandbox/CodeSandbox';
 import RenderCounter from '../RenderCounter';
+import StackBlitz from '../StackBlitz/StackBlitz';
 
 import styles from './styles.module.css';
 
@@ -70,14 +73,6 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
     }
     renderCount.current = value;
   }, []);
-  // const timer = useRef<NodeJS.Timeout>();
-  // const debouncedNotify = useCallback(
-  //   (value: number) => {
-  //     clearTimeout(timer.current);
-  //     timer.current = setTimeout(() => notify(value), 0);
-  //   },
-  //   [notify],
-  // );
 
   function handleUseNativeValidationChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -119,6 +114,14 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
               revalidateMode={revalidateMode}
               useNativeValidation={useNativeValidation}
             />
+            <BrowserOnly>
+              {() => (
+                <div className={styles.actions}>
+                  <CodeSandbox code={code} />
+                  <StackBlitz code={code} />
+                </div>
+              )}
+            </BrowserOnly>
           </div>
           {Boolean(
             withModes || withRevalidateModes || withUseNativeValidation,
