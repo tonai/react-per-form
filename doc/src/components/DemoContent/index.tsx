@@ -10,6 +10,7 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { demoContext } from '@site/src/contexts/demo';
 
 import RenderCounter from '../RenderCounter';
+import StackBlitz from '../StackBlitz/StackBlitz';
 
 import styles from './styles.module.css';
 
@@ -70,14 +71,6 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
     }
     renderCount.current = value;
   }, []);
-  // const timer = useRef<NodeJS.Timeout>();
-  // const debouncedNotify = useCallback(
-  //   (value: number) => {
-  //     clearTimeout(timer.current);
-  //     timer.current = setTimeout(() => notify(value), 0);
-  //   },
-  //   [notify],
-  // );
 
   function handleUseNativeValidationChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -119,6 +112,9 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
               revalidateMode={revalidateMode}
               useNativeValidation={useNativeValidation}
             />
+            <div className={styles.actions}>
+              <StackBlitz code={code} />
+            </div>
           </div>
           {Boolean(
             withModes || withRevalidateModes || withUseNativeValidation,

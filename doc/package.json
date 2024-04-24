@@ -24,6 +24,7 @@
     "@mdx-js/react": "^3.0.0",
     "@mui/material": "^5.15.12",
     "@mui/x-date-pickers": "^6.19.6",
+    "@stackblitz/sdk": "^1.9.0",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",
     "prism-react-renderer": "^2.3.0",
@@ -34,6 +35,8 @@
     "rsf": "file:../packages/react-swift-form"
   },
   "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "@docusaurus/module-type-aliases": "3.2.0",
     "@docusaurus/tsconfig": "3.2.0",
     "@docusaurus/types": "3.2.0",
