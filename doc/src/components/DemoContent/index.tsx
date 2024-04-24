@@ -2,6 +2,7 @@ import type { IProps } from '../../demo/types';
 import type { ChangeEvent, ComponentType, ReactElement } from 'react';
 import type { IError, IFormMode, IFormRevalidateMode } from 'react-swift-form';
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import { Badge, Checkbox, Collapse, Select } from '@mantine/core';
 import CodeBlock from '@theme/CodeBlock';
 import clsx from 'clsx';
@@ -113,10 +114,14 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
               revalidateMode={revalidateMode}
               useNativeValidation={useNativeValidation}
             />
-            <div className={styles.actions}>
-              <CodeSandbox code={code} />
-              <StackBlitz code={code} />
-            </div>
+            <BrowserOnly>
+              {() => (
+                <div className={styles.actions}>
+                  <CodeSandbox code={code} />
+                  <StackBlitz code={code} />
+                </div>
+              )}
+            </BrowserOnly>
           </div>
           {Boolean(
             withModes || withRevalidateModes || withUseNativeValidation,
