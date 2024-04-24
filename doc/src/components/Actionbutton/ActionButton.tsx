@@ -1,9 +1,5 @@
-import type { ButtonProps } from '@mantine/core';
-import type {
-  ComponentPropsWithoutRef,
-  ElementType,
-  ReactElement,
-} from 'react';
+import type { ButtonProps, ElementProps } from '@mantine/core';
+import type { ElementType, ReactElement } from 'react';
 
 import { Button } from '@mantine/core';
 
@@ -11,13 +7,7 @@ import styles from './styles.module.css';
 
 interface IActionButtonProps
   extends ButtonProps,
-    Omit<
-      JSX.LibraryManagedAttributes<
-        'button',
-        ComponentPropsWithoutRef<'button'>
-      >,
-      keyof ButtonProps
-    > {
+    ElementProps<'a', keyof ButtonProps> {
   Icon: ElementType;
   label: string;
 }
@@ -27,6 +17,7 @@ export default function ActionButton(props: IActionButtonProps): ReactElement {
   return (
     <Button
       className={styles.button}
+      component="a"
       size="xs"
       variant="default"
       {...buttonProps}

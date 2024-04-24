@@ -2,7 +2,7 @@
   border-bottom-right-radius: 0 !important;
   border-top-right-radius: 0 !important;
   padding: 0 calc(var(--ifm-pre-padding) / 2);
-  translate: calc(100% - 28px) 0;
+  translate: calc(100% - 34px) 0;
   border-right: 0;
   transition: translate 200ms;
   position: relative;
@@ -19,6 +19,6 @@
 }
 
 .icon {
-  height: 1em;
+  height: 1.5em;
   margin-right: calc(var(--ifm-pre-padding) / 2);
 }

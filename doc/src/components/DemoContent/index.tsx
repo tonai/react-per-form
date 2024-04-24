@@ -9,6 +9,7 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import { demoContext } from '@site/src/contexts/demo';
 
+import CodeSandbox from '../CodeSandbox/CodeSandbox';
 import RenderCounter from '../RenderCounter';
 import StackBlitz from '../StackBlitz/StackBlitz';
 
@@ -113,6 +114,7 @@ export default function DemoContent(props: IDemoContentProps): ReactElement {
               useNativeValidation={useNativeValidation}
             />
             <div className={styles.actions}>
+              <CodeSandbox code={code} />
               <StackBlitz code={code} />
             </div>
           </div>
