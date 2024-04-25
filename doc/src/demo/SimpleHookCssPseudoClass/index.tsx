@@ -1,6 +1,6 @@
 import type { IProps } from '../types';
 import { type FormEvent, useId } from 'react';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 
 export default function Demo({ useNativeValidation }: IProps) {
   const id = useId();

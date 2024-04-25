@@ -5,7 +5,7 @@ import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 
 const config: Config = {
-  title: 'react-swift-form',
+  title: 'react-per-form',
   tagline:
     'Fast and easy form validation for React based on native HTML capabilities',
   favicon: 'img/logo.svg',
@@ -14,12 +14,12 @@ const config: Config = {
   url: 'https://tonai.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/react-swift-form/',
+  baseUrl: '/react-per-form/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'tonai', // Usually your GitHub org/user name.
-  projectName: 'react-swift-form', // Usually your repo name.
+  projectName: 'react-per-form', // Usually your repo name.
   trailingSlash: false,
 
   onBrokenLinks: 'throw',
@@ -41,7 +41,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/tonai/react-swift-form/tree/main/doc/',
+          editUrl: 'https://github.com/tonai/react-per-form/tree/main/doc/',
         },
         theme: {
           customCss: [
@@ -65,9 +65,9 @@ const config: Config = {
     respectPrefersColorScheme: true,
     image: 'img/social-card.png',
     navbar: {
-      title: 'react-swift-form',
+      title: 'react-per-form',
       logo: {
-        alt: 'react-swift-form Logo',
+        alt: 'react-per-form Logo',
         src: 'img/logo.svg',
         srcDark: 'img/logo-dark.svg',
       },
@@ -79,7 +79,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/tonai/react-swift-form',
+          href: 'https://github.com/tonai/react-per-form',
           // label: 'GitHub',
           position: 'right',
           className: 'header-github-link',
@@ -111,7 +111,7 @@ const config: Config = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/react-swift-form',
+              href: 'https://stackoverflow.com/questions/tagged/react-per-form',
             },
             // {
             //   label: 'Discord',
@@ -128,7 +128,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/tonai/react-swift-form',
+              href: 'https://github.com/tonai/react-per-form',
             },
           ],
         },

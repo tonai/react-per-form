@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react';
 import type { IProps } from '../types';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 
 export default function Demo(props: IProps) {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {

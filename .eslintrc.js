@@ -22,7 +22,7 @@ module.exports = {
       },
     },
     {
-      files: ['doc/src/react-swift-form/**/*'],
+      files: ['doc/src/react-per-form/**/*'],
       rules: {
         'react/no-multi-comp': 'off',
       },

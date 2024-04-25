@@ -14,7 +14,7 @@ test.describe('Hook Double Native', () => {
     const { consoleMsg } = await goto(page, url);
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('double-1').focus();
     await page.getByTestId('double-1').blur();
@@ -33,7 +33,7 @@ test.describe('Hook Double Native', () => {
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('double-1')).toBeFocused();
     expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
@@ -45,8 +45,8 @@ test.describe('Hook Double Native', () => {
     await page.getByTestId('double-1').blur();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('double-1')).not.toBeFocused();
     expect(page.getByTestId('double-2')).toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
@@ -58,8 +58,8 @@ test.describe('Hook Double Native', () => {
     await page.getByTestId('double-2').blur();
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
     expect(await getErrorMessage(page, 'double-2')).toEqual(validatorError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('double-1')).toBeFocused();
     expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual(validatorError);
@@ -71,8 +71,8 @@ test.describe('Hook Double Native', () => {
     await page.getByTestId('double-2').blur();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('double-1')).not.toBeFocused();
     expect(page.getByTestId('double-2')).not.toBeFocused();
     expect(await getErrorMessage(page, 'double-1')).toEqual('');
@@ -85,15 +85,15 @@ test.describe('Hook Double Native', () => {
     await page.getByTestId('double-1').blur();
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
     expect(await getErrorMessage(page, 'double-2')).toEqual('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('double-1').fill('5');
     await page.getByTestId('double-1').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('double-1')).toHaveValue('');
     await expect(page.getByTestId('double-2')).toHaveValue('');
     expect(await getErrorMessage(page, 'double-1')).toEqual(missError);
     expect(await getErrorMessage(page, 'double-2')).toEqual(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 });

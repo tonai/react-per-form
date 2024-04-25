@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 import { delay } from '../time';
 
 const validators = {

@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 import clsx from 'clsx';
 
 export default function Demo() {

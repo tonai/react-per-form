@@ -32,8 +32,8 @@
     "raw-loader": "^4.0.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-swift-form": "file:./src/react-swift-form",
-    "rsf": "file:../packages/react-swift-form"
+    "react-per-form": "file:./src/react-per-form",
+    "rpf": "file:../packages/react-per-form"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.2.0",

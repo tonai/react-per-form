@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-swift-form';
+import type { IFormValues } from 'react-per-form';
 import type { IProps } from '../types';
-import { FormProvider, useForm, useFormValid } from 'react-swift-form';
+import { FormProvider, useForm, useFormValid } from 'react-per-form';
 
 function Submit() {
   const isValid = useFormValid();

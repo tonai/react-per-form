@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { useInputs } from 'react-swift-form';
+import { useInputs } from 'react-per-form';
 
 import {
   colorValidator,

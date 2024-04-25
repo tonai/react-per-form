@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { Form, Reset, Submit } from 'react-swift-form';
+import { Form, Reset, Submit } from 'react-per-form';
 
 import Double from '../../components/Double/Double';
 import Filters from '../../components/Filters/Filters';
@@ -30,7 +30,7 @@ export default function ComponentDoubleForm(): ReactElement {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rsf-submit-disabled" disableOnError />
+          <Submit data-testid="rpf-submit-disabled" disableOnError />
         </div>
       </Form>
     </>

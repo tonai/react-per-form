@@ -12,19 +12,19 @@ export default function Home(): ReactElement {
   return (
     <Layout
       description={siteConfig.tagline}
-      title="react-swift-form Documentation"
+      title="react-per-form Documentation"
     >
       <main className={styles.main}>
         <h1 className={styles.title}>{siteConfig.title}</h1>
         <div className={styles.logo}>
           <img
-            alt="react-swift-form Logo"
+            alt="react-per-form Logo"
             className="mantine-dark-hidden"
             src="img/logo.svg"
             width="200"
           />
           <img
-            alt="react-swift-form Logo"
+            alt="react-per-form Logo"
             className="mantine-light-hidden"
             src="img/logo-dark.svg"
             width="200"

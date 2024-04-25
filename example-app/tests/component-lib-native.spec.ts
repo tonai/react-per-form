@@ -18,7 +18,7 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual(minError);
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('mui').focus();
     await page.getByTestId('mui').blur();
@@ -42,7 +42,7 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'mui')).toEqual(muiValidatorError);
     await expect(page.getByTestId('watch')).toHaveText('');
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('number')).toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual(minError);
@@ -57,8 +57,8 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -73,8 +73,8 @@ test.describe('Component Lib Native', () => {
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(muiMinError);
     await expect(page.getByTestId('watch')).toHaveText('01/01/2024');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -109,8 +109,8 @@ test.describe('Component Lib Native', () => {
     await expect(page.getByTestId('watch')).toHaveText(
       dateAfterTodayButBelowThe15Fr,
     );
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -146,8 +146,8 @@ test.describe('Component Lib Native', () => {
     await expect(page.getByTestId('watch')).toHaveText(
       dateAfterTodayAndAfterThe15Fr,
     );
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('number')).not.toBeFocused();
     expect(page.getByTestId('mui')).not.toBeFocused();
     expect(await getErrorMessage(page, 'number')).toEqual('');
@@ -169,16 +169,16 @@ test.describe('Component Lib Native', () => {
     await expect(page.getByTestId('watch')).toHaveText(
       dateAfterTodayAndAfterThe15Fr,
     );
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('number').fill('42');
     await page.getByTestId('number').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('number')).toHaveValue('12');
     await expect(page.getByTestId('mui')).toHaveValue('');
     expect(await getErrorMessage(page, 'number')).toEqual('');
     expect(await getErrorMessage(page, 'mui')).toEqual(missError);
     await expect(page.getByTestId('watch')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 });

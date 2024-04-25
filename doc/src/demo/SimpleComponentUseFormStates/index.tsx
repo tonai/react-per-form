@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormStates } from 'react-swift-form';
+import { Form, type IFormValues, useFormStates } from 'react-per-form';
 import { delay } from '../time';
 
 const defaultValues = { a: 'foo' };

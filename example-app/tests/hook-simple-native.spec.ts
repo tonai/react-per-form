@@ -16,7 +16,7 @@ test.describe('Hook Simple Native', () => {
     const { consoleMsg } = await goto(page, url);
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -30,7 +30,7 @@ test.describe('Hook Simple Native', () => {
     await page.getByTestId('simple').blur();
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -39,8 +39,8 @@ test.describe('Hook Simple Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
     await page.getByTestId('simple').blur();
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -49,8 +49,8 @@ test.describe('Hook Simple Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
     await page.getByTestId('simple').blur();
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -59,8 +59,8 @@ test.describe('Hook Simple Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual('');
     await page.getByTestId('simple').blur();
     expect(await getErrorMessage(page, 'simple')).toEqual('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     expect(await getErrorMessage(page, 'simple')).toEqual('');
     expect(await consoleMsg).toBe(true);
@@ -70,13 +70,13 @@ test.describe('Hook Simple Native', () => {
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
     await page.getByTestId('simple').blur();
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     expect(await getErrorMessage(page, 'simple')).toEqual(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 });

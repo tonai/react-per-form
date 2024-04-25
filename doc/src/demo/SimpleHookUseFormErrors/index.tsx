@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-swift-form';
+import type { IFormValues } from 'react-per-form';
 import type { IProps } from '../types';
-import { FormProvider, useForm, useFormErrors } from 'react-swift-form';
+import { FormProvider, useForm, useFormErrors } from 'react-per-form';
 
 function Inputs() {
   const errors = useFormErrors();

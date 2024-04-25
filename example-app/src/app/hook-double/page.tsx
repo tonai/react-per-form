@@ -4,7 +4,7 @@
 
 import type { ReactElement } from 'react';
 
-import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+import { FormProvider, Reset, Submit, useForm } from 'react-per-form';
 
 import Filters from '../../components/Filters/Filters';
 import { handleSubmit } from '../../helpers/form';
@@ -79,7 +79,7 @@ export default function HookDoubleForm(): ReactElement {
           <div className="form__actions">
             <Reset />
             <Submit />
-            <Submit data-testid="rsf-submit-disabled" disableOnError />
+            <Submit data-testid="rpf-submit-disabled" disableOnError />
           </div>
         </form>
       </FormProvider>

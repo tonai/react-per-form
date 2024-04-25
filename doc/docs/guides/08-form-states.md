@@ -1,8 +1,8 @@
 # Form states
 
-## react-swift-form `states` values
+## react-per-form `states` values
 
-react-swift-form expose a `states` object that contains form states:
+react-per-form expose a `states` object that contains form states:
 
 - changedFields (`string[]`): List of fields the user has changed
 - dirtyFields (`string[]`): List of fields the user has changed and values are different to default ones
@@ -33,7 +33,7 @@ import SimpleComponentBadStatesSource from '!!raw-loader!@site/src/demo/SimpleCo
 
 :::info
 
-The button stay disabled even when you fill the input because by default react-swift-form do not trigger unwanted renders.
+The button stay disabled even when you fill the input because by default react-per-form do not trigger unwanted renders.
 
 See below on how to retrieve the form state correctly.
 
@@ -63,7 +63,7 @@ import SimpleComponentUseFormValidSource from '!!raw-loader!@site/src/demo/Simpl
 
 :::warning
 
-With the hook version you will have to add yourself the react-swift-form `<FormProvider>` component !
+With the hook version you will have to add yourself the react-per-form `<FormProvider>` component !
 
 :::
 

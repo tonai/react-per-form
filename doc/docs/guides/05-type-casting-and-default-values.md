@@ -49,7 +49,7 @@ import SimpleComponentDefaultValuesSource from '!!raw-loader!@site/src/demo/Simp
 
 Declare the default values outside the component to avoid creating a new reference for each new render.
 
-If you don't react-swift-form will update the form values with the default ones on the next render.
+If you don't react-per-form will update the form values with the default ones on the next render.
 
 If you can't declare them outside, then use `useMemo`.
 

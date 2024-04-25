@@ -1,6 +1,6 @@
 import type { IProps } from '../types';
 import { type FormEvent, useRef, useState } from 'react';
-import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
+import { Form, type IFormContext, type IFormValues } from 'react-per-form';
 
 function validator(values: IFormValues) {
   return Object.values(values).reduce((a, b) => Number(a) + Number(b), 0) === 42

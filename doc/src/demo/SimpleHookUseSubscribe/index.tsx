@@ -5,7 +5,7 @@ import {
   type IFormValues,
   useForm,
   useSubscribe,
-} from 'react-swift-form';
+} from 'react-per-form';
 
 function Submit() {
   const [isValid, setIsValid] = useState(false);

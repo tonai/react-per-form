@@ -1,6 +1,6 @@
 # `<Form>`
 
-The `<Form>` component is the alternative way to initialize a react-swift-form form (it uses `useForm` and `<FormProvider>` internally).
+The `<Form>` component is the alternative way to initialize a react-per-form form (it uses `useForm` and `<FormProvider>` internally).
 
 ## Props
 

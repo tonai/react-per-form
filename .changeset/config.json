@@ -3,11 +3,11 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "tonai/react-swift-form"
+      "repo": "tonai/react-per-form"
     }
   ],
   "commit": false,
-  "fixed": [["react-swift-form*"]],
+  "fixed": [["react-per-form*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
