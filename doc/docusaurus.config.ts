@@ -73,10 +73,16 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'docSidebar',
-          position: 'left',
-          label: 'Docs',
+          href: '/docs/getting-started',
+          label: 'Getting started',
+        },
+        {
+          href: '/docs/category/guides',
+          label: 'Guides',
+        },
+        {
+          href: '/docs/category/api',
+          label: 'API',
         },
         {
           href: 'https://github.com/tonai/react-per-form',
