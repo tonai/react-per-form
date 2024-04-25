@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 
 import { useFormState } from 'react-dom';
-import { Form, Reset, Submit } from 'react-swift-form';
+import { Form, Reset, Submit } from 'react-per-form';
 
 import { serverAction } from '../../actions';
 import Filters from '../../components/Filters/Filters';
@@ -43,7 +43,7 @@ export default function ComponentSimpleForm(): ReactElement {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rsf-submit-disabled" disableOnError />
+          <Submit data-testid="rpf-submit-disabled" disableOnError />
           <Loader />
         </div>
         <p

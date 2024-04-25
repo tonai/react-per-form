@@ -1,24 +1,24 @@
-# react-swift-form
+# react-per-form
 
 <p align="center">
-  <img alt="react-swift-form Logo" src="/doc/static/img/logo.svg#gh-light-mode-only" width="200" />
-  <img alt="react-swift-form Logo" src="/doc/static/img/logo-dark.svg#gh-dark-mode-only" width="200" />
+  <img alt="react-per-form Logo" src="/doc/static/img/logo.svg#gh-light-mode-only" width="200" />
+  <img alt="react-per-form Logo" src="/doc/static/img/logo-dark.svg#gh-dark-mode-only" width="200" />
 </p>
 <p align="center">
   Fast and easy form validation for React based on native HTML capabilities
 </p>
 <p align="center">
-  <a href="https://tonai.github.io/react-swift-form/" target="_blank">Documentation</a>
+  <a href="https://tonai.github.io/react-per-form/" target="_blank">Documentation</a>
 </p>
 <div align="center">
 
-<!-- [![NPM Downloads](https://img.shields.io/npm/dm/react-swift-form?style=flat)](https://www.npmjs.com/package/react-swift-form) -->
+<!-- [![NPM Downloads](https://img.shields.io/npm/dm/react-per-form?style=flat)](https://www.npmjs.com/package/react-per-form) -->
 
-[![NPM Version](https://img.shields.io/npm/v/react-swift-form)](https://www.npmjs.com/package/react-swift-form)
-[![GitHub License](https://img.shields.io/github/license/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-swift-form)](https://bundlephobia.com/package/react-swift-form)
+[![NPM Version](https://img.shields.io/npm/v/react-per-form)](https://www.npmjs.com/package/react-per-form)
+[![GitHub License](https://img.shields.io/github/license/tonai/react-per-form)](https://github.com/tonai/react-per-form/blob/main/LICENSE)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-per-form)](https://bundlephobia.com/package/react-per-form)
 
-<!-- [![GitHub Repo stars](https://img.shields.io/github/stars/tonai/react-swift-form)](https://github.com/tonai/react-swift-form/blob/main/LICENSE) -->
+<!-- [![GitHub Repo stars](https://img.shields.io/github/stars/tonai/react-per-form)](https://github.com/tonai/react-per-form/blob/main/LICENSE) -->
 
 </div>
 
@@ -58,7 +58,7 @@ pnpm install react-hook-form
 
 ```tsx
 import type { FormEvent } from 'react';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -82,7 +82,7 @@ export default function Demo() {
 
 ```tsx
 import type { FormEvent } from 'react';
-import { Form, type IFormValues } from 'react-swift-form';
+import { Form, type IFormValues } from 'react-per-form';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -98,11 +98,11 @@ export default function Demo() {
 }
 ```
 
-Check the [documentation](https://tonai.github.io/react-swift-form/) for more.
+Check the [documentation](https://tonai.github.io/react-per-form/) for more.
 
 ## Examples
 
-Check the [example App](https://github.com/tonai/react-swift-form/tree/main/example-app).
+Check the [example App](https://github.com/tonai/react-per-form/tree/main/example-app).
 
 Clone this repo and then run:
 

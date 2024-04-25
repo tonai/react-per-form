@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormValid } from 'react-swift-form';
+import { Form, type IFormValues, useFormValid } from 'react-per-form';
 
 function Submit() {
   const isValid = useFormValid();

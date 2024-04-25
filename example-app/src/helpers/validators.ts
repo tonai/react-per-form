@@ -1,5 +1,5 @@
 import type { Dayjs } from 'dayjs';
-import type { IFormValues } from 'react-swift-form';
+import type { IFormValues } from 'react-per-form';
 
 export function fooValidator(values: IFormValues): Promise<string> {
   return Promise.resolve(

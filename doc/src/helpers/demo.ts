@@ -36,7 +36,7 @@ export function getIndexHtml(type: IDemoType): string {
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>react-swift-form</title>
+    <title>react-per-form</title>
   </head>
   <body>
     <div id="root"></div>
@@ -64,10 +64,10 @@ export function getPackageJson(type: IDemoType): IPackageJson {
       '@types/react-dom': 'latest',
       react: 'latest',
       'react-dom': 'latest',
-      'react-swift-form': 'latest',
+      'react-per-form': 'latest',
     },
     description: location.href,
-    name: 'react-swift-form-app',
+    name: 'react-per-form-app',
   };
   if (isStackBlitz(type)) {
     packageJson.dependencies['@vitejs/plugin-react-swc'] = 'latest';

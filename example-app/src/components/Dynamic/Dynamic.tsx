@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 
 import { useMemo, useRef, useState } from 'react';
-import { useInputs } from 'react-swift-form';
+import { useInputs } from 'react-per-form';
 
 import { dynamicValidator } from '../../helpers/validators';
 

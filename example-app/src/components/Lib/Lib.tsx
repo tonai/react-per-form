@@ -5,7 +5,7 @@ import type { Dispatch, ReactElement, SetStateAction } from 'react';
 
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { useInputs, useWatch } from 'react-swift-form';
+import { useInputs, useWatch } from 'react-per-form';
 
 import { muiValidator } from '../../helpers/validators';
 

@@ -5,7 +5,7 @@ import {
   type IError,
   type IFormContext,
   type IFormValues,
-} from 'react-swift-form';
+} from 'react-per-form';
 
 export default function Demo(props: IProps) {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {

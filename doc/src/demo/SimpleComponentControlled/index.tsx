@@ -1,6 +1,6 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormContext, type IFormValues } from 'react-swift-form';
+import { Form, type IFormContext, type IFormValues } from 'react-per-form';
 
 export default function Demo(props: IProps) {
   const [value, setValue] = useState('');

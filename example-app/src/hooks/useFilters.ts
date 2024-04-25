@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import { useState } from 'react';
 

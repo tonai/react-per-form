@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { Form, type IFormValues } from 'react-swift-form';
+import { Form, type IFormValues } from 'react-per-form';
 
 export default function Demo() {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {

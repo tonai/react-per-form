@@ -2,12 +2,12 @@
 
 import type { Dayjs } from 'dayjs';
 import type { ReactElement } from 'react';
-import type { IFormValues } from 'react-swift-form';
+import type { IFormValues } from 'react-per-form';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
-import { Error, Form, Reset, Submit } from 'react-swift-form';
+import { Error, Form, Reset, Submit } from 'react-per-form';
 
 import Filters from '../../components/Filters/Filters';
 import Lib from '../../components/Lib/Lib';
@@ -51,7 +51,7 @@ export default function ComponentLibForm(): ReactElement {
         <div className="form__actions">
           <Reset />
           <Submit />
-          <Submit data-testid="rsf-submit-disabled" disableOnError />
+          <Submit data-testid="rpf-submit-disabled" disableOnError />
         </div>
       </Form>
     </LocalizationProvider>

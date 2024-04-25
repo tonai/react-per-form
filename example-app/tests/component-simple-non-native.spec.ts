@@ -19,7 +19,7 @@ test.describe('Component Simple Non Native', () => {
     await disableNativeValidation(page);
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -33,7 +33,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -42,8 +42,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -52,8 +52,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -62,8 +62,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -73,14 +73,14 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 
   test('mode=change', async ({ page }) => {
@@ -89,7 +89,7 @@ test.describe('Component Simple Non Native', () => {
     await selectMode(page, 'change');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -103,7 +103,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -112,8 +112,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -122,8 +122,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -132,8 +132,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -143,14 +143,14 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 
   test('mode=blur', async ({ page }) => {
@@ -159,7 +159,7 @@ test.describe('Component Simple Non Native', () => {
     await selectMode(page, 'blur');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -173,7 +173,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -182,8 +182,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -192,8 +192,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -202,8 +202,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -213,14 +213,14 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 
   test('mode=all', async ({ page }) => {
@@ -229,7 +229,7 @@ test.describe('Component Simple Non Native', () => {
     await selectMode(page, 'all');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -243,7 +243,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -252,8 +252,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -262,8 +262,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -272,8 +272,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -283,14 +283,14 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 
   test('revalidateMode=change', async ({ page }) => {
@@ -299,7 +299,7 @@ test.describe('Component Simple Non Native', () => {
     await selectRevalidateMode(page, 'change');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -313,7 +313,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -322,8 +322,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -332,8 +332,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -342,8 +342,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -353,14 +353,14 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 
   test('revalidateMode=blur', async ({ page }) => {
@@ -369,7 +369,7 @@ test.describe('Component Simple Non Native', () => {
     await selectRevalidateMode(page, 'blur');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await expect(page.getByTestId('message')).toHaveText('');
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     // focus and blur
     await page.getByTestId('simple').focus();
     await page.getByTestId('simple').blur();
@@ -383,7 +383,7 @@ test.describe('Component Simple Non Native', () => {
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     // submit
-    await page.getByTestId('rsf-submit').click();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -392,8 +392,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(missError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -402,8 +402,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(fooError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).toBeFocused();
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await expect(page.getByTestId('message')).toHaveText('');
@@ -412,8 +412,8 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).toHaveText(barError);
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeEnabled();
-    await page.getByTestId('rsf-submit').click();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeEnabled();
+    await page.getByTestId('rpf-submit').click();
     expect(page.getByTestId('simple')).not.toBeFocused();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     expect(await consoleMsg).toBe(true);
@@ -423,13 +423,13 @@ test.describe('Component Simple Non Native', () => {
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
     await page.getByTestId('simple').blur();
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
     await page.getByTestId('simple').fill('foobar');
     await page.getByTestId('simple').blur();
     // reset button
-    await page.getByTestId('rsf-reset').click();
+    await page.getByTestId('rpf-reset').click();
     await expect(page.getByTestId('simple')).toHaveValue('');
     await expect(page.getByTestId('simple-error')).not.toBeVisible();
-    await expect(page.getByTestId('rsf-submit-disabled')).toBeDisabled();
+    await expect(page.getByTestId('rpf-submit-disabled')).toBeDisabled();
   });
 });

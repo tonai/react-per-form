@@ -2,7 +2,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { type Dayjs } from 'dayjs';
 import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues } from 'react-swift-form';
+import { Form, type IFormValues } from 'react-per-form';
 
 const defaultValues = { mui: null };
 const validators = {

@@ -2,13 +2,13 @@
 
 import type { Dayjs } from 'dayjs';
 import type { ReactElement } from 'react';
-import type { IFormValues } from 'react-swift-form';
+import type { IFormValues } from 'react-per-form';
 
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { FormProvider, Reset, Submit, useForm } from 'react-swift-form';
+import { FormProvider, Reset, Submit, useForm } from 'react-per-form';
 
 import Filters from '../../components/Filters/Filters';
 import { handleSubmit } from '../../helpers/form';
@@ -157,7 +157,7 @@ export default function HookLibForm(): ReactElement {
           <div className="form__actions">
             <Reset />
             <Submit />
-            <Submit data-testid="rsf-submit-disabled" disableOnError />
+            <Submit data-testid="rpf-submit-disabled" disableOnError />
           </div>
         </form>
       </FormProvider>

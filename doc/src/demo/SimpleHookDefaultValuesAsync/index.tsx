@@ -1,6 +1,6 @@
 import type { IProps } from '../types';
 import { type FormEvent } from 'react';
-import { type IFormValues, useForm } from 'react-swift-form';
+import { type IFormValues, useForm } from 'react-per-form';
 import { useData } from '../useData';
 
 export default function Demo(props: IProps) {

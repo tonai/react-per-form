@@ -2,7 +2,7 @@
 
 ## Validation strategy
 
-react-swift-mode propose multiple validation strategy with the `mode` parameter:
+react-per-form propose multiple validation strategy with the `mode` parameter:
 
 - `"submit"` (default): Validation is only triggered when the form is submitted.
 - `"blur"`: Validation is triggered when fields lose focus (in addition to the form being submitted).

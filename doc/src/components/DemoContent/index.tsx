@@ -1,6 +1,6 @@
 import type { IProps } from '../../demo/types';
 import type { ChangeEvent, ComponentType, ReactElement } from 'react';
-import type { IError, IFormMode, IFormRevalidateMode } from 'react-swift-form';
+import type { IError, IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { Badge, Checkbox, Collapse, Select } from '@mantine/core';

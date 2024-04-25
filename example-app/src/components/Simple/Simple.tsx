@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 
 import { useId } from 'react';
-import { useInput } from 'react-swift-form';
+import { useInput } from 'react-per-form';
 
 import { fooValidator } from '../../helpers/validators';
 

@@ -5,7 +5,7 @@ import {
   type IFormValues,
   useFormErrors,
   useWatch,
-} from 'react-swift-form';
+} from 'react-per-form';
 
 function Input() {
   const errors = useFormErrors();

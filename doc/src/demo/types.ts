@@ -1,4 +1,4 @@
-import type { IFormMode, IFormRevalidateMode } from 'react-swift-form';
+import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 export interface IProps {
   filterLocalErrors?: boolean;

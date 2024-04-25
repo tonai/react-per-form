@@ -5,7 +5,7 @@ import {
   type IFormContext,
   type IFormReset,
   type IFormValues,
-} from 'react-swift-form';
+} from 'react-per-form';
 
 export default function Demo(props: IProps) {
   function handleSubmit(

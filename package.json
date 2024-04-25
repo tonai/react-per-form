@@ -1,15 +1,15 @@
 {
-  "name": "react-swift-form-monorepo",
+  "name": "react-per-form-monorepo",
   "private": true,
   "description": "React Form Validation Monorepo",
   "license": "MIT",
-  "homepage": "https://github.com/tonai/react-swift-form",
+  "homepage": "https://github.com/tonai/react-per-form",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tonai/react-swift-form.git"
+    "url": "git@github.com:tonai/react-per-form.git"
   },
   "bugs": {
-    "url": "https://github.com/tonai/react-swift-form/issues"
+    "url": "https://github.com/tonai/react-per-form/issues"
   },
   "author": {
     "name": "Tony Cabaye",
@@ -17,11 +17,11 @@
     "url": "https://github.com/tonai"
   },
   "scripts": {
-    "build": "npm run build -w packages/react-swift-form",
+    "build": "npm run build -w packages/react-per-form",
     "prebuild:doc": "npm run build",
     "build:doc": "npm run build -w doc",
     "dev": "npm run dev:packages & npm run dev:app",
-    "dev:packages": "npm run dev -w packages/react-swift-form",
+    "dev:packages": "npm run dev -w packages/react-per-form",
     "dev:app": "npm run dev -w example-app",
     "dev:doc": "npm run start -w doc",
     "prelint": "npm run build",

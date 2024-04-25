@@ -1,6 +1,6 @@
 # Controlled components
 
-react-swift-form use uncontrolled components for performance reason but having controlled component can still be useful in some cases:
+react-per-form use uncontrolled components for performance reason but having controlled component can still be useful in some cases:
 
 - you want to react to each key stroke in a text field (filtering, searching...etc.)
 - you want to have dynamic things depending on form values
@@ -32,7 +32,7 @@ import SimpleComponentControlledSource from '!!raw-loader!@site/src/demo/SimpleC
 
 :::note
 
-react-swift-form do not manage the state of your form, you are free to use state if you want, but it's your responsibility to manage it correctly.
+react-per-form do not manage the state of your form, you are free to use state if you want, but it's your responsibility to manage it correctly.
 
 :::
 
@@ -40,7 +40,7 @@ react-swift-form do not manage the state of your form, you are free to use state
 
 Controlled components get their value from the `onChange` handler.
 
-You can cast yourself the transformer function on `event.target.value` but react-swift-form gives you a way to this automatically for you.
+You can cast yourself the transformer function on `event.target.value` but react-per-form gives you a way to this automatically for you.
 
 In that case you can use the `onChange` handler to wrap your update state function and it will receive the transformed value :
 
@@ -92,7 +92,7 @@ But the value you get in your `onSubmit` callback is a real Dayjs value. Check t
 
 #### With the `onError` handler
 
-Some components you may use manage validation internally, in that case you can use the `onError` handler to forward the error to react-swift-form.
+Some components you may use manage validation internally, in that case you can use the `onError` handler to forward the error to react-per-form.
 
 The `onError` handler accept one argument, the name of the form field, and return a new function that accept the error string as argument (or `null` if there is no error) :
 
@@ -113,7 +113,7 @@ Try to manually enter a date like 01/01/2024 to see the error.
 
 You can customize the error message with something like `onError={(error) => onError('mui')(messages[error])}` for example.
 
-But you can also customize the error message using react-swift-form `messages` parameter.
+But you can also customize the error message using react-per-form `messages` parameter.
 
 Check the chapter about [messages and i18n](/docs/guides/messages-and-i18n) for more information.
 
