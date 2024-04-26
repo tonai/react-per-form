@@ -1,5 +1,11 @@
 # react-per-form
 
+## 0.3.0
+
+### Minor Changes
+
+- [#33](https://github.com/tonai/react-per-form/pull/33) [`ac12d8d`](https://github.com/tonai/react-per-form/commit/ac12d8db64efca51784958037797bb1d6c5fbc6a) Thanks [@tonai](https://github.com/tonai)! - Rename package
+
 ## 0.2.0
 
 ### Minor Changes
