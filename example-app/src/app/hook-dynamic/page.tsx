@@ -2,8 +2,8 @@
 
 import type { ReactElement } from 'react';
 
+import { FormProvider, Reset, Submit, useForm } from '@per-form/react';
 import { useMemo, useRef, useState } from 'react';
-import { FormProvider, Reset, Submit, useForm } from 'react-per-form';
 
 import Filters from '../../components/Filters/Filters';
 import { handleSubmit } from '../../helpers/form';

@@ -1,5 +1,5 @@
+import type { IFormMode, IFormRevalidateMode } from '@per-form/react';
 import type { Page } from '@playwright/test';
-import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import path from 'node:path';
 import * as url from 'node:url';

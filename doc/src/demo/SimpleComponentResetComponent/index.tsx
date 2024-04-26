@@ -5,7 +5,7 @@ import {
   type IFormContext,
   type IFormValues,
   Reset,
-} from 'react-per-form';
+} from '@per-form/react';
 
 export default function Demo(props: IProps) {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {

@@ -1,6 +1,6 @@
 # Errors and styling
 
-By default react-per-form use native form validation to avoid using any state at all (for performance reason).
+By default @per-form/react use native form validation to avoid using any state at all (for performance reason).
 
 But if you want to customize the display of form errors you can turn off the native validation with the `useNativeValidation` parameter.
 

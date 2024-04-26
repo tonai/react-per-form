@@ -1,12 +1,12 @@
 'use client';
 
+import type { IFormMode, IFormRevalidateMode } from '@per-form/react';
 import type {
   ChangeEvent,
   Dispatch,
   ReactElement,
   SetStateAction,
 } from 'react';
-import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import styles from './Filters.module.css';
 

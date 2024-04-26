@@ -1,4 +1,4 @@
-import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
+import type { IFormMode, IFormRevalidateMode } from '@per-form/react';
 
 export interface IProps {
   filterLocalErrors?: boolean;

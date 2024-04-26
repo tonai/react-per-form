@@ -19,7 +19,7 @@ pnpm install react-hook-form
 
 ## Usage
 
-react-per-form can be used with two main flavors:
+@per-form/react can be used with two main flavors:
 
 ### With the `useForm` hook
 
@@ -61,7 +61,7 @@ For both cases there is no need to register the form fields, you only need to ad
 
 ## Customize error display
 
-By default react-per-form use native form validation, but you can also choose to customize the error as you want by setting `useNativeValidation: false` and display the error as you want :
+By default @per-form/react use native form validation, but you can also choose to customize the error as you want by setting `useNativeValidation: false` and display the error as you want :
 
 import SimpleHookNonNative from '@site/src/demo/SimpleHookNonNative';
 import SimpleHookNonNativeSource from '!!raw-loader!@site/src/demo/SimpleHookNonNative';

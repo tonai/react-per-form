@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { useInputs } from 'react-per-form';
+import { useInputs } from '@per-form/react';
 
 import {
   colorValidator,

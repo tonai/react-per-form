@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormContext } from 'react-per-form';
+import { Form, type IFormValues, useFormContext } from '@per-form/react';
 
 function Input() {
   const { errors, watch } = useFormContext();

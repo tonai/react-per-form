@@ -1,6 +1,6 @@
 # `useForm`
 
-`useForm` is the base hook containing all react-per-form logic.
+`useForm` is the base hook containing all @per-form/react logic.
 
 ## Parameters
 
@@ -45,7 +45,7 @@ See [here](/docs/api/types) for the types.
 | reset               | `IFormReset`                              | Manual reset function                                                                                                                                                              |
 | revalidateMode      | `'blur' \| 'change' \| 'submit'`          | Chosen re-validation strategy                                                                                                                                                      |
 | states              | `IFormStates`                             | Form states (warning: these are not react states)                                                                                                                                  |
-| subscribe           | `ISubscribe`                              | Function to subscribe to state change (see the [form state guide](http://localhost:3001/react-per-form/docs/guides/form-states#with-the-subscribe-function) for more information)  |
+| subscribe           | `ISubscribe`                              | Function to subscribe to state change (see the [form state guide](http://localhost:3001/@per-form/react/docs/guides/form-states#with-the-subscribe-function) for more information) |
 | unregister          | `IUnregister`                             | Internal usage                                                                                                                                                                     |
 | useNativeValidation | `boolean`                                 | Choice for native validation or not                                                                                                                                                |
 | validate            | `IFormValidate`                           | Manual validate function                                                                                                                                                           |

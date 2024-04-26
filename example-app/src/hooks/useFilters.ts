@@ -1,5 +1,5 @@
+import type { IFormMode, IFormRevalidateMode } from '@per-form/react';
 import type { Dispatch, SetStateAction } from 'react';
-import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import { useState } from 'react';
 

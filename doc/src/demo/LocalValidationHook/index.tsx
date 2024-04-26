@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-per-form';
+import type { IFormValues } from '@per-form/react';
 import type { IProps } from '../types';
-import { FormProvider, useForm, useInput } from 'react-per-form';
+import { FormProvider, useForm, useInput } from '@per-form/react';
 
 const validator = (values: IFormValues) =>
   String(values.text).includes('foo') ? '' : 'Value does not include "foo"';

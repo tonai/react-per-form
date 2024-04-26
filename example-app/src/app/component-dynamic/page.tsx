@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { Form, Reset, Submit } from 'react-per-form';
+import { Form, Reset, Submit } from '@per-form/react';
 
 import Dynamic from '../../components/Dynamic/Dynamic';
 import Filters from '../../components/Filters/Filters';

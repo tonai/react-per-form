@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormErrors } from 'react-per-form';
+import { Form, type IFormValues, useFormErrors } from '@per-form/react';
 
 function Input() {
   const errors = useFormErrors();

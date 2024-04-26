@@ -1,13 +1,13 @@
 'use client';
 
+import type { IFormValues } from '@per-form/react';
 import type { Dayjs } from 'dayjs';
 import type { ReactElement } from 'react';
-import type { IFormValues } from 'react-per-form';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Error, Form, Reset, Submit } from '@per-form/react';
 import { useState } from 'react';
-import { Error, Form, Reset, Submit } from 'react-per-form';
 
 import Filters from '../../components/Filters/Filters';
 import Lib from '../../components/Lib/Lib';

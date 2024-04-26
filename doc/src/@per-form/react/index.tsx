@@ -13,7 +13,7 @@ import type {
 import { useCallback, useContext, useEffect } from 'react';
 import { Form as RpfForm, useFormContext, useForm as useRpfForm } from 'rpf';
 
-import { demoContext } from '../contexts/demo';
+import { demoContext } from '../../contexts/demo';
 
 export type {
   IError,

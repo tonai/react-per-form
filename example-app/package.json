@@ -12,24 +12,24 @@
     "e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.15.12",
-    "@mui/x-date-pickers": "^6.19.6",
-    "classnames": "^2.5.1",
-    "dayjs": "^1.11.10",
-    "next": "14.1.4",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@mui/material": "^5",
+    "@mui/x-date-pickers": "^7",
+    "classnames": "^2",
+    "dayjs": "^1",
+    "next": "14",
     "react": "^18",
     "react-dom": "^18",
-    "react-per-form": "0.3.0"
+    "@per-form/react": "0.3.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.41.2",
+    "@playwright/test": "^1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.1.4",
+    "eslint-config-next": "^14",
     "typescript": "^5"
   }
 }

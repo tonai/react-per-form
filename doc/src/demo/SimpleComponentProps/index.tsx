@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormContext, type IFormValues } from 'react-per-form';
+import { Form, type IFormContext, type IFormValues } from '@per-form/react';
 
 export default function Demo(props: IProps) {
   function handleSubmit(_e: FormEvent<HTMLFormElement>, values: IFormValues) {

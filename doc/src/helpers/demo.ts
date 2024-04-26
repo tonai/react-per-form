@@ -36,7 +36,7 @@ export function getIndexHtml(type: IDemoType): string {
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>react-per-form</title>
+    <title>@per-form/react</title>
   </head>
   <body>
     <div id="root"></div>
@@ -60,14 +60,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 export function getPackageJson(type: IDemoType): IPackageJson {
   const packageJson: IPackageJson = {
     dependencies: {
+      '@per-form/react': 'latest',
       '@types/react': 'latest',
       '@types/react-dom': 'latest',
       react: 'latest',
       'react-dom': 'latest',
-      'react-per-form': 'latest',
     },
     description: location.href,
-    name: 'react-per-form-app',
+    name: '@per-form/react-app',
   };
   if (isStackBlitz(type)) {
     packageJson.dependencies['@vitejs/plugin-react-swc'] = 'latest';

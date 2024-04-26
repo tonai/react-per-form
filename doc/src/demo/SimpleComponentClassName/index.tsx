@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { Form, type IFormContext, type IFormValues } from 'react-per-form';
+import { Form, type IFormContext, type IFormValues } from '@per-form/react';
 import clsx from 'clsx';
 
 export default function Demo() {

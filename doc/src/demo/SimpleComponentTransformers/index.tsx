@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormContext, type IFormValues } from 'react-per-form';
+import { Form, type IFormContext, type IFormValues } from '@per-form/react';
 
 const transformers = { count: Number };
 

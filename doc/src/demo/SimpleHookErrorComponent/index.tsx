@@ -1,6 +1,11 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Error, FormProvider, type IFormValues, useForm } from 'react-per-form';
+import {
+  Error,
+  FormProvider,
+  type IFormValues,
+  useForm,
+} from '@per-form/react';
 
 const validators = {
   text: (values: IFormValues) =>

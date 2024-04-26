@@ -1,8 +1,8 @@
-# react-per-form
+# @per-form/react
 
 <p align="center">
-  <img alt="react-per-form Logo" src="/doc/static/img/logo.svg#gh-light-mode-only" width="200" />
-  <img alt="react-per-form Logo" src="/doc/static/img/logo-dark.svg#gh-dark-mode-only" width="200" />
+  <img alt="@per-form/react Logo" src="/doc/static/img/logo.svg#gh-light-mode-only" width="200" />
+  <img alt="@per-form/react Logo" src="/doc/static/img/logo-dark.svg#gh-dark-mode-only" width="200" />
 </p>
 <p align="center">
   Fast and easy form validation for React based on native HTML capabilities
@@ -12,11 +12,11 @@
 </p>
 <div align="center">
 
-<!-- [![NPM Downloads](https://img.shields.io/npm/dm/react-per-form?style=flat)](https://www.npmjs.com/package/react-per-form) -->
+<!-- [![NPM Downloads](https://img.shields.io/npm/dm/@per-form/react?style=flat)](https://www.npmjs.com/package/@per-form/react) -->
 
-[![NPM Version](https://img.shields.io/npm/v/react-per-form)](https://www.npmjs.com/package/react-per-form)
+[![NPM Version](https://img.shields.io/npm/v/@per-form/react)](https://www.npmjs.com/package/@per-form/react)
 [![GitHub License](https://img.shields.io/github/license/tonai/react-per-form)](https://github.com/tonai/react-per-form/blob/main/LICENSE)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-per-form)](https://bundlephobia.com/package/react-per-form)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@per-form/react)](https://bundlephobia.com/package/@per-form/react)
 
 <!-- [![GitHub Repo stars](https://img.shields.io/github/stars/tonai/react-per-form)](https://github.com/tonai/react-per-form/blob/main/LICENSE) -->
 
@@ -58,7 +58,7 @@ pnpm install react-hook-form
 
 ```tsx
 import type { FormEvent } from 'react';
-import { type IFormValues, useForm } from 'react-per-form';
+import { type IFormValues, useForm } from '@per-form/react';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {
@@ -82,7 +82,7 @@ export default function Demo() {
 
 ```tsx
 import type { FormEvent } from 'react';
-import { Form, type IFormValues } from 'react-per-form';
+import { Form, type IFormValues } from '@per-form/react';
 
 export default function Demo() {
   function handleSubmit(e: FormEvent<HTMLFormElement>, values: IFormValues) {

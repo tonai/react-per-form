@@ -2,8 +2,8 @@
 
 import type { ReactElement } from 'react';
 
+import { useInput } from '@per-form/react';
 import { useId } from 'react';
-import { useInput } from 'react-per-form';
 
 import { fooValidator } from '../../helpers/validators';
 

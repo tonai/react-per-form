@@ -1,6 +1,6 @@
 import type { IDemoProps } from '../DemoContent';
+import type { IFormMode, IFormRevalidateMode } from '@per-form/react';
 import type { ReactElement } from 'react';
-import type { IFormMode, IFormRevalidateMode } from 'react-per-form';
 
 import { localStorageColorSchemeManager } from '@mantine/core';
 import { ThemeProvider, createTheme } from '@mui/material/styles';

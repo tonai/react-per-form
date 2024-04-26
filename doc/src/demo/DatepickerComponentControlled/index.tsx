@@ -2,7 +2,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import type { Dayjs } from 'dayjs';
 import { type FormEvent, useState } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues } from 'react-per-form';
+import { Form, type IFormValues } from '@per-form/react';
 
 export default function Demo(props: IProps) {
   const [value, setValue] = useState<Dayjs | null>(null);
