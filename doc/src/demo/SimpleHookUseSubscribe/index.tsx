@@ -5,7 +5,7 @@ import {
   type IFormValues,
   useForm,
   useSubscribe,
-} from 'react-per-form';
+} from '@per-form/react';
 
 function Submit() {
   const [isValid, setIsValid] = useState(false);

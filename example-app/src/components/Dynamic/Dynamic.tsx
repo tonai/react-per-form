@@ -2,8 +2,8 @@
 
 import type { ReactElement } from 'react';
 
+import { useInputs } from '@per-form/react';
 import { useMemo, useRef, useState } from 'react';
-import { useInputs } from 'react-per-form';
 
 import { dynamicValidator } from '../../helpers/validators';
 

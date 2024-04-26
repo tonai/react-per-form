@@ -340,7 +340,9 @@ export function useForm(props: IUseFormProps = {}): IUseFormResult {
     <V>(value: unknown, name?: string): [string, V] => {
       const fieldName = getName(value) ?? name;
       if (!fieldName) {
-        throw new Error('react-per-form was unable to retrieve the field name');
+        throw new Error(
+          '@per-form/react was unable to retrieve the field name',
+        );
       }
       states.current.changedFields.add(fieldName);
       const allTransformers = getTransformers(fields.current, transformers);

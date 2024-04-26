@@ -33,7 +33,7 @@ Changing the field value does not trigger the render counter in the top left cor
 
 :::warning
 
-With the hook version you will have to add yourself the react-per-form `<FormProvider>` component !
+With the hook version you will have to add yourself the @per-form/react `<FormProvider>` component !
 
 :::
 

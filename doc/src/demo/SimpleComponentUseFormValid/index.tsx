@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { Form, type IFormValues, useFormValid } from 'react-per-form';
+import { Form, type IFormValues, useFormValid } from '@per-form/react';
 
 function Submit() {
   const isValid = useFormValid();

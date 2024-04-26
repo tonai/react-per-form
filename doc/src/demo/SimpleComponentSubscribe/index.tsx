@@ -5,7 +5,7 @@ import {
   type IFormContext,
   type IFormValues,
   useFormContext,
-} from 'react-per-form';
+} from '@per-form/react';
 
 function Submit() {
   const { states, subscribe } = useFormContext();

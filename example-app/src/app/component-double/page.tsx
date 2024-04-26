@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { Form, Reset, Submit } from 'react-per-form';
+import { Form, Reset, Submit } from '@per-form/react';
 
 import Double from '../../components/Double/Double';
 import Filters from '../../components/Filters/Filters';

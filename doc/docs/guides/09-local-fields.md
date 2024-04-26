@@ -19,7 +19,7 @@ import LocalValidationComponentSource from '!!raw-loader!@site/src/demo/LocalVal
 
 :::warning
 
-With the hook version you will have to add yourself the react-per-form `<FormProvider>` component !
+With the hook version you will have to add yourself the @per-form/react `<FormProvider>` component !
 
 :::
 

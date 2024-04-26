@@ -12,19 +12,19 @@ export default function Home(): ReactElement {
   return (
     <Layout
       description={siteConfig.tagline}
-      title="react-per-form Documentation"
+      title="@per-form/react Documentation"
     >
       <main className={styles.main}>
         <h1 className={styles.title}>{siteConfig.title}</h1>
         <div className={styles.logo}>
           <img
-            alt="react-per-form Logo"
+            alt="@per-form/react Logo"
             className="mantine-dark-hidden"
             src="img/logo.svg"
             width="200"
           />
           <img
-            alt="react-per-form Logo"
+            alt="@per-form/react Logo"
             className="mantine-light-hidden"
             src="img/logo-dark.svg"
             width="200"

@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-per-form';
+import type { IFormValues } from '@per-form/react';
 import type { IProps } from '../types';
-import { FormProvider, useForm, useInputs } from 'react-per-form';
+import { FormProvider, useForm, useInputs } from '@per-form/react';
 
 const validator = (values: IFormValues) =>
   Number(values.a) + Number(values.b) === 42

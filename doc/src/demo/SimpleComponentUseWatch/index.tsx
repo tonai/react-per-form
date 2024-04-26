@@ -5,7 +5,7 @@ import {
   type IFormValues,
   useFormErrors,
   useWatch,
-} from 'react-per-form';
+} from '@per-form/react';
 
 function Input() {
   const errors = useFormErrors();

@@ -1,5 +1,5 @@
+import type { IFormValues } from '@per-form/react';
 import type { FormEvent } from 'react';
-import type { IFormValues } from 'react-per-form';
 
 export function handleSubmit(
   _event: FormEvent<HTMLFormElement>,

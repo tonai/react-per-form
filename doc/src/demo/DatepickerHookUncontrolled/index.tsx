@@ -2,7 +2,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { type FormEvent } from 'react';
 import type { IProps } from '../types';
-import { type IFormValues, useForm } from 'react-per-form';
+import { type IFormValues, useForm } from '@per-form/react';
 
 const today = dayjs();
 const transformers = { mui: (date: unknown) => dayjs(String(date)) };

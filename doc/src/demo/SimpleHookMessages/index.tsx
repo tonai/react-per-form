@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react';
 import type { IProps } from '../types';
-import { type IFormValues, useForm } from 'react-per-form';
+import { type IFormValues, useForm } from '@per-form/react';
 
 const messages = { valueMissing: 'Did you miss something ?' };
 

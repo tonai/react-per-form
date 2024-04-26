@@ -1,6 +1,6 @@
 import type { IProps } from '../types';
 import { type FormEvent } from 'react';
-import { Form, type IFormContext, type IFormValues } from 'react-per-form';
+import { Form, type IFormContext, type IFormValues } from '@per-form/react';
 import { useData } from '../useData';
 
 export default function Demo(props: IProps) {

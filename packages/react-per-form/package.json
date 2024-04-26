@@ -1,5 +1,5 @@
 {
-  "name": "react-per-form",
+  "name": "@per-form/react",
   "version": "0.3.0",
   "description": "React library fro form validation",
   "license": "MIT",
@@ -48,25 +48,25 @@
     "prepublishOnly": "npm run build && node ../../scripts/prepublish.mjs"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.9",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.16",
-    "@types/react": "^18.2.21",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "@babel/preset-env": "^7",
+    "@babel/preset-react": "^7",
+    "@babel/preset-typescript": "^7",
+    "@testing-library/jest-dom": "^6",
+    "@testing-library/react": "^15",
+    "@types/jest": "^29",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@vitejs/plugin-react-swc": "^3",
+    "babel-jest": "^29",
+    "jest": "^29",
+    "jest-environment-jsdom": "^29",
     "tsconfig": "*",
-    "typescript": "~5.2.2",
-    "vite": "^5.0.12",
-    "vite-plugin-dts": "^3.7.2"
+    "typescript": "^5",
+    "vite": "^5",
+    "vite-plugin-dts": "^3"
   },
   "peerDependencies": {
-    "react": ">=18.0"
+    "react": ">=18"
   },
   "engines": {
     "node": ">=16"

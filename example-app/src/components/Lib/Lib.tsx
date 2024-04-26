@@ -4,8 +4,8 @@ import type { Dayjs } from 'dayjs';
 import type { Dispatch, ReactElement, SetStateAction } from 'react';
 
 import { DatePicker } from '@mui/x-date-pickers';
+import { useInputs, useWatch } from '@per-form/react';
 import dayjs from 'dayjs';
-import { useInputs, useWatch } from 'react-per-form';
 
 import { muiValidator } from '../../helpers/validators';
 

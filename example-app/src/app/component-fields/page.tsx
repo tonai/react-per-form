@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { Error, Form, Reset, Submit } from 'react-per-form';
+import { Error, Form, Reset, Submit } from '@per-form/react';
 
 import Fields from '../../components/Fields/Fields';
 import Filters from '../../components/Filters/Filters';

@@ -22,7 +22,7 @@ module.exports = {
       },
     },
     {
-      files: ['doc/src/react-per-form/**/*'],
+      files: ['doc/src/@per-form/react/**/*'],
       rules: {
         'react/no-multi-comp': 'off',
       },

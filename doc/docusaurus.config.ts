@@ -5,7 +5,7 @@ import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 
 const config: Config = {
-  title: 'react-per-form',
+  title: '@per-form/react',
   tagline:
     'Fast and easy form validation for React based on native HTML capabilities',
   favicon: 'img/logo.svg',
@@ -65,9 +65,9 @@ const config: Config = {
     respectPrefersColorScheme: true,
     image: 'img/social-card.png',
     navbar: {
-      title: 'react-per-form',
+      title: '@per-form/react',
       logo: {
-        alt: 'react-per-form Logo',
+        alt: '@per-form/react Logo',
         src: 'img/logo.svg',
         srcDark: 'img/logo-dark.svg',
       },
@@ -112,23 +112,23 @@ const config: Config = {
             },
           ],
         },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/react-per-form',
-            },
-            // {
-            //   label: 'Discord',
-            //   href: 'https://discordapp.com/invite/docusaurus',
-            // },
-            // {
-            //   label: 'Twitter',
-            //   href: 'https://twitter.com/docusaurus',
-            // },
-          ],
-        },
+        // {
+        //   title: 'Community',
+        //   items: [
+        //     {
+        //       label: 'Stack Overflow',
+        //       href: 'https://stackoverflow.com/questions/tagged/per-form',
+        //     },
+        //     {
+        //       label: 'Discord',
+        //       href: 'https://discordapp.com/invite/docusaurus',
+        //     },
+        //     {
+        //       label: 'Twitter',
+        //       href: 'https://twitter.com/docusaurus',
+        //     },
+        //   ],
+        // },
         {
           title: 'Social',
           items: [
