@@ -21,7 +21,7 @@
     "next": "14",
     "react": "^18",
     "react-dom": "^18",
-    "@per-form/react": "0.3.0"
+    "@per-form/react": "0.3.1"
   },
   "devDependencies": {
     "@playwright/test": "^1",
