@@ -1,5 +1,11 @@
 # @per-form/react
 
+## 0.3.1
+
+### Patch Changes
+
+- [#36](https://github.com/tonai/react-per-form/pull/36) [`e24bf88`](https://github.com/tonai/react-per-form/commit/e24bf8815c9b88649385fddecc837b92fdb1b818) Thanks [@tonai](https://github.com/tonai)! - Fix focus error with mui fields
+
 ## 0.3.0
 
 ### Minor Changes
