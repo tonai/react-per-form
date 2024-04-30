@@ -27,6 +27,8 @@ import {
   validateForm,
 } from './validator';
 
+jest.useFakeTimers();
+
 describe('validator helper', () => {
   let form: HTMLFormElement;
   let input1: HTMLInputElement;
@@ -145,6 +147,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators: [],
       });
+      jest.runAllTimers();
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -157,6 +160,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators: [],
       });
+      jest.runAllTimers();
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -169,6 +173,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators: [],
       });
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -181,6 +186,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators: [],
       });
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });
@@ -400,6 +406,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators,
       });
+      jest.runAllTimers();
       expect(fooErrors).toHaveBeenCalled();
       expect(barErrors).toHaveBeenCalled();
       expect(spy).toHaveBeenCalled();
@@ -416,6 +423,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators,
       });
+      jest.runAllTimers();
       expect(spy).toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -430,6 +438,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators,
       });
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockClear();
       displayErrors({
@@ -444,6 +453,7 @@ describe('validator helper', () => {
         useNativeValidation: false,
         validators,
       });
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });
@@ -1114,6 +1124,7 @@ describe('validator helper', () => {
       expect(
         focusError(Array.from(form.elements) as HTMLInputElement[]),
       ).toEqual(false);
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });
@@ -1129,6 +1140,7 @@ describe('validator helper', () => {
           names: ['foo'],
         }),
       ).toEqual(true);
+      jest.runAllTimers();
       expect(spy1).toHaveBeenCalled();
       expect(spy2).not.toHaveBeenCalled();
       spy1.mockClear();
@@ -1141,6 +1153,7 @@ describe('validator helper', () => {
           names: ['foo', 'bar'],
         }),
       ).toEqual(true);
+      jest.runAllTimers();
       expect(spy1).toHaveBeenCalled();
       expect(spy2).not.toHaveBeenCalled();
       spy1.mockClear();
@@ -1153,6 +1166,7 @@ describe('validator helper', () => {
           names: ['bar'],
         }),
       ).toEqual(true);
+      jest.runAllTimers();
       expect(spy1).not.toHaveBeenCalled();
       expect(spy2).toHaveBeenCalled();
       spy1.mockRestore();
@@ -1169,6 +1183,7 @@ describe('validator helper', () => {
           names: ['baz'],
         }),
       ).toEqual(false);
+      jest.runAllTimers();
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
     });

@@ -433,7 +433,7 @@ export function focusError(inputs: IFormElement[], main?: IMainError): boolean {
       main.names.includes(getFormInput(input).name),
     );
     if (focusInput) {
-      getFormInput(focusInput).focus();
+      setTimeout(() => getFormInput(focusInput).focus());
       return true;
     }
   }
