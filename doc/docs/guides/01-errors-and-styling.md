@@ -28,7 +28,7 @@ import SimpleComponentNonNativeRenderSource from '!!raw-loader!@site/src/demo/Si
 
 Or you can access the error object using the context (in that case you need to use a sub-component).
 
-You can use the `useFormErrors` hook to directly get access to the errors:
+You can use the `useFormErrors` hook to directly get access to the form errors:
 
 import SimpleComponentNonNativeContext from '@site/src/demo/SimpleComponentNonNativeContext';
 import SimpleComponentNonNativeContextSource from '!!raw-loader!@site/src/demo/SimpleComponentNonNativeContext';
@@ -41,7 +41,7 @@ import SimpleComponentNonNativeContextSource from '!!raw-loader!@site/src/demo/S
 
 You can use `:valid` and `:invalid` CSS pseudo-classes to customize your fields depending on their internal validation state.
 
-This works even you choose not to use the native validation:
+This works even if you choose not to use the native validation:
 
 import SimpleHookCssPseudoClass from '@site/src/demo/SimpleHookCssPseudoClass';
 import SimpleHookCssPseudoClassSource from '!!raw-loader!@site/src/demo/SimpleHookCssPseudoClass';
@@ -114,7 +114,7 @@ It has the following shape:
 | manual    | `Record<string, string \| null>`                                   | Contains errors only relative to manual validation (See [guide page about validation](/docs/guides/validation) for more information). Keys are field names                                       |
 | global    | `Record<string, {error: string, global: boolean, names: string[]>` | Contains errors only relative to custom field validation that are set at the form level (See [guide page about validation](/docs/guides/validation) for more information). Keys are validator id |
 | all       | `Record<string, string>`                                           | Contains all above errors, with one error per field (native errors first, then manual errors, then validator errors). Keys are field names                                                       |
-| main      | `{error: string, global: boolean, id: string, names: string[] }`   | Contain the first field error (from top to bottom).                                                                                                                                              |
+| main      | `{error: string, global: boolean, id: string, names: string[] }`   | Contain the first field error (native errors first, then manual errors, then validator errors).                                                                                                  |
 
 ### Example
 
