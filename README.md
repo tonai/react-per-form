@@ -45,11 +45,11 @@
 
 ```bash
 # npm
-npm install react-hook-form
+npm install @per-form/react
 # yarn
-yarn add react-hook-form
+yarn add @per-form/react
 # pnpm
-pnpm install react-hook-form
+pnpm install @per-form/react
 ```
 
 ## Usage
